@@ -1,10 +1,13 @@
-﻿using BigWorldGame.Components;
+﻿using BigWorld.Map;
+using BigWorldGame.Components;
 using engenious;
 
 namespace BigWorldGame
 {
     public class MainGame : Game
     {
+        public readonly World CurrentWorld = new World();
+        
         public MainGame()
         {   
             RoomRenderer roomRenderer = new RoomRenderer(this);

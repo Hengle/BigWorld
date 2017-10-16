@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using BigWorld.World;
+using BigWorld.Map;
 using engenious;
 using engenious.Graphics;
 
@@ -12,9 +12,7 @@ namespace BigWorldGame.Components
         private SpriteBatch spriteBatch;
         private Texture2D pixeltexture;
 
-        private Texture2D dungeonSheet;
-        
-        private Point tilePoint = new Point(9,2);
+        private Texture2D dungeonSheet; 
         
         public RoomRenderer(MainGame game) : base(game)
         {
@@ -49,26 +47,41 @@ namespace BigWorldGame.Components
 
         private void DrawRoom(Point point)
         {
-            var height = (GraphicsDevice.Viewport.Height - Room.RoomSizeY * RenderSettings.TileSize)/2;
+            var height = (GraphicsDevice.Viewport.Height - Room.SizeY * RenderSettings.TileSize)/2;
             
             var size = new Point(RenderSettings.TileSize,RenderSettings.TileSize);
             
-            var delta = new Point(size.X * Room.RoomSizeX* point.X,size.Y * Room.RoomSizeY* point.Y);
+            var delta = new Point(size.X * Room.SizeX* point.X,size.Y * Room.SizeY* point.Y);
 
-            float alpha = point.IsEmpty ? 1f : 0.5f; 
-            
-            var realTilePoint = new Point(17*tilePoint.X,17* tilePoint.Y);
-            
-            for (int x = 0; x < Room.RoomSizeX; x++)
+            float alpha = point.IsEmpty ? 1f : 0.5f;
+
+            var room = Game.CurrentWorld.LoadOrCreateRoom(point);
+
+            foreach (var layer in room.TileLayer)
             {
-                for (int y = 0; y < Room.RoomSizeY; y++)
+                for (int x = 0; x < Room.SizeX; x++)
                 {
-                    var drawPoint = new Point(x*RenderSettings.TileSize+height,y*RenderSettings.TileSize+height) + delta;
+                    for (int y = 0; y < Room.SizeY; y++)
+                    {
+                        var drawPoint = new Point(x*RenderSettings.TileSize+height,y*RenderSettings.TileSize+height) + delta;
+                    
+                        Point? tilePoint = layer.GetValue(x,y);
+                        
+                        if (!tilePoint.HasValue)
+                        {
+                            spriteBatch.Draw(pixeltexture,new Rectangle(drawPoint,size),Color.White * alpha );
+                            continue;
+                        }
+
+                        var realTilePoint = new Point(17*tilePoint.Value.X,17* tilePoint.Value.Y);
                     
                     
-                    spriteBatch.Draw(dungeonSheet,new Rectangle(drawPoint,size),new Rectangle(realTilePoint,new Point(16,16)),Color.White * alpha );
+                    
+                    
+                        spriteBatch.Draw(dungeonSheet,new Rectangle(drawPoint,size),new Rectangle(realTilePoint,new Point(16,16)),Color.White * alpha );
+                    }
                 }
-            }
+            }          
         }
     }
 }
