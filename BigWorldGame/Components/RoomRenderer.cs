@@ -11,7 +11,10 @@ namespace BigWorldGame.Components
 
         private SpriteBatch spriteBatch;
         private Texture2D pixeltexture;
+
+        private Texture2D dungeonSheet;
         
+        private Point tilePoint = new Point(9,2);
         
         public RoomRenderer(MainGame game) : base(game)
         {
@@ -22,8 +25,11 @@ namespace BigWorldGame.Components
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            
             pixeltexture = new Texture2D(GraphicsDevice,1,1);
             pixeltexture.SetData(new Color[] {Color.White});
+
+            dungeonSheet = Game.Content.Load<Texture2D>("Spritesheets/TileSheetDungeon");
         }
 
         public override void Draw(GameTime gameTime)
@@ -51,6 +57,8 @@ namespace BigWorldGame.Components
 
             float alpha = point.IsEmpty ? 1f : 0.5f; 
             
+            var realTilePoint = new Point(17*tilePoint.X,17* tilePoint.Y);
+            
             for (int x = 0; x < Room.RoomSizeX; x++)
             {
                 for (int y = 0; y < Room.RoomSizeY; y++)
@@ -58,7 +66,7 @@ namespace BigWorldGame.Components
                     var drawPoint = new Point(x*16+height,y*16+height) + delta;
                     
                     
-                    spriteBatch.Draw(pixeltexture,new Rectangle(drawPoint,size),Color.White * alpha );
+                    spriteBatch.Draw(dungeonSheet,new Rectangle(drawPoint,size),new Rectangle(realTilePoint,size),Color.White * alpha );
                 }
             }
         }
