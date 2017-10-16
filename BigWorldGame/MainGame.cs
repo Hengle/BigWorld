@@ -9,6 +9,9 @@ namespace BigWorldGame
         {   
             RoomRenderer roomRenderer = new RoomRenderer(this);
             Components.Add(roomRenderer);
+            
+            GuiRenderer guiRenderer = new GuiRenderer(this);
+            Components.Add(guiRenderer);
         }
 
         public override void Draw(GameTime gameTime)

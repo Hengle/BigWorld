@@ -49,9 +49,9 @@ namespace BigWorldGame.Components
 
         private void DrawRoom(Point point)
         {
-            var height = (GraphicsDevice.Viewport.Height - Room.RoomSizeY * 16)/2;
+            var height = (GraphicsDevice.Viewport.Height - Room.RoomSizeY * RenderSettings.TileSize)/2;
             
-            var size = new Point(16,16);
+            var size = new Point(RenderSettings.TileSize,RenderSettings.TileSize);
             
             var delta = new Point(size.X * Room.RoomSizeX* point.X,size.Y * Room.RoomSizeY* point.Y);
 
@@ -63,10 +63,10 @@ namespace BigWorldGame.Components
             {
                 for (int y = 0; y < Room.RoomSizeY; y++)
                 {
-                    var drawPoint = new Point(x*16+height,y*16+height) + delta;
+                    var drawPoint = new Point(x*RenderSettings.TileSize+height,y*RenderSettings.TileSize+height) + delta;
                     
                     
-                    spriteBatch.Draw(dungeonSheet,new Rectangle(drawPoint,size),new Rectangle(realTilePoint,size),Color.White * alpha );
+                    spriteBatch.Draw(dungeonSheet,new Rectangle(drawPoint,size),new Rectangle(realTilePoint,new Point(16,16)),Color.White * alpha );
                 }
             }
         }
