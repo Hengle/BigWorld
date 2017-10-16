@@ -1,0 +1,83 @@
+﻿<Content>
+  <References />
+  <Configuration>Debug</Configuration>
+  <OutputDir>bin/{Configuration}/</OutputDir>
+  <Name>Content</Name>
+  <Contents>
+    <ContentFolder>
+      <Name>Fonts</Name>
+      <Contents>
+        <ContentFile>
+          <Name>BoldFont.spritefont</Name>
+          <Processor>SpriteFontProcessor</Processor>
+          <Importer>SpriteFontImporter</Importer>
+        </ContentFile>
+        <ContentFile>
+          <Name>GameFont.spritefont</Name>
+          <Processor>SpriteFontProcessor</Processor>
+          <Importer>SpriteFontImporter</Importer>
+        </ContentFile>
+        <ContentFile>
+          <Name>HeadlineFont.spritefont</Name>
+          <Processor>SpriteFontProcessor</Processor>
+          <Importer>SpriteFontImporter</Importer>
+        </ContentFile>
+        <ContentFile>
+          <Name>Hud.spritefont</Name>
+          <Processor>SpriteFontProcessor</Processor>
+          <Importer>SpriteFontImporter</Importer>
+        </ContentFile>
+      </Contents>
+    </ContentFolder>
+    <ContentFolder>
+      <Name>Spritesheets</Name>
+      <Contents>
+        <ContentFile>
+          <Name>TileSheetDungeon.png</Name>
+          <Processor>BitmapProcessor</Processor>
+          <Importer>Bitmap Importer</Importer>
+          <Settings>
+            <AutoGenerateMipMaps>False</AutoGenerateMipMaps>
+            <MipMapCount>1</MipMapCount>
+            <Format>0</Format>
+          </Settings>
+        </ContentFile>
+        <ContentFile>
+          <Name>TileSheetIndoor.png</Name>
+          <Processor>BitmapProcessor</Processor>
+          <Importer>Bitmap Importer</Importer>
+          <Settings>
+            <AutoGenerateMipMaps>False</AutoGenerateMipMaps>
+            <MipMapCount>1</MipMapCount>
+            <Format>0</Format>
+          </Settings>
+        </ContentFile>
+        <ContentFile>
+          <Name>TileSheetOutdoor.png</Name>
+          <Processor>BitmapProcessor</Processor>
+          <Importer>Bitmap Importer</Importer>
+          <Settings>
+            <AutoGenerateMipMaps>False</AutoGenerateMipMaps>
+            <MipMapCount>1</MipMapCount>
+            <Format>0</Format>
+          </Settings>
+        </ContentFile>
+         <ContentFile>
+              <Name>TileSheetCharacter.png</Name>
+              <Processor>BitmapProcessor</Processor>
+              <Importer>Bitmap Importer</Importer>
+              <Settings>
+                <AutoGenerateMipMaps>False</AutoGenerateMipMaps>
+                <MipMapCount>1</MipMapCount>
+                <Format>0</Format>
+              </Settings>
+         </ContentFile>
+      </Contents>
+    </ContentFolder>
+    <ContentFile>
+      <Name>simple.glsl</Name>
+      <Processor>EffectProcessor</Processor>
+      <Importer />
+    </ContentFile>
+  </Contents>
+</Content>

@@ -1,0 +1,13 @@
+#version 130
+
+uniform sampler2DArray TileTextures;
+
+in vec2 psTexcoord;
+flat in uint psTileIndex;
+
+out vec4 outColor;
+void main()
+{
+	vec4 texColor = texture(TileTextures,vec3(psTexcoord,psTileIndex));
+	outColor = texColor;
+}
