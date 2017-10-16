@@ -51,9 +51,11 @@ namespace BigWorldGame.Components
 
             if (mouseMapPoint.HasValue && mouseState.LeftButton == ButtonState.Pressed)
             {
-                var room = Game.CurrentWorld.LoadOrCreateRoom(new Point(0, 0));
+                var room = Game.CurrentWorld.LoadOrCreateRoom(Game.BasePoint);
                 room.TileLayer[0].SetValue(mouseMapPoint.Value,new Point(9,2));
             }
+            
+            
             
         }
 

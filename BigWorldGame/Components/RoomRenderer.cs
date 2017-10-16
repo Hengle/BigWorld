@@ -2,6 +2,7 @@
 using BigWorld.Map;
 using engenious;
 using engenious.Graphics;
+using engenious.Input;
 
 namespace BigWorldGame.Components
 {
@@ -13,6 +14,8 @@ namespace BigWorldGame.Components
         private Texture2D pixeltexture;
 
         private Texture2D dungeonSheet; 
+        
+        
         
         public RoomRenderer(MainGame game) : base(game)
         {
@@ -29,6 +32,9 @@ namespace BigWorldGame.Components
 
             dungeonSheet = Game.Content.Load<Texture2D>("Spritesheets/TileSheetDungeon");
         }
+
+
+        
 
         public override void Draw(GameTime gameTime)
         {   
@@ -55,7 +61,7 @@ namespace BigWorldGame.Components
 
             float alpha = point.IsEmpty ? 1f : 0.5f;
 
-            var room = Game.CurrentWorld.LoadOrCreateRoom(point);
+            var room = Game.CurrentWorld.LoadOrCreateRoom(point+Game.BasePoint);
 
             foreach (var layer in room.TileLayer)
             {
