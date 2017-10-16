@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using engenious;
 
 namespace BigWorldGame
 {
@@ -7,6 +8,8 @@ namespace BigWorldGame
     {
         public static void Main(string[] args)
         {
+            using (var game = new MainGame())
+                game.Run();
         }
     }
 }
