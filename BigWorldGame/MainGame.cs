@@ -1,6 +1,7 @@
 ﻿using BigWorld.Map;
 using BigWorldGame.Components;
 using engenious;
+using engenious.Graphics;
 using engenious.Input;
 
 namespace BigWorldGame
@@ -13,25 +14,34 @@ namespace BigWorldGame
         
         public MainGame()
         {   
-            RoomRenderer roomRenderer = new RoomRenderer(this);
-            Components.Add(roomRenderer);
+            mapRenderer = new MapRenderer(this);
+            Components.Add(mapRenderer);
             
-            GuiRenderer guiRenderer = new GuiRenderer(this);
+            guiRenderer = new GuiRenderer(this);
             Components.Add(guiRenderer);
         }
 
         public override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            base.Draw(gameTime);
+            //GraphicsDevice.Clear(Color.White);
+
+            GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Height,Window.ClientSize.Height);
+            mapRenderer.Draw(gameTime);
+            
+            GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Width,Window.ClientSize.Height);
+            guiRenderer.Draw(gameTime);
+            
         }
         
         private Trigger<bool> upTrigger = new Trigger<bool>();
         private Trigger<bool> downTrigger = new Trigger<bool>();
         
         private Trigger<bool> leftTrigger = new Trigger<bool>();
-        private Trigger<bool> rightTrigger = new Trigger<bool>(); 
-        
+        private Trigger<bool> rightTrigger = new Trigger<bool>();
+        private MapRenderer mapRenderer;
+        private GuiRenderer guiRenderer;
+
         public override void Update(GameTime gameTime)
         {
             var keyState = Keyboard.GetState();

@@ -11,12 +11,13 @@ namespace BigWorld.Map
         public readonly Point Point;
         
         public Layer<bool> BlockLayer { get; } = new Layer<bool>();
-        public List<Layer<Point>> TileLayer {get;} = new List<Layer<Point>>();
+        public List<Layer<uint>> TileLayer {get;} = new List<Layer<uint>>();
         
         public Room(Point point)
         {
             Point = point;
-            TileLayer.Add(new Layer<Point>());
+            //GroundValue
+            TileLayer.Add(new Layer<uint>());
         }
         
         

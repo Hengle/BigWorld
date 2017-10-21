@@ -54,7 +54,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\GuiRenderer.cs" />
-    <Compile Include="Components\RoomRenderer.cs" />
+    <Compile Include="Components\MapRenderer.cs" />
+    <Compile Include="Controlls\BaseControl.cs" />
+    <Compile Include="Controlls\SelectTileSheetControl.cs" />
+    <Compile Include="Graphics\MapVertex.cs" />
+    <Compile Include="Graphics\RoomRenderer.cs" />
+    <Compile Include="Graphics\SpriteSheet.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

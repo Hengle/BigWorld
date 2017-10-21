@@ -1,8 +1,10 @@
 ﻿using System.Runtime.InteropServices.ComTypes;
 using BigWorld.Map;
+using BigWorldGame.Controlls;
 using engenious;
 using engenious.Graphics;
 using engenious.Input;
+using OpenTK.Graphics.ES30;
 
 namespace BigWorldGame.Components
 {
@@ -13,8 +15,13 @@ namespace BigWorldGame.Components
         private SpriteBatch batch;
         
         private Texture2D pixeltexture;
+        private Texture2D dungeonSheet; 
         
-        private Color mouseColor = Color.Red * 0.3f; 
+        private Color mouseColor = Color.Red * 0.3f;
+
+        private SelectTileSheetControl tileSheetControl;
+        
+        private Point? mouseMapPoint = null;
         
         public GuiRenderer(MainGame game) : base(game)
         {
@@ -27,9 +34,17 @@ namespace BigWorldGame.Components
             
             pixeltexture = new Texture2D(GraphicsDevice,1,1);
             pixeltexture.SetData(new Color[] {Color.White});
+            
+            dungeonSheet = Game.Content.Load<Texture2D>("Spritesheets/TileSheetDungeon");
+            
+            tileSheetControl= new SelectTileSheetControl();
+            tileSheetControl.LoadContent(Game);
+            tileSheetControl.SetTileSheet(dungeonSheet);
+            tileSheetControl.Position = new Rectangle(GraphicsDevice.Viewport.Width-300,10,300,GraphicsDevice.Viewport.Height);
         }
 
-        private Point? mouseMapPoint = null;
+        
+        
         
         public override void Update(GameTime gameTime)
         {
@@ -52,11 +67,17 @@ namespace BigWorldGame.Components
             if (mouseMapPoint.HasValue && mouseState.LeftButton == ButtonState.Pressed)
             {
                 var room = Game.CurrentWorld.LoadOrCreateRoom(Game.BasePoint);
-                room.TileLayer[0].SetValue(mouseMapPoint.Value,new Point(9,2));
+                room.TileLayer[0].SetValue(mouseMapPoint.Value,tileSheetControl.SelectTextureInteger);
+            }
+            else if (mouseMapPoint.HasValue && mouseState.RightButton == ButtonState.Pressed)
+            {
+                var room = Game.CurrentWorld.LoadOrCreateRoom(Game.BasePoint);
+                room.TileLayer[0].SetValue(mouseMapPoint.Value,null);
             }
             
-            
-            
+
+            tileSheetControl.Update();
+
         }
 
         public override void Draw(GameTime gameTime)
@@ -69,8 +90,12 @@ namespace BigWorldGame.Components
             {
                 batch.Draw(pixeltexture,new Rectangle(mouseMapPoint.Value.X*RenderSettings.TileSize+height,mouseMapPoint.Value.Y*RenderSettings.TileSize+height,RenderSettings.TileSize,RenderSettings.TileSize),mouseColor );
             }
+
+            
             
             batch.End();
+            
+            tileSheetControl.Draw();
         }
     }
 }
