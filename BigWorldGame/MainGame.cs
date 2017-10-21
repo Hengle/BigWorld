@@ -9,7 +9,8 @@ namespace BigWorldGame
     public class MainGame : Game
     {
         public readonly World CurrentWorld = new World();
-
+        public int CurrentLayer = -1;
+        
         public Point BasePoint;
         
         public MainGame()
@@ -20,6 +21,8 @@ namespace BigWorldGame
             guiRenderer = new GuiRenderer(this);
             Components.Add(guiRenderer);
         }
+
+        
 
         public override void Draw(GameTime gameTime)
         {

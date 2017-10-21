@@ -9,7 +9,7 @@
             </Shader>
             <Attributes>
                 <attribute name="position">Position</attribute>
-              <attribute name="tileIndex">Normal</attribute>
+                <attribute name="tileIndex">Normal</attribute>
             </Attributes>
         </Pass>
     </Technique>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using engenious;
 
 namespace BigWorld.Map
@@ -18,6 +19,28 @@ namespace BigWorld.Map
             Point = point;
             //GroundValue
             TileLayer.Add(new Layer<uint>());
+        }
+
+        public Layer<uint> this[int index]
+        {
+            get { return GetLayer(index); }
+        }
+        
+        public Layer<uint> GetLayer(int index)
+        {
+            if (index < 0)
+                throw new IndexOutOfRangeException();
+            
+            if (TileLayer.Count <= index)
+            {
+                var layer = new Layer<uint>();
+                
+                TileLayer.Add(layer);
+                
+                return layer;
+            }
+
+            return TileLayer[index];
         }
         
         

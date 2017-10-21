@@ -37,7 +37,7 @@ namespace BigWorldGame.Graphics
             int l = 0;
             
             foreach (var layer in room.TileLayer)
-            {
+            {   
                 for (int x = 0; x < Room.SizeX; x++)
                 {
                     for (int y = 0; y < Room.SizeY; y++)
@@ -45,13 +45,13 @@ namespace BigWorldGame.Graphics
                         var tileIndex = layer.GetValue(x,y);
 
                         if (tileIndex.HasValue)
-                        {
+                        {                            
                             var index = tileIndex.Value;
-                            vertices.Add(new MapVertex(x + 0, y + 0, y, index));
-                            vertices.Add(new MapVertex(x + 1, y + 0, y, index));
+                            vertices.Add(new MapVertex(x + 0, y + 0, l, index));
+                            vertices.Add(new MapVertex(x + 1, y + 0, l, index));
 
-                            vertices.Add(new MapVertex(x + 0, y + 1, y, index));
-                            vertices.Add(new MapVertex(x + 1, y + 1, y, index));
+                            vertices.Add(new MapVertex(x + 0, y + 1, l, index));
+                            vertices.Add(new MapVertex(x + 1, y + 1, l, index));
                         }
                     }
                 }
@@ -96,6 +96,7 @@ namespace BigWorldGame.Graphics
             spriteSheet.Textures.SamplerState = NearestSampler;
             effect.Parameters["TileTextures"].SetValue(spriteSheet.Textures);
             effect.Parameters["WorldViewProj"].SetValue(projection * view *  world);
+            
 
             foreach (var pass in effect.CurrentTechnique.Passes.PassesList)
             {

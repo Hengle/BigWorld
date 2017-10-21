@@ -64,7 +64,9 @@ namespace BigWorldGame.Components
 
         public override void Draw(GameTime gameTime)
         {
-            Matrix projection = Matrix.CreateOrthographic(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height,-0.1f, 10);
+            Matrix projection = Matrix.CreateOrthographic(
+                GraphicsDevice.Viewport.Width, 
+                GraphicsDevice.Viewport.Height,-1.1f, 10);
 
             var posX = 16*Room.SizeX;
             var posY = 16*Room.SizeY;
@@ -75,6 +77,8 @@ namespace BigWorldGame.Components
             //Matrix projection = Matrix.CreateOrthographicOffCenter(0,GraphicsDevice.Viewport.Width, 0 ,
             //    GraphicsDevice.Viewport.Height, -0.1f, 1000);
             //Matrix view = Matrix.CreateLookAt(new Vector3(0,0,1000),Vector3.Zero, Vector3.UnitY)*Matrix.CreateScaling(new Vector3(2));
+            
+            effect.Parameters["CurrentLayer"].SetValue(Game.CurrentLayer);
             
             for (int i = 0; i < renderers.Length; i++)
             {

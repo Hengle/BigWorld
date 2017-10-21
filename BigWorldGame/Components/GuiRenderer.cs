@@ -1,10 +1,11 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-using BigWorld.Map;
+﻿using BigWorld.Map;
 using BigWorldGame.Controlls;
 using engenious;
 using engenious.Graphics;
 using engenious.Input;
-using OpenTK.Graphics.ES30;
+using ButtonState = engenious.Input.ButtonState;
+using Keyboard = engenious.Input.Keyboard;
+using Mouse = engenious.Input.Mouse;
 
 namespace BigWorldGame.Components
 {
@@ -15,13 +16,19 @@ namespace BigWorldGame.Components
         private SpriteBatch batch;
         
         private Texture2D pixeltexture;
-        private Texture2D dungeonSheet; 
+        private Texture2D dungeonSheet;
+
+        private SpriteFont gameFont;
         
         private Color mouseColor = Color.Red * 0.3f;
 
         private SelectTileSheetControl tileSheetControl;
         
         private Point? mouseMapPoint = null;
+
+        private int currentLayer = 0;
+        private Trigger<bool> pageUpTrigger = new Trigger<bool>();
+        private Trigger<bool> pageDownTrigger = new Trigger<bool>();
         
         public GuiRenderer(MainGame game) : base(game)
         {
@@ -36,6 +43,7 @@ namespace BigWorldGame.Components
             pixeltexture.SetData(new Color[] {Color.White});
             
             dungeonSheet = Game.Content.Load<Texture2D>("Spritesheets/TileSheetDungeon");
+            gameFont = Game.Content.Load<SpriteFont>("Fonts/Hud");
             
             tileSheetControl= new SelectTileSheetControl();
             tileSheetControl.LoadContent(Game);
@@ -67,15 +75,33 @@ namespace BigWorldGame.Components
             if (mouseMapPoint.HasValue && mouseState.LeftButton == ButtonState.Pressed)
             {
                 var room = Game.CurrentWorld.LoadOrCreateRoom(Game.BasePoint);
-                room.TileLayer[0].SetValue(mouseMapPoint.Value,tileSheetControl.SelectTextureInteger);
+                room[currentLayer].SetValue(mouseMapPoint.Value,tileSheetControl.SelectTextureInteger);
             }
             else if (mouseMapPoint.HasValue && mouseState.RightButton == ButtonState.Pressed)
             {
                 var room = Game.CurrentWorld.LoadOrCreateRoom(Game.BasePoint);
-                room.TileLayer[0].SetValue(mouseMapPoint.Value,null);
+                room[currentLayer].SetValue(mouseMapPoint.Value,null);
             }
             
+            
+            //Keyboard
+            var keyState = Keyboard.GetState();
 
+            if (pageUpTrigger.IsChanged(keyState.IsKeyDown(Keys.PageUp),i => i))
+            {
+                currentLayer++;
+            }
+            else if (pageDownTrigger.IsChanged(keyState.IsKeyDown(Keys.PageDown),i => i))
+            {
+                currentLayer--;
+                if (currentLayer < 0)
+                {
+                    currentLayer = 0;
+                }
+            }
+
+
+            Game.CurrentLayer = currentLayer;
             tileSheetControl.Update();
 
         }
@@ -90,9 +116,11 @@ namespace BigWorldGame.Components
             {
                 batch.Draw(pixeltexture,new Rectangle(mouseMapPoint.Value.X*RenderSettings.TileSize+height,mouseMapPoint.Value.Y*RenderSettings.TileSize+height,RenderSettings.TileSize,RenderSettings.TileSize),mouseColor );
             }
+            
+            
+            batch.DrawString(gameFont,$"Layer:{currentLayer}",new Vector2(10,10),Color.White );
+            
 
-            
-            
             batch.End();
             
             tileSheetControl.Draw();
