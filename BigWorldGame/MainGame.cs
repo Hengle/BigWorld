@@ -1,4 +1,5 @@
-﻿using BigWorld.Map;
+﻿using BigWorld;
+using BigWorld.Map;
 using BigWorldGame.Components;
 using engenious;
 using engenious.Graphics;
@@ -12,6 +13,8 @@ namespace BigWorldGame
         public int CurrentLayer = -1;
         
         public Point BasePoint;
+
+        public GameState CurrentGameState = GameState.Build;
         
         public MainGame()
         {   
@@ -27,7 +30,6 @@ namespace BigWorldGame
         public override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            //GraphicsDevice.Clear(Color.White);
 
             GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Height,Window.ClientSize.Height);
             mapRenderer.Draw(gameTime);
@@ -37,13 +39,17 @@ namespace BigWorldGame
             
         }
         
-        private Trigger<bool> upTrigger = new Trigger<bool>();
-        private Trigger<bool> downTrigger = new Trigger<bool>();
+        private readonly Trigger<bool> upTrigger = new Trigger<bool>();
+        private readonly Trigger<bool> downTrigger = new Trigger<bool>();
+        private readonly Trigger<bool> leftTrigger = new Trigger<bool>();
+        private readonly Trigger<bool> rightTrigger = new Trigger<bool>();
         
-        private Trigger<bool> leftTrigger = new Trigger<bool>();
-        private Trigger<bool> rightTrigger = new Trigger<bool>();
-        private MapRenderer mapRenderer;
-        private GuiRenderer guiRenderer;
+        private readonly Trigger<bool> debugTrigger = new Trigger<bool>();
+        private Trigger<bool> buildTrigger = new Trigger<bool>();        
+
+
+        private readonly MapRenderer mapRenderer;
+        private readonly GuiRenderer guiRenderer;
 
         public override void Update(GameTime gameTime)
         {
@@ -66,6 +72,16 @@ namespace BigWorldGame
             if (rightTrigger.IsChanged(keyState.IsKeyDown(Keys.D),k => k))
             {
                 BasePoint = new Point(BasePoint.X+1,BasePoint.Y);
+            }
+
+            if (buildTrigger.IsChanged(keyState.IsKeyDown(Keys.F4), k => k))
+            {
+                CurrentGameState = GameState.Build;
+            }
+            
+            if (debugTrigger.IsChanged(keyState.IsKeyDown(Keys.F5), k => k))
+            {
+                CurrentGameState = GameState.Debug;
             }
             
             base.Update(gameTime);

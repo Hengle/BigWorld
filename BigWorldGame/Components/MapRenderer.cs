@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using BigWorld;
 using BigWorld.Map;
 using BigWorldGame.Graphics;
 using engenious;
@@ -73,12 +74,19 @@ namespace BigWorldGame.Components
             
             Matrix view = Matrix.CreateLookAt(new Vector3(posX,posY,10),new Vector3(posX,posY,0), Vector3.UnitY) 
                           * Matrix.CreateScaling(new Vector3(2));
+
+
+            if (Game.CurrentGameState == GameState.Build)
+            {
+                effect.CurrentTechnique = effect.Techniques["Build"];
+                effect.Parameters["CurrentLayer"].SetValue(Game.CurrentLayer);
+            }
+            else if (Game.CurrentGameState == GameState.Debug || Game.CurrentGameState == GameState.Running)
+            {
+                effect.CurrentTechnique = effect.Techniques["Run"];
+            }
             
-            //Matrix projection = Matrix.CreateOrthographicOffCenter(0,GraphicsDevice.Viewport.Width, 0 ,
-            //    GraphicsDevice.Viewport.Height, -0.1f, 1000);
-            //Matrix view = Matrix.CreateLookAt(new Vector3(0,0,1000),Vector3.Zero, Vector3.UnitY)*Matrix.CreateScaling(new Vector3(2));
             
-            effect.Parameters["CurrentLayer"].SetValue(Game.CurrentLayer);
             
             for (int i = 0; i < renderers.Length; i++)
             {

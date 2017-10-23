@@ -50,6 +50,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameState.cs" />
     <Compile Include="Map\Layer.cs" />
     <Compile Include="Map\Room.cs" />
     <Compile Include="Map\World.cs" />

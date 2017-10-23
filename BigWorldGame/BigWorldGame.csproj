@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\GuiRenderer.cs" />
+    <Compile Include="Components\Gui\BuildGuiRenderer.cs" />
     <Compile Include="Components\MapRenderer.cs" />
     <Compile Include="Controlls\BaseControl.cs" />
     <Compile Include="Controlls\SelectTileSheetControl.cs" />
@@ -80,8 +81,10 @@
     <Content Include="Content\Fonts\HeadlineFont.spritefont" />
     <Content Include="Content\Fonts\Hud.spritefont" />
     <Content Include="Content\simple.glsl" />
-    <Content Include="Content\simple\simple.ps" />
-    <Content Include="Content\simple\simple.vs" />
+    <Content Include="Content\simple\build.ps" />
+    <Content Include="Content\simple\build.vs" />
+    <Content Include="Content\simple\run.ps" />
+    <Content Include="Content\simple\run.vs" />
     <Content Include="Content\Spritesheets\TileSheetCharacter.png" />
     <Content Include="Content\Spritesheets\TileSheetDungeon.png" />
     <Content Include="Content\Spritesheets\TileSheetIndoor.png" />
