@@ -62,19 +62,19 @@ namespace BigWorldGame
         {
             var keyState = Keyboard.GetState();
             
-            if (buildTrigger.IsChanged(keyState.IsKeyDown(Keys.F4), k => k))
+            if (buildTrigger.IsChanged(keyState.IsKeyDown(Keys.F4), k => k) && CurrentGameState != GameState.Build)
             {
                 CurrentGameState = GameState.Build;
                 SimulationComponent.Reset(GameState.Build);
             }
             
-            if (debugTrigger.IsChanged(keyState.IsKeyDown(Keys.F5), k => k))
+            if (debugTrigger.IsChanged(keyState.IsKeyDown(Keys.F5), k => k) && CurrentGameState != GameState.Debug)
             {
                 CurrentGameState = GameState.Debug;
                 SimulationComponent.Reset(GameState.Debug);
             }
 
-            if (runTrigger.IsChanged(keyState.IsKeyDown(Keys.F6),k => k))
+            if (runTrigger.IsChanged(keyState.IsKeyDown(Keys.F6),k => k) && CurrentGameState != GameState.Running)
             {
                 CurrentGameState = GameState.Running;
                 SimulationComponent.Reset(GameState.Running);

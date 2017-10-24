@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using engenious;
 
 namespace BigWorld.Map
 {
-    public class Layer<T>
-        where T : struct 
+    public class Layer<T> where T : struct 
     {
         public readonly T?[] Values = new T?[Room.SizeX* Room.SizeY];
 
@@ -42,5 +44,26 @@ namespace BigWorld.Map
 
             return y * Room.SizeY + x;
         }
+
+        public Point GetPointByIndex(int index)
+        {
+            var x = index % Room.SizeY;
+            var y = index / Room.SizeY;
+            
+            return new Point(x,y);
+        }
+
+        public IEnumerable<KeyValuePair<Point,T>> GetPositivValues()
+        {
+            for (int i = 0; i < Values.Length; i++)
+            {
+                var value = Values[i];
+                if (value.HasValue)
+                {
+                    yield return new KeyValuePair<Point, T>(GetPointByIndex(i),value.Value);
+                }
+            }
+        }
+
     }
 }
