@@ -14,6 +14,9 @@ namespace BigWorld.Map
         public Layer<bool> BlockLayer { get; } = new Layer<bool>();
         public List<Layer<uint>> TileLayer {get;} = new List<Layer<uint>>();
         
+        public Color AmbientColor { get; set; } = Color.White;
+        public float AmbientIntensity { get; set; } = 1;
+        
         public Room(Point point)
         {
             Point = point;

@@ -27,6 +27,8 @@ namespace BigWorldGame.Components.Gui
         private readonly Trigger<bool> pageUpTrigger = new Trigger<bool>();
         private readonly Trigger<bool> pageDownTrigger = new Trigger<bool>();
 
+        private readonly Trigger<bool> groundFill = new Trigger<bool>();
+        
         public BuildGuiRenderer(MainGame game) : base(game)
         {
             Game = game;
@@ -69,12 +71,12 @@ namespace BigWorldGame.Components.Gui
 
             if (mouseMapPoint.HasValue && mouseState.LeftButton == ButtonState.Pressed)
             {
-                var room = Game.CurrentWorld.LoadOrCreateRoom(Game.BasePoint);
+                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.BasePoint);
                 room[currentLayer].SetValue(mouseMapPoint.Value,tileSheetControl.SelectTextureInteger);
             }
             else if (mouseMapPoint.HasValue && mouseState.RightButton == ButtonState.Pressed)
             {
-                var room = Game.CurrentWorld.LoadOrCreateRoom(Game.BasePoint);
+                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.BasePoint);
                 room[currentLayer].SetValue(mouseMapPoint.Value,null);
             }
             
@@ -95,6 +97,20 @@ namespace BigWorldGame.Components.Gui
                 }
             }
 
+            if (groundFill.IsChanged((keyState.IsKeyDown(Keys.F)),i => i))
+            {
+                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.BasePoint);
+                
+                for (int x = 0; x < Room.SizeX; x++)
+                {
+                    for (int y = 0; y < Room.SizeY; y++)
+                    {
+                        room[0].SetValue(new Point(x,y), tileSheetControl.SelectTextureInteger);
+                    }
+                    
+                }
+            }
+            
 
             Game.CurrentLayer = currentLayer;
             tileSheetControl.Update();

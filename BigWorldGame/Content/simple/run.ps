@@ -1,16 +1,36 @@
 #version 130
 
 uniform sampler2DArray TileTextures;
-uniform int CurrentLayer;
+
+uniform vec2 LightPosition;
+
+uniform float AmbientIntensity;
+uniform vec4 AmbientColor;
+
+in vec4 gl_FragCoord;
 
 in vec2 psTexcoord;
 flat in uint psTileIndex;
+in vec2 psPosition;
 
 out vec4 outColor;
+
 
 void main()
 {
 	vec4 texColor = texture(TileTextures,vec3(psTexcoord,psTileIndex));
 	
-	outColor = texColor;
+	vec2 distVec =  LightPosition - psPosition.xy;
+	float dist = dot(distVec,distVec);
+	
+	dist = 1 - clamp(dist /2,0,1); 
+	
+	
+	vec4 IAmbient = texColor * AmbientColor * AmbientIntensity;
+	IAmbient = vec4(IAmbient.rgb,texColor.a);
+	
+	vec4 ILight = texColor * vec4(vec3(dist),1);
+	
+	outColor = IAmbient + ILight ;
+	outColor = clamp(outColor,0,1);
 }

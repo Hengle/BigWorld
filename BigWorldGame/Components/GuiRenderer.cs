@@ -1,4 +1,5 @@
-﻿using BigWorld;
+﻿using System;
+using BigWorld;
 using BigWorld.Map;
 using BigWorldGame.Components.Gui;
 using BigWorldGame.Controlls;
@@ -16,6 +17,7 @@ namespace BigWorldGame.Components
         public new readonly MainGame Game;
 
         private BuildGuiRenderer buildGuiRenderer;
+        private DebugGuiRenderer debugGuiRenderer;
         
         public GuiRenderer(MainGame game) : base(game)
         {
@@ -26,6 +28,9 @@ namespace BigWorldGame.Components
         {        
             buildGuiRenderer = new BuildGuiRenderer(Game);
             buildGuiRenderer.LoadContent();
+            
+            debugGuiRenderer = new DebugGuiRenderer(Game);
+            debugGuiRenderer.LoadContent();
         }
 
         
@@ -33,17 +38,35 @@ namespace BigWorldGame.Components
         
         public override void Update(GameTime gameTime)
         {
-            if (Game.CurrentGameState == GameState.Build)
-            {
-                buildGuiRenderer.Update(gameTime);
-            }
+            switch(Game.CurrentGameState)
+                {
+                    case GameState.Build:
+                        buildGuiRenderer.Update(gameTime);
+                        break;
+                    case GameState.Debug:
+                        debugGuiRenderer.Update(gameTime);
+                        break;
+                    case GameState.Running:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
         }
 
         public override void Draw(GameTime gameTime)
         {
-            if (Game.CurrentGameState == GameState.Build)
+            switch (Game.CurrentGameState)
             {
-                buildGuiRenderer.Draw(gameTime);
+                case GameState.Build:
+                    buildGuiRenderer.Draw(gameTime);
+                    break;
+                case GameState.Debug:
+                    debugGuiRenderer.Draw(gameTime);
+                    break;
+                case GameState.Running:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

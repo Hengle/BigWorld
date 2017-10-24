@@ -52,7 +52,9 @@
   <ItemGroup>
     <Compile Include="Components\GuiRenderer.cs" />
     <Compile Include="Components\Gui\BuildGuiRenderer.cs" />
+    <Compile Include="Components\Gui\DebugGuiRenderer.cs" />
     <Compile Include="Components\MapRenderer.cs" />
+    <Compile Include="Components\SimulationComponent.cs" />
     <Compile Include="Controlls\BaseControl.cs" />
     <Compile Include="Controlls\SelectTileSheetControl.cs" />
     <Compile Include="Graphics\MapVertex.cs" />

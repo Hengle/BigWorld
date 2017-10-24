@@ -9,20 +9,30 @@ namespace BigWorldGame
 {
     public class MainGame : Game
     {
-        public readonly World CurrentWorld = new World();
+        
         public int CurrentLayer = -1;
         
-        public Point BasePoint;
+        
 
         public GameState CurrentGameState = GameState.Build;
+                
+        private readonly Trigger<bool> debugTrigger = new Trigger<bool>();
+        private Trigger<bool> buildTrigger = new Trigger<bool>();
+        
+        public readonly MapRenderer MapRenderer;
+        public readonly GuiRenderer GuiRenderer;
+        public readonly SimulationComponent SimulationComponent;
         
         public MainGame()
         {   
-            mapRenderer = new MapRenderer(this);
-            Components.Add(mapRenderer);
+            MapRenderer = new MapRenderer(this);
+            Components.Add(MapRenderer);
             
-            guiRenderer = new GuiRenderer(this);
-            Components.Add(guiRenderer);
+            GuiRenderer = new GuiRenderer(this);
+            Components.Add(GuiRenderer);
+            
+            SimulationComponent = new SimulationComponent(this);
+            Components.Add(SimulationComponent);
         }
 
         
@@ -32,48 +42,17 @@ namespace BigWorldGame
             GraphicsDevice.Clear(Color.Black);
 
             GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Height,Window.ClientSize.Height);
-            mapRenderer.Draw(gameTime);
+            MapRenderer.Draw(gameTime);
             
             GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Width,Window.ClientSize.Height);
-            guiRenderer.Draw(gameTime);
+            GuiRenderer.Draw(gameTime);
             
         }
-        
-        private readonly Trigger<bool> upTrigger = new Trigger<bool>();
-        private readonly Trigger<bool> downTrigger = new Trigger<bool>();
-        private readonly Trigger<bool> leftTrigger = new Trigger<bool>();
-        private readonly Trigger<bool> rightTrigger = new Trigger<bool>();
-        
-        private readonly Trigger<bool> debugTrigger = new Trigger<bool>();
-        private Trigger<bool> buildTrigger = new Trigger<bool>();        
-
-
-        private readonly MapRenderer mapRenderer;
-        private readonly GuiRenderer guiRenderer;
 
         public override void Update(GameTime gameTime)
         {
             var keyState = Keyboard.GetState();
-
-            if (upTrigger.IsChanged(keyState.IsKeyDown(Keys.W),k => k))
-            {
-                BasePoint = new Point(BasePoint.X,BasePoint.Y-1);
-            }
-            if (downTrigger.IsChanged(keyState.IsKeyDown(Keys.S),k => k))
-            {
-                BasePoint = new Point(BasePoint.X,BasePoint.Y+1);
-            }
             
-            if (leftTrigger.IsChanged(keyState.IsKeyDown(Keys.A),k => k))
-            {
-                BasePoint = new Point(BasePoint.X-1,BasePoint.Y);
-            }
-            
-            if (rightTrigger.IsChanged(keyState.IsKeyDown(Keys.D),k => k))
-            {
-                BasePoint = new Point(BasePoint.X+1,BasePoint.Y);
-            }
-
             if (buildTrigger.IsChanged(keyState.IsKeyDown(Keys.F4), k => k))
             {
                 CurrentGameState = GameState.Build;
