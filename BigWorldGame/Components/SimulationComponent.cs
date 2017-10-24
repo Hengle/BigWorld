@@ -10,7 +10,9 @@ namespace BigWorldGame.Components
         
         public World CurrentWorld { get; private set; }
         
-        public Point BasePoint;
+        public Point CurrentRoomCoordinate { get; private set; }
+        public Room CurrentRoom { get; private set; }
+        
         
         private readonly Trigger<bool> upTrigger = new Trigger<bool>();
         private readonly Trigger<bool> downTrigger = new Trigger<bool>();
@@ -29,22 +31,31 @@ namespace BigWorldGame.Components
 
             if (upTrigger.IsChanged(keyState.IsKeyDown(Keys.W),k => k))
             {
-                BasePoint = new Point(BasePoint.X,BasePoint.Y-1);
+                CurrentRoomCoordinate = new Point(CurrentRoomCoordinate.X,CurrentRoomCoordinate.Y-1);
             }
             if (downTrigger.IsChanged(keyState.IsKeyDown(Keys.S),k => k))
             {
-                BasePoint = new Point(BasePoint.X,BasePoint.Y+1);
+                CurrentRoomCoordinate = new Point(CurrentRoomCoordinate.X,CurrentRoomCoordinate.Y+1);
             }
             
             if (leftTrigger.IsChanged(keyState.IsKeyDown(Keys.A),k => k))
             {
-                BasePoint = new Point(BasePoint.X-1,BasePoint.Y);
+                CurrentRoomCoordinate = new Point(CurrentRoomCoordinate.X-1,CurrentRoomCoordinate.Y);
             }
             
             if (rightTrigger.IsChanged(keyState.IsKeyDown(Keys.D),k => k))
             {
-                BasePoint = new Point(BasePoint.X+1,BasePoint.Y);
+                CurrentRoomCoordinate = new Point(CurrentRoomCoordinate.X+1,CurrentRoomCoordinate.Y);
             }
+
+            Room currentRoom;
+            
+            if (!CurrentWorld.TryGetRoom(CurrentRoomCoordinate,out currentRoom))
+            {
+                currentRoom = null;
+            }
+
+            CurrentRoom = currentRoom;
         }
     }
 }

@@ -17,7 +17,8 @@ namespace BigWorldGame
         public GameState CurrentGameState = GameState.Build;
                 
         private readonly Trigger<bool> debugTrigger = new Trigger<bool>();
-        private Trigger<bool> buildTrigger = new Trigger<bool>();
+        private readonly Trigger<bool> buildTrigger = new Trigger<bool>();
+        private readonly Trigger<bool> runTrigger = new Trigger<bool>();
         
         public readonly MapRenderer MapRenderer;
         public readonly GuiRenderer GuiRenderer;
@@ -61,6 +62,11 @@ namespace BigWorldGame
             if (debugTrigger.IsChanged(keyState.IsKeyDown(Keys.F5), k => k))
             {
                 CurrentGameState = GameState.Debug;
+            }
+
+            if (runTrigger.IsChanged(keyState.IsKeyDown(Keys.F6),k => k))
+            {
+                CurrentGameState = GameState.Running;
             }
             
             base.Update(gameTime);

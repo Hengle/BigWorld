@@ -71,12 +71,12 @@ namespace BigWorldGame.Components.Gui
 
             if (mouseMapPoint.HasValue && mouseState.LeftButton == ButtonState.Pressed)
             {
-                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.BasePoint);
+                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
                 room[currentLayer].SetValue(mouseMapPoint.Value,tileSheetControl.SelectTextureInteger);
             }
             else if (mouseMapPoint.HasValue && mouseState.RightButton == ButtonState.Pressed)
             {
-                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.BasePoint);
+                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
                 room[currentLayer].SetValue(mouseMapPoint.Value,null);
             }
             
@@ -99,7 +99,7 @@ namespace BigWorldGame.Components.Gui
 
             if (groundFill.IsChanged((keyState.IsKeyDown(Keys.F)),i => i))
             {
-                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.BasePoint);
+                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
                 
                 for (int x = 0; x < Room.SizeX; x++)
                 {

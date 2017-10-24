@@ -58,7 +58,7 @@ namespace BigWorldGame.Components
                 var x = i % 3 - 1;
                 var y = i / 3 - 1;
 
-                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(new Point(x, y) + Game.SimulationComponent.BasePoint);
+                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(new Point(x, y) + Game.SimulationComponent.CurrentRoomCoordinate);
                 renderers[i].ReloadChunk(room);
             }
         }
@@ -89,13 +89,18 @@ namespace BigWorldGame.Components
                 effect.Parameters["AmbientIntensity"].SetValue(0.2f);
                 effect.Parameters["LightPosition"].SetValue(new Vector2(7,8));
             }
-            
-            
-            
-            for (int i = 0; i < renderers.Length; i++)
+
+            if (Game.CurrentGameState == GameState.Running)
             {
-                var renderer = renderers[i];
-                renderer.Render(GraphicsDevice,effect,view,projection);
+                renderers[4].Render(GraphicsDevice,effect,view,projection);
+            }
+            else
+            {
+                for (int i = 0; i < renderers.Length; i++)
+                {
+                    var renderer = renderers[i];
+                    renderer.Render(GraphicsDevice,effect,view,projection);
+                }   
             }
         }
     }

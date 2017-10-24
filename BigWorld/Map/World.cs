@@ -31,5 +31,10 @@ namespace BigWorld.Map
             }
             return result;
         }
+
+        public bool TryGetRoom(Point currentRoomCoordinate, out Room room)
+        {
+            return roomList.TryGetValue(currentRoomCoordinate, out room);
+        }
     }
 }
