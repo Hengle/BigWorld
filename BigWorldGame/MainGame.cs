@@ -23,6 +23,7 @@ namespace BigWorldGame
         public readonly MapRenderer MapRenderer;
         public readonly GuiRenderer GuiRenderer;
         public readonly SimulationComponent SimulationComponent;
+        public readonly EntityRenderer EntityRenderer;
         
         public MainGame()
         {   
@@ -34,6 +35,9 @@ namespace BigWorldGame
             
             SimulationComponent = new SimulationComponent(this);
             Components.Add(SimulationComponent);
+            
+            EntityRenderer = new EntityRenderer(this);
+            Components.Add(EntityRenderer);
         }
 
         
@@ -45,8 +49,12 @@ namespace BigWorldGame
             GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Height,Window.ClientSize.Height);
             MapRenderer.Draw(gameTime);
             
+            EntityRenderer.Draw(gameTime);
+            
             GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Width,Window.ClientSize.Height);
             GuiRenderer.Draw(gameTime);
+            
+            
             
         }
 
@@ -57,16 +65,19 @@ namespace BigWorldGame
             if (buildTrigger.IsChanged(keyState.IsKeyDown(Keys.F4), k => k))
             {
                 CurrentGameState = GameState.Build;
+                SimulationComponent.Reset(GameState.Build);
             }
             
             if (debugTrigger.IsChanged(keyState.IsKeyDown(Keys.F5), k => k))
             {
                 CurrentGameState = GameState.Debug;
+                SimulationComponent.Reset(GameState.Debug);
             }
 
             if (runTrigger.IsChanged(keyState.IsKeyDown(Keys.F6),k => k))
             {
                 CurrentGameState = GameState.Running;
+                SimulationComponent.Reset(GameState.Running);
             }
             
             base.Update(gameTime);

@@ -2,7 +2,6 @@
 using BigWorld;
 using BigWorld.Map;
 using BigWorldGame.Components.Gui;
-using BigWorldGame.Controlls;
 using engenious;
 using engenious.Graphics;
 using engenious.Input;

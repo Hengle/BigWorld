@@ -2,7 +2,7 @@
 using engenious.Graphics;
 using engenious.Input;
 
-namespace BigWorldGame.Controlls
+namespace BigWorldGame.Controls
 {
     public class SelectTileSheetControl : BaseControl
     {

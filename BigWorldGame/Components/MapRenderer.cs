@@ -75,6 +75,7 @@ namespace BigWorldGame.Components
             Matrix view = Matrix.CreateLookAt(new Vector3(posX,posY,10),new Vector3(posX,posY,0), Vector3.UnitY) 
                           * Matrix.CreateScaling(new Vector3(2));
 
+            
 
             if (Game.CurrentGameState == GameState.Build)
             {

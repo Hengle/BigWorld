@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using BigWorld.Map;
-using BigWorldGame.Controlls;
+using BigWorldGame.Controls;
 using engenious;
 using engenious.Graphics;
 using engenious.Input;

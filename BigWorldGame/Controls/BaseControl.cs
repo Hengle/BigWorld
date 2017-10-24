@@ -1,6 +1,6 @@
 ﻿using engenious;
 
-namespace BigWorldGame.Controlls
+namespace BigWorldGame.Controls
 {
     public class BaseControl
     {

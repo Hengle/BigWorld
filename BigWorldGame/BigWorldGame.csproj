@@ -50,13 +50,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\EntityRenderer.cs" />
     <Compile Include="Components\GuiRenderer.cs" />
     <Compile Include="Components\Gui\BuildGuiRenderer.cs" />
     <Compile Include="Components\Gui\DebugGuiRenderer.cs" />
     <Compile Include="Components\MapRenderer.cs" />
     <Compile Include="Components\SimulationComponent.cs" />
-    <Compile Include="Controlls\BaseControl.cs" />
-    <Compile Include="Controlls\SelectTileSheetControl.cs" />
+    <Compile Include="Controls\BaseControl.cs" />
+    <Compile Include="Controls\SelectTileSheetControl.cs" />
+    <Compile Include="Graphics\CharacterVertex.cs" />
     <Compile Include="Graphics\MapVertex.cs" />
     <Compile Include="Graphics\RoomRenderer.cs" />
     <Compile Include="Graphics\SpriteSheet.cs" />
@@ -87,6 +89,7 @@
     <Content Include="Content\simple\build.vs" />
     <Content Include="Content\simple\run.ps" />
     <Content Include="Content\simple\run.vs" />
+    <Content Include="Content\simple\runCharacter.vs" />
     <Content Include="Content\Spritesheets\TileSheetCharacter.png" />
     <Content Include="Content\Spritesheets\TileSheetDungeon.png" />
     <Content Include="Content\Spritesheets\TileSheetIndoor.png" />
