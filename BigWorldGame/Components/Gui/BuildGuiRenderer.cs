@@ -48,7 +48,7 @@ namespace BigWorldGame.Components.Gui
             tileSheetControl= new SelectTileSheetControl();
             tileSheetControl.LoadContent(Game);
             tileSheetControl.SetTileSheet(dungeonSheet);
-            tileSheetControl.Position = new Rectangle(GraphicsDevice.Viewport.Width-300,10,300,GraphicsDevice.Viewport.Height);
+            tileSheetControl.ClientRectangle = new Rectangle(GraphicsDevice.Viewport.Width-300,10,300,GraphicsDevice.Viewport.Height);
         }
 
         public override void Update(GameTime gameTime)
@@ -128,7 +128,7 @@ namespace BigWorldGame.Components.Gui
             }
                 
             batch.DrawString(gameFont,$"Layer:{currentLayer}",new Vector2(10,10),Color.White );
-            tileSheetControl.Draw();
+            //tileSheetControl.Draw();
 
             batch.End();
         }

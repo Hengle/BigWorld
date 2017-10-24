@@ -8,6 +8,7 @@ using engenious.Input;
 using ButtonState = engenious.Input.ButtonState;
 using Keyboard = engenious.Input.Keyboard;
 using Mouse = engenious.Input.Mouse;
+using BigWorldGame.Controls;
 
 namespace BigWorldGame.Components
 {
@@ -15,58 +16,40 @@ namespace BigWorldGame.Components
     {
         public new readonly MainGame Game;
 
-        private BuildGuiRenderer buildGuiRenderer;
-        private DebugGuiRenderer debugGuiRenderer;
+        public RootControl RootControl { get; private set; }
         
+        public SpriteBatch SpriteBatch { get; private set; }
+
         public GuiRenderer(MainGame game) : base(game)
         {
             Game = game;
+            RootControl = new RootControl();
+            RootControl.ClientRectangle = new Rectangle(0,0,game.Window.ClientSize.Width, game.Window.ClientSize.Height);
+            RootControl.BackgroundColor = Color.Green;
         }
 
         protected override void LoadContent()
-        {        
-            buildGuiRenderer = new BuildGuiRenderer(Game);
-            buildGuiRenderer.LoadContent();
-            
-            debugGuiRenderer = new DebugGuiRenderer(Game);
-            debugGuiRenderer.LoadContent();
-        }
+        {
+            RootControl.LoadContent(Game);
 
-        
-        
+            var child = new Button("Demo") { ClientRectangle = new Rectangle(10, 10, 100, 100), BackgroundColor = Color.Red };
+            child.LoadContent(Game);
+            RootControl.Children.Add(child);
+
+
+            SpriteBatch = new SpriteBatch(Game.GraphicsDevice);
+        }
         
         public override void Update(GameTime gameTime)
         {
-            switch(Game.CurrentGameState)
-                {
-                    case GameState.Build:
-                        buildGuiRenderer.Update(gameTime);
-                        break;
-                    case GameState.Debug:
-                        debugGuiRenderer.Update(gameTime);
-                        break;
-                    case GameState.Running:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+            RootControl.Update();
         }
 
         public override void Draw(GameTime gameTime)
         {
-            switch (Game.CurrentGameState)
-            {
-                case GameState.Build:
-                    buildGuiRenderer.Draw(gameTime);
-                    break;
-                case GameState.Debug:
-                    debugGuiRenderer.Draw(gameTime);
-                    break;
-                case GameState.Running:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            SpriteBatch.Begin();
+            RootControl.Draw(SpriteBatch, RootControl.ClientRectangle, 1);
+            SpriteBatch.End();
         }
     }
 }

@@ -4,13 +4,11 @@ using engenious.Input;
 
 namespace BigWorldGame.Controls
 {
-    public class SelectTileSheetControl : BaseControl
+    public class SelectTileSheetControl : Control
     {
 
         private Texture2D tilesheet;
         private Texture2D pixel;
-        
-        private SpriteBatch batch;
 
         public int ScrollPosition = 0;
         public int DrawSize = 32;
@@ -35,8 +33,7 @@ namespace BigWorldGame.Controls
 
         public override void LoadContent(Game game)
         {
-            batch = new SpriteBatch(game.GraphicsDevice);
-            
+
             pixel = new Texture2D(game.GraphicsDevice,1,1);
             pixel.SetData(new [] {Color.White});
         }
@@ -45,9 +42,9 @@ namespace BigWorldGame.Controls
         {
             var mouseState = Mouse.GetState();
 
-            columns = Position.Width / (DrawSize + 2 * DrawMargin);
+            columns = ClientRectangle.Width / (DrawSize + 2 * DrawMargin);
 
-            if (!Position.Contains(mouseState.X, mouseState.Y))
+            if (!ClientRectangle.Contains(mouseState.X, mouseState.Y))
             {
                 HooverTexture = null;
                 HooverTextureInteger = null;
@@ -56,7 +53,7 @@ namespace BigWorldGame.Controls
             
             //HoverPosition
             
-            var mouseRelativPosition = new Point(mouseState.X,mouseState.Y) - Position.Location;
+            var mouseRelativPosition = new Point(mouseState.X,mouseState.Y) - ClientRectangle.Location;
             var hooverRow = mouseRelativPosition.Y / (DrawSize + 2 * DrawMargin) + ScrollPosition;
             var hooverColumn = mouseRelativPosition.X / (DrawSize + 2 * DrawMargin);
 
@@ -99,14 +96,14 @@ namespace BigWorldGame.Controls
             oldWheelPosition = wheelValue;
         }
 
-        public override void Draw()
+        public override void Draw(SpriteBatch batch, Rectangle destinationRectangle, float alpha)
         {
             if(tilesheet == null)
                 return;
             
             batch.Begin();
 
-            batch.Draw(pixel,Position,Color.Azure);
+            batch.Draw(pixel, ClientRectangle, Color.Azure);
             
             var texSizeX = (tilesheet.Width + 1) / 17;
             var texSizeY = (tilesheet.Height + 1) / 17f;
@@ -129,8 +126,8 @@ namespace BigWorldGame.Controls
                 
                 
                 
-                var destRec = new Rectangle(x * (DrawSize) + Position.X + (2*x+1) *DrawMargin
-                    ,y * (DrawSize) + Position.Y + (2*y+1) * DrawMargin 
+                var destRec = new Rectangle(x * (DrawSize) + ClientRectangle.X + (2*x+1) *DrawMargin
+                    ,y * (DrawSize) + ClientRectangle.Y + (2*y+1) * DrawMargin 
                     , DrawSize, DrawSize);
                 
                 var sourceRec = new Rectangle(texX * 17, texY * 17, 16, 16);
