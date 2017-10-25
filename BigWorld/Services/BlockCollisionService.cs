@@ -12,19 +12,20 @@ namespace BigWorld.Services
             if (!world.TryGetRoom(entity.CurrentRoom,out room))
                 return;
 
+            var goalPosition = entity.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds + entity.RoomPosition;
+            
             foreach (var value in room.BlockLayer.GetPositivValues())
             {
                 if (value.Value)
                 {
-                    var distance = entity.RoomPosition - value.Key.ToVector2();
-
+                    var distance = goalPosition - value.Key.ToVector2();
+                    
                     if ((distance.X > -1 && distance.X < 1) && (distance.Y > -1 && distance.Y < 1))
                     {
-                        float x = distance.X < 0 ? distance.X : 1 - distance.X;
-                        float y = distance.Y < 0 ? 1 + distance.Y : 1 - distance.Y;
-                        
-                        var corr = new Vector2(x, y);
-                        entity.RoomPosition += corr;
+                        //var x = distance.X < 0 ? 1 + distance.X : 1 - distance.X;
+                        //var y = distance.Y < 0 ? 1 + distance.Y : 1 - distance.Y;
+
+                        entity.Velocity = entity.Velocity * new Vector2(0, 0);
                     }
                 }
             }

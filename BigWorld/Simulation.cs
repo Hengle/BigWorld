@@ -16,8 +16,10 @@ namespace BigWorld
 
         private readonly List<BaseService> services = new List<BaseService>()
         {
-            new RoomCollisionService(),
+            new VelocityService(),
             new BlockCollisionService(),
+            new MovementService(),
+            new RoomCollisionService(),
         };
         
         public void Start(World world)

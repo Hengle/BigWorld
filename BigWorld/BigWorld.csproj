@@ -58,6 +58,8 @@
     <Compile Include="Player.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\BlockCollisionService.cs" />
+    <Compile Include="Services\MovementService.cs" />
+    <Compile Include="Services\VelocityService.cs" />
     <Compile Include="Services\RoomCollisionService.cs" />
     <Compile Include="Simulation.cs" />
   </ItemGroup>
