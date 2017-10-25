@@ -19,15 +19,18 @@ namespace BigWorldGame.Components.Gui
         
         private SpriteBatch batch;
         
-        private readonly Color mouseColor = Color.Red * 0.3f;
         private Point? mouseMapPoint = null;
+
+        private bool isBlockMode = false;
         
         private int currentLayer = 0;
-        
         private readonly Trigger<bool> pageUpTrigger = new Trigger<bool>();
         private readonly Trigger<bool> pageDownTrigger = new Trigger<bool>();
 
         private readonly Trigger<bool> groundFill = new Trigger<bool>();
+        
+        
+        
         
         public BuildGuiRenderer(MainGame game) : base(game)
         {
@@ -71,13 +74,32 @@ namespace BigWorldGame.Components.Gui
 
             if (mouseMapPoint.HasValue && mouseState.LeftButton == ButtonState.Pressed)
             {
-                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
-                room[currentLayer].SetValue(mouseMapPoint.Value,tileSheetControl.SelectTextureInteger);
+                var room = Game.SimulationComponent.BuildWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+
+                if (!isBlockMode)
+                {
+                    room[currentLayer].SetValue(mouseMapPoint.Value,tileSheetControl.SelectTextureInteger);
+                }
+                else
+                {
+                    room.BlockLayer.SetValue(mouseMapPoint.Value,true);
+                }
+                
+                
             }
             else if (mouseMapPoint.HasValue && mouseState.RightButton == ButtonState.Pressed)
             {
-                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
-                room[currentLayer].SetValue(mouseMapPoint.Value,null);
+                var room = Game.SimulationComponent.BuildWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+
+                if (!isBlockMode)
+                {
+                    room[currentLayer].SetValue(mouseMapPoint.Value,null);
+                }
+                else
+                {
+                    room.BlockLayer.SetValue(mouseMapPoint.Value,false);
+                }
+                
             }
             
             
@@ -97,9 +119,13 @@ namespace BigWorldGame.Components.Gui
                 }
             }
 
+            isBlockMode = keyState.IsKeyDown(Keys.B);
+            
+            
+            
             if (groundFill.IsChanged((keyState.IsKeyDown(Keys.F)),i => i))
             {
-                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+                var room = Game.SimulationComponent.BuildWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
                 
                 for (int x = 0; x < Room.SizeX; x++)
                 {
@@ -122,11 +148,33 @@ namespace BigWorldGame.Components.Gui
             
             
             var height = (GraphicsDevice.Viewport.Height - Room.SizeY * RenderSettings.TileSize)/2;
+            
+            Color mouseColor = Color.LightBlue * 0.7f;
+
+            if (isBlockMode)
+            {
+                mouseColor = Color.Yellow * 0.7f;
+            }
+            
             if (mouseMapPoint.HasValue)
             {
                 batch.Draw(pixelTexture,new Rectangle(mouseMapPoint.Value.X*RenderSettings.TileSize+height,mouseMapPoint.Value.Y*RenderSettings.TileSize+height,RenderSettings.TileSize,RenderSettings.TileSize),mouseColor );
             }
-                
+            
+            var room = Game.SimulationComponent.BuildWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+
+            for (int x = 0; x < Room.SizeX; x++)
+            {
+                for (int y = 0; y < Room.SizeY; y++)
+                {
+                    var block = room.BlockLayer.GetValue(x, y);
+                    if (block.HasValue && block.Value)
+                    {
+                        batch.Draw(pixelTexture,new Rectangle(x*RenderSettings.TileSize+height,y * RenderSettings.TileSize+height,RenderSettings.TileSize,RenderSettings.TileSize),Color.Yellow * 0.7f ); 
+                    }
+                }
+            }
+            
             batch.DrawString(gameFont,$"Layer:{currentLayer}",new Vector2(10,10),Color.White );
             tileSheetControl.Draw();
 

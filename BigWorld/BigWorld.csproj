@@ -50,10 +50,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entity.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Map\Layer.cs" />
     <Compile Include="Map\Room.cs" />
     <Compile Include="Map\World.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="Services\BaseService.cs" />
+    <Compile Include="Services\BlockCollisionService.cs" />
+    <Compile Include="Services\MovementService.cs" />
+    <Compile Include="Services\VelocityService.cs" />
+    <Compile Include="Services\RoomCollisionService.cs" />
+    <Compile Include="Simulation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\engenious.0.1.10\build\engenious.targets" />
