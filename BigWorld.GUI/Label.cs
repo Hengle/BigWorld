@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using engenious;
 using engenious.Graphics;
 
-namespace BigWorldGame.Controls
+namespace BigWorld.GUI.Controls
 {
     public class Label : Control
     {

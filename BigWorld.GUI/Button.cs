@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using engenious;
 
-namespace BigWorldGame.Controls
+namespace BigWorld.GUI.Controls
 {
     public class Button : Control
     {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using engenious;
 using engenious.Input;
 
-namespace BigWorldGame.Controls
+namespace BigWorld.GUI.Controls
 {
     public class RootControl : Control
     {

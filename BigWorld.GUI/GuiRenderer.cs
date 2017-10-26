@@ -10,7 +10,7 @@ using Keyboard = engenious.Input.Keyboard;
 using Mouse = engenious.Input.Mouse;
 using BigWorldGame.Controls;
 
-namespace BigWorldGame.Components
+namespace BigWorld.GUI.Components
 {
     public class GuiRenderer : DrawableGameComponent
     {

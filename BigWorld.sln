@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.0.0
-MinimumVisualStudioVersion = 10.0.0.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigWorld", "BigWorld/BigWorld.csproj", "{46AAACB9-0360-451D-B884-78C3A9CED460}"
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigWorld", "BigWorld\BigWorld.csproj", "{46AAACB9-0360-451D-B884-78C3A9CED460}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigWorldGame", "BigWorldGame\BigWorldGame.csproj", "{5C6D35F4-C55E-47F3-A3B1-E80E647BD067}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigWorld.GUI", "BigWorld.GUI\BigWorld.GUI.csproj", "{D6394335-7C02-49F8-A2C6-A8584B89E049}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +23,15 @@ Global
 		{5C6D35F4-C55E-47F3-A3B1-E80E647BD067}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C6D35F4-C55E-47F3-A3B1-E80E647BD067}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C6D35F4-C55E-47F3-A3B1-E80E647BD067}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6394335-7C02-49F8-A2C6-A8584B89E049}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6394335-7C02-49F8-A2C6-A8584B89E049}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6394335-7C02-49F8-A2C6-A8584B89E049}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6394335-7C02-49F8-A2C6-A8584B89E049}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {22947B2C-9115-48CA-835A-2C7316E746C5}
 	EndGlobalSection
 EndGlobal

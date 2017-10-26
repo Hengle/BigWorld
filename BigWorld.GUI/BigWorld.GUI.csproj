@@ -1,23 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5C6D35F4-C55E-47F3-A3B1-E80E647BD067}</ProjectGuid>
-    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{D6394335-7C02-49F8-A2C6-A8584B89E049}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BigWorldGame</RootNamespace>
-    <AssemblyName>BigWorldGame</AssemblyName>
+    <RootNamespace>BigWorld.GUI</RootNamespace>
+    <AssemblyName>BigWorld.GUI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -27,7 +24,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -52,53 +48,22 @@
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\EntityRenderer.cs" />
-    <Compile Include="Components\Gui\BuildGuiRenderer.cs" />
-    <Compile Include="Components\Gui\DebugGuiRenderer.cs" />
-    <Compile Include="Components\MapRenderer.cs" />
-    <Compile Include="Components\SimulationComponent.cs" />
-    <Compile Include="Controls\SelectTileSheetControl.cs" />
-    <Compile Include="Graphics\CharacterVertex.cs" />
-    <Compile Include="Graphics\MapVertex.cs" />
-    <Compile Include="Graphics\RoomRenderer.cs" />
-    <Compile Include="Graphics\SpriteSheet.cs" />
-    <Compile Include="MainGame.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Button.cs" />
+    <Compile Include="Control.cs" />
+    <Compile Include="GuiRenderer.cs" />
+    <Compile Include="Label.cs" />
+    <Compile Include="Layout\Alignment.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RenderSettings.cs" />
-    <Compile Include="Trigger.cs" />
+    <Compile Include="RootControl.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-    <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BigWorld\BigWorld.csproj">
-      <Project>{46AAACB9-0360-451D-B884-78C3A9CED460}</Project>
-      <Name>BigWorld</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EngeniousContentReference Include="Content\Content.ecp" />
-    <Content Include="Content\Fonts\BoldFont.spritefont" />
-    <Content Include="Content\Fonts\GameFont.spritefont" />
-    <Content Include="Content\Fonts\HeadlineFont.spritefont" />
-    <Content Include="Content\Fonts\Hud.spritefont" />
-    <Content Include="Content\simple.glsl" />
-    <Content Include="Content\simple\build.ps" />
-    <Content Include="Content\simple\build.vs" />
-    <Content Include="Content\simple\run.ps" />
-    <Content Include="Content\simple\run.vs" />
-    <Content Include="Content\simple\runCharacter.vs" />
-    <Content Include="Content\Spritesheets\TileSheetCharacter.png" />
-    <Content Include="Content\Spritesheets\TileSheetDungeon.png" />
-    <Content Include="Content\Spritesheets\TileSheetIndoor.png" />
-    <Content Include="Content\Spritesheets\TileSheetOutdoor.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\engenious.0.1.10\build\engenious.targets" Condition="Exists('..\packages\engenious.0.1.10\build\engenious.targets')" />
@@ -108,11 +73,4 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\engenious.0.1.10\build\engenious.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\engenious.0.1.10\build\engenious.targets'))" />
   </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

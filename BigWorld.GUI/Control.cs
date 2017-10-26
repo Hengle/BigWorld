@@ -2,12 +2,15 @@
 using engenious.Graphics;
 using System.Collections.Generic;
 using System;
+using BigWorld.GUI.Layout;
 
-namespace BigWorldGame.Controls
+namespace BigWorld.GUI.Controls
 {
     public class Control
     {
-        public Rectangle ClientRectangle= Rectangle.Empty;
+        public Rectangle ClientRectangle { get; set; } = Rectangle.Empty;
+
+        public Rectangle ActualClientRectangle { get; set; } = Rectangle.Empty;
 
         public Rectangle Padding { get; set; } = Rectangle.Empty;
 
@@ -25,6 +28,10 @@ namespace BigWorldGame.Controls
 
         protected void Invalidate() => IsInvalid = true;
 
+        public HorizontalAlignment HorizontalAlignment { get; set; }
+
+        public VerticalAlignment VerticalAlignment { get; set; }
+
         public virtual void LoadContent(Game game)
         {
             Pixel = new Texture2D(game.GraphicsDevice, 1, 1);
@@ -39,8 +46,55 @@ namespace BigWorldGame.Controls
             foreach (var child in Children)
                 child.Update();
 
+            CalculateLayout();
+
             if (IsInvalid)
                 IsInvalid = false;
+        }
+
+        public virtual void CalculateLayout()
+        {
+            foreach(var child in Children)
+            {
+                child.CalculateLayout();
+
+                var positionX = child.ActualClientRectangle.X;
+                var positionY = child.ActualClientRectangle.Y;
+
+                switch (child.HorizontalAlignment)
+                {
+                    case HorizontalAlignment.Right:
+                        positionX = ActualClientRectangle.Width - child.ActualClientRectangle.Width;
+                        break;
+                    case HorizontalAlignment.Left:
+                        positionX = 0;
+                        break;
+                    case HorizontalAlignment.Stretch:
+                        positionY = -1;
+                        break;
+                    default:
+                    case HorizontalAlignment.Center:
+                        positionX = (ActualClientRectangle.Width - child.ActualClientRectangle.Width) / 2;
+                        break;
+                }
+
+                switch(child.VerticalAlignment)
+                {
+                    case VerticalAlignment.Top:
+                        positionY = 0;
+                        break;
+                    case VerticalAlignment.Bottom:
+                        positionY = ActualClientRectangle.Height - child.ActualClientRectangle.Height;
+                        break;
+                    case VerticalAlignment.Stretch:
+                        positionY = -1;
+                        break;
+                    default:
+                    case VerticalAlignment.Center:
+                        positionY = (ActualClientRectangle.Height - child.ActualClientRectangle.Height) / 2;
+                        break;
+                }
+            }
         }
 
 
