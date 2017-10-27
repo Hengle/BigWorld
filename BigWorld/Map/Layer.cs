@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using engenious;
 
@@ -65,5 +66,30 @@ namespace BigWorld.Map
             }
         }
 
+        internal void Serialize(BinaryWriter sw,Action<T,BinaryWriter> serialize)
+        {
+            for (int i = 0; i < Values.Length; i++)
+            {
+                var element = Values[i];
+                sw.Write(element.HasValue);
+                if (element.HasValue)
+                {
+                    serialize(element.Value,sw);
+                }
+            }
+        }
+
+        internal void Deserialize(BinaryReader sr,Func<BinaryReader,T> deserialize)
+        {
+            for (int i = 0; i < Values.Length; i++)
+            {
+                var value = sr.ReadBoolean();
+
+                if (value)
+                {
+                    Values[i] = deserialize(sr);
+                }
+            }
+        }
     }
 }

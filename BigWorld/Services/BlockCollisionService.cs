@@ -6,10 +6,10 @@ namespace BigWorld.Services
 {
     public class BlockCollisionService : BaseService
     {
-        public override void Update(Entity entity, World world, GameTime gameTime)
+        public override void Update(Entity entity, WorldMap worldMap, GameTime gameTime)
         {
             Room room;
-            if (!world.TryGetRoom(entity.CurrentRoom,out room))
+            if (!worldMap.TryGetRoom(entity.CurrentRoom,out room))
                 return;
 
             var goalPosition = entity.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds + entity.RoomPosition;

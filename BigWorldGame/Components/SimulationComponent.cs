@@ -10,12 +10,12 @@ namespace BigWorldGame.Components
     {
         public new MainGame Game;
         
-        public World BuildWorld { get; private set; }
+        public WorldMap BuildWorldMap { get; private set; }
 
         
         
         public readonly Simulation Simulation = new Simulation();
-        public World CurrentWorld => Simulation.CurrentWorld;
+        public WorldMap CurrentWorldMap => Simulation.CurrentWorldMap;
         
         
         public Point CurrentRoomCoordinate { get; private set; }
@@ -33,7 +33,7 @@ namespace BigWorldGame.Components
         public SimulationComponent(MainGame game) : base(game)
         {
             Game = game;
-            BuildWorld = new World();
+            BuildWorldMap = new WorldMap();
         }
 
         public void Reset(GameState state)
@@ -44,7 +44,7 @@ namespace BigWorldGame.Components
             }
             else if (state == GameState.Running)
             {
-                Simulation.Start(BuildWorld);
+                Simulation.Start(BuildWorldMap);
                 Player = Simulation.AddPlayer();
             }
         }
@@ -98,7 +98,7 @@ namespace BigWorldGame.Components
 
             Room currentRoom;
             
-            if (!BuildWorld.TryGetRoom(CurrentRoomCoordinate,out currentRoom))
+            if (!BuildWorldMap.TryGetRoom(CurrentRoomCoordinate,out currentRoom))
             {
                 currentRoom = null;
             }
@@ -109,6 +109,11 @@ namespace BigWorldGame.Components
             {
                 Simulation.Update(gameTime);
             }
+        }
+
+        public void SetWorld(WorldMap loadWorld)
+        {
+            BuildWorldMap = loadWorld;
         }
     }
 }

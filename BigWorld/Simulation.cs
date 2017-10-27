@@ -7,7 +7,7 @@ namespace BigWorld
 {
     public class Simulation
     {
-        public World CurrentWorld { get; private set; }
+        public WorldMap CurrentWorldMap { get; private set; }
 
         public bool IsRunning { get; private set; }
 
@@ -22,9 +22,9 @@ namespace BigWorld
             new RoomCollisionService(),
         };
         
-        public void Start(World world)
+        public void Start(WorldMap worldMap)
         {   
-            CurrentWorld = world ;
+            CurrentWorldMap = worldMap ;
             entities.Clear();
             
             
@@ -55,7 +55,7 @@ namespace BigWorld
                 entity.Update(gameTime);
                 foreach (var service in services)
                 {
-                    service.Update(entity,CurrentWorld,gameTime);
+                    service.Update(entity,CurrentWorldMap,gameTime);
                 }
             }
         }

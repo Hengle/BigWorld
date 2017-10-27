@@ -74,7 +74,7 @@ namespace BigWorldGame.Components.Gui
 
             if (mouseMapPoint.HasValue && mouseState.LeftButton == ButtonState.Pressed)
             {
-                var room = Game.SimulationComponent.BuildWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+                var room = Game.SimulationComponent.BuildWorldMap.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
 
                 if (!isBlockMode)
                 {
@@ -89,7 +89,7 @@ namespace BigWorldGame.Components.Gui
             }
             else if (mouseMapPoint.HasValue && mouseState.RightButton == ButtonState.Pressed)
             {
-                var room = Game.SimulationComponent.BuildWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+                var room = Game.SimulationComponent.BuildWorldMap.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
 
                 if (!isBlockMode)
                 {
@@ -125,7 +125,7 @@ namespace BigWorldGame.Components.Gui
             
             if (groundFill.IsChanged((keyState.IsKeyDown(Keys.F)),i => i))
             {
-                var room = Game.SimulationComponent.BuildWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+                var room = Game.SimulationComponent.BuildWorldMap.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
                 
                 for (int x = 0; x < Room.SizeX; x++)
                 {
@@ -161,7 +161,7 @@ namespace BigWorldGame.Components.Gui
                 batch.Draw(pixelTexture,new Rectangle(mouseMapPoint.Value.X*RenderSettings.TileSize+height,mouseMapPoint.Value.Y*RenderSettings.TileSize+height,RenderSettings.TileSize,RenderSettings.TileSize),mouseColor );
             }
             
-            var room = Game.SimulationComponent.BuildWorld.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+            var room = Game.SimulationComponent.BuildWorldMap.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
 
             for (int x = 0; x < Room.SizeX; x++)
             {
