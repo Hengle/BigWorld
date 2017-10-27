@@ -223,17 +223,6 @@ namespace BigWorld.GUI
         {
             MouseHovered = true;
             OnMouseEnter(mousePosition);
-
-            foreach (var child in Children)
-            {
-                var relativeMousePosition = new Point(mousePosition.X - child.ActualClientRectangle.X,
-                    mousePosition.Y - child.ActualClientRectangle.Y);
-
-                if (relativeMousePosition.X > 0 && relativeMousePosition.Y > 0 &&
-                    relativeMousePosition.X < child.ActualClientRectangle.Width &&
-                    relativeMousePosition.Y < child.ActualClientRectangle.Height && !child.MouseHovered)
-                    child.InternalMouseEnter(relativeMousePosition);
-            }
         }
 
         internal virtual void InternalMouseLeave(Point mousePosition)
@@ -250,18 +239,17 @@ namespace BigWorld.GUI
 
         internal void InternalMouseMove(Point mousePosition)
         {
+            var relativeMousePosition = new Point(mousePosition.X - ActualClientRectangle.X, mousePosition.Y - ActualClientRectangle.Y);
+
             foreach (var child in Children)
             {
-                var relativeMousePosition = new Point(mousePosition.X - child.ActualClientRectangle.X, 
-                    mousePosition.Y - child.ActualClientRectangle.Y);
-
-                if (child.ActualClientRectangle.Contains(mousePosition.X, mousePosition.Y) && !child.MouseHovered)
-                    child.InternalMouseEnter(mousePosition);
-                else if (!child.ActualClientRectangle.Contains(mousePosition.X, mousePosition.Y) && child.MouseHovered)
-                    child.InternalMouseLeave(mousePosition);
+                if (child.ActualClientRectangle.Contains(relativeMousePosition.X, relativeMousePosition.Y) && !child.MouseHovered)
+                    child.InternalMouseEnter(relativeMousePosition);
+                else if (!child.ActualClientRectangle.Contains(relativeMousePosition.X, relativeMousePosition.Y) && child.MouseHovered)
+                    child.InternalMouseLeave(relativeMousePosition);
 
                 if (child.MouseHovered)
-                    child.InternalMouseMove(mousePosition);
+                    child.InternalMouseMove(relativeMousePosition);
 
             }
         }

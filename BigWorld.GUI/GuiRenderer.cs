@@ -22,10 +22,19 @@ namespace BigWorld.GUI
             Game = game;
             RootControl = new RootControl();
 
-            var button = new Button("Start");
-            button.VerticalAlignment = Layout.VerticalAlignment.Top;
+            StackPanel p = new StackPanel();
+            p.ItemSpacing = 10;
+            p.VerticalAlignment = Layout.VerticalAlignment.Top;
+            p.Orientation = Layout.Orientation.Horizontal;
+            
+            var button1 = new Button("Start");
+            p.Children.Add(button1);
+            var button2 = new Button("Start");
+            p.Children.Add(button2);
+            var button3 = new Button("Start");
+            p.Children.Add(button3);
 
-            RootControl.Children.Add(button);
+            RootControl.Children.Add(p);
         }
 
         protected override void LoadContent()
