@@ -20,7 +20,8 @@ namespace BigWorld.GUI
         public override void LoadContent(Game game)
         {
             base.LoadContent(game);
-            ClientRectangle = game.GraphicsDevice.Viewport.Bounds;
+            Height = game.GraphicsDevice.Viewport.Bounds.Height;
+            Width = game.GraphicsDevice.Viewport.Bounds.Width;
             ActualClientRectangle = game.GraphicsDevice.Viewport.Bounds;
             RenderedClientRectangle = game.GraphicsDevice.Viewport.Bounds;
             Invalidate();

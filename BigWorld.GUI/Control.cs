@@ -9,11 +9,8 @@ namespace BigWorld.GUI
 {
     public class Control
     {
-        /// <summary>
-        /// The full relative client rectangle (excluding margins & layouting, not clipped)
-        /// </summary>
-        public Rectangle ClientRectangle { get; set; } = Rectangle.Empty;
 
+        #region Properties
         /// <summary>
         /// The relative client rectangle as it is calculated (including margins & layouting, not clipped)
         /// </summary>
@@ -24,41 +21,34 @@ namespace BigWorld.GUI
         /// </summary>
         public Rectangle RenderedClientRectangle { get; set; } = Rectangle.Empty;
 
-        public int Height
+        public int? Height
         {
-            get => ClientRectangle.Height;
+            get => height;
             set {
-                if (ClientRectangle.Height == value)
+                if (height == value)
                     return;
 
-                ClientRectangle = new Rectangle(
-                    ClientRectangle.Location.X,
-                    ClientRectangle.Location.Y,
-                    ClientRectangle.Width,
-                    value);
-
-
-
+                height = value;
                 Invalidate();
             }
         }
 
-        public int Width
+        private int? height = null;
+
+        public int? Width
         {
-            get => ClientRectangle.Width;
+            get => width;
             set
             {
-                if (ClientRectangle.Width == value)
+                if (width == value)
                     return;
 
-                ClientRectangle = new Rectangle(
-                    ClientRectangle.Location.X,
-                    ClientRectangle.Location.Y, 
-                    value,
-                    ClientRectangle.Height);
+                width = value;
                 Invalidate();
             }
         }
+
+        private int? width = null;
 
         public Border Padding { get; set; } = new Border(0);
 
@@ -72,7 +62,19 @@ namespace BigWorld.GUI
 
         public Color? PressedBackgroundColor { get; set; } = null;
 
-        protected Color ActiveBackgroundColor { get; set; }
+        protected Color ActiveBackgroundColor
+        {
+            get => activeBackgroundColor;
+            set
+            {
+                if (activeBackgroundColor == value)
+                    return;
+
+                activeBackgroundColor = value;
+            }
+        }
+
+        private Color activeBackgroundColor = Color.Transparent;
 
         public Texture2D Pixel { get; private set; }
 
@@ -87,6 +89,8 @@ namespace BigWorld.GUI
         public HorizontalAlignment HorizontalAlignment { get; set; }
 
         public VerticalAlignment VerticalAlignment { get; set; }
+
+        #endregion
 
         public Control()
         {
@@ -104,12 +108,8 @@ namespace BigWorld.GUI
         
         public void Update(GameTime gameTime)
         {
-
             if (IsInvalid)
-            {
                 PerformLayout();
-                IsInvalid = false;
-            }
 
             OnUpdate(gameTime);
 
@@ -124,15 +124,17 @@ namespace BigWorld.GUI
 
             foreach(var child in Children)
             {
-                var positionX = child.ClientRectangle.X;
-                var positionY = child.ClientRectangle.Y;
-                var height = child.ClientRectangle.Height;
-                var width = child.ClientRectangle.Width;
+                var childSize = child.CalculateRequiredClientSpace();
+
+                var positionX = child.Margin.Left;
+                var positionY = child.Margin.Top;
+                var height = childSize.Y;
+                var width = childSize.X;
 
                 switch (child.HorizontalAlignment)
                 {
                     case HorizontalAlignment.Right:
-                        positionX = contentArea.Width - child.ClientRectangle.Width - child.Margin.Right;
+                        positionX = contentArea.Width - width - child.Margin.Right;
                         break;
                     case HorizontalAlignment.Left:
                         positionX = 0 + child.Margin.Left;
@@ -141,9 +143,9 @@ namespace BigWorld.GUI
                         positionY = 0 + child.Margin.Left;
                         width = contentArea.Width - child.Margin.Horizontal;
                         break;
-                    default:
                     case HorizontalAlignment.Center:
-                        positionX = (contentArea.Width - child.ClientRectangle.Width - child.Margin.Horizontal) / 2;
+                    default:
+                        positionX = (contentArea.Width - width - child.Margin.Horizontal) / 2;
                         break;
                 }
 
@@ -153,15 +155,15 @@ namespace BigWorld.GUI
                         positionY = 0 + child.Margin.Top;
                         break;
                     case VerticalAlignment.Bottom:
-                        positionY = contentArea.Height - child.ClientRectangle.Height - child.Margin.Bottom;
+                        positionY = contentArea.Height - height - child.Margin.Bottom;
                         break;
                     case VerticalAlignment.Stretch:
                         positionY = 0 + child.Margin.Top;
                         height = contentArea.Height - child.Margin.Vertical;
                         break;
-                    default:
                     case VerticalAlignment.Center:
-                        positionY = (contentArea.Height - child.ClientRectangle.Height - child.Margin.Vertical) / 2;
+                    default:
+                        positionY = (contentArea.Height - height - child.Margin.Vertical) / 2;
                         break;
                 }
 
@@ -169,8 +171,14 @@ namespace BigWorld.GUI
 
                 child.PerformLayout();
             }
+
+            IsInvalid = false;
         }
 
+        public virtual Point CalculateRequiredClientSpace()
+        {
+            return new Point(Width ?? 0, Height ?? 0);
+        }
 
         public void Draw(SpriteBatch batch, Rectangle parentArea, float alpha)
         {
@@ -194,7 +202,19 @@ namespace BigWorld.GUI
             }
         }
 
-        #region Internal Mouse Events
+        protected virtual void OnDraw(SpriteBatch batch, Rectangle controlArea, float alpha)
+        {
+            if (MouseDown)
+                ActiveBackgroundColor = PressedBackgroundColor ?? BackgroundColor;
+            else if (MouseHovered)
+                ActiveBackgroundColor = HoveredBackgroundColor ?? BackgroundColor;
+            else
+                ActiveBackgroundColor = BackgroundColor;
+
+            batch.Draw(Pixel, controlArea, ActiveBackgroundColor);
+        }
+
+        #region Internal Mouse Methods
         internal virtual void InternalMouseEnter(Point mousePosition)
         {
             MouseHovered = true;
@@ -231,9 +251,9 @@ namespace BigWorld.GUI
                 var relativeMousePosition = new Point(mousePosition.X - child.ActualClientRectangle.X, 
                     mousePosition.Y - child.ActualClientRectangle.Y);
 
-                if (child.ClientRectangle.Contains(mousePosition.X, mousePosition.Y) && !child.MouseHovered)
+                if (child.ActualClientRectangle.Contains(mousePosition.X, mousePosition.Y) && !child.MouseHovered)
                     child.InternalMouseEnter(mousePosition);
-                else if (!child.ClientRectangle.Contains(mousePosition.X, mousePosition.Y) && child.MouseHovered)
+                else if (!child.ActualClientRectangle.Contains(mousePosition.X, mousePosition.Y) && child.MouseHovered)
                     child.InternalMouseLeave(mousePosition);
 
                 if (child.MouseHovered)
@@ -244,6 +264,8 @@ namespace BigWorld.GUI
 
         internal virtual void InternalMouseUp(Point mousePosition)
         {
+            MouseDown = false;
+
             foreach(var child in Children)
             {
                 if (child.MouseDown)
@@ -267,26 +289,14 @@ namespace BigWorld.GUI
         }
         #endregion
 
-        #region Protected Methods
+        #region Protected Virtual Methods
         protected virtual void OnMouseLeave(Point mousePosition){ }
 
         protected virtual void OnMouseEnter(Point mousePosition){}
 
-        protected virtual void OnMouseUp(Point mousePosition) { }
+        protected virtual void OnMouseUp(Point mousePosition){}
 
         protected virtual void OnMouseDown(Point mousePosition) { }
-
-        protected virtual void OnDraw(SpriteBatch batch, Rectangle controlArea, float alpha)
-        {
-            if (MouseHovered && HoveredBackgroundColor != null && ActiveBackgroundColor != HoveredBackgroundColor)
-                ActiveBackgroundColor = (Color)HoveredBackgroundColor;
-            else if (MouseDown && PressedBackgroundColor != null && ActiveBackgroundColor != PressedBackgroundColor)
-                ActiveBackgroundColor = (Color)PressedBackgroundColor;
-            else if (ActiveBackgroundColor != BackgroundColor)
-                ActiveBackgroundColor = BackgroundColor;
-
-            batch.Draw(Pixel, controlArea,ActiveBackgroundColor);
-        }
 
         protected virtual void OnUpdate(GameTime gameTime) { }
         #endregion

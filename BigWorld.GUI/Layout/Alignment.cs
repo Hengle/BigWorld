@@ -8,8 +8,8 @@ namespace BigWorld.GUI.Layout
 {
     public enum HorizontalAlignment
     {
-        Left,
         Center,
+        Left,
         Right,
         Stretch,
         Absolute
@@ -17,8 +17,8 @@ namespace BigWorld.GUI.Layout
 
     public enum VerticalAlignment
     {
-        Top,
         Center,
+        Top,
         Bottom,
         Stretch,
         Absolute
