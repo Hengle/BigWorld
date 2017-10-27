@@ -36,7 +36,7 @@ namespace BigWorldGame.Graphics
 
             int l = 0;
             
-            foreach (var layer in room.TileLayer)
+            foreach (var layer in room.TileLayers)
             {   
                 for (int x = 0; x < Room.SizeX; x++)
                 {
@@ -83,7 +83,11 @@ namespace BigWorldGame.Graphics
                 indices.Add((ushort) (3 + i));
                 indices.Add((ushort) (2 + i));
             }
-            indexBuffer = new IndexBuffer(graphicsDevice, DrawElementsType.UnsignedShort, indices.Count);
+            if (indexBuffer == null)
+                indexBuffer = new IndexBuffer(graphicsDevice, DrawElementsType.UnsignedShort, indices.Count);
+            else
+                indexBuffer.Resize(indices.Count);
+
             indexBuffer.SetData(indices.ToArray());
         }
 

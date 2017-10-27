@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BigWorld;
 using BigWorld.Map;
 using BigWorldGame.Graphics;
@@ -40,19 +41,27 @@ namespace BigWorldGame.Components
         {
             List<CharacterVertex> vertices = new List<CharacterVertex>(Room.SizeX * Room.SizeY * 4);
 
-            float x = Game.SimulationComponent.PlayerRoomPosition.X;
-            float y = Game.SimulationComponent.PlayerRoomPosition.Y;
-            
-            uint index = 0;
-            
-            vertices.Add(new CharacterVertex(x + 0, y + 0, 0, 0, 0, index));
-            vertices.Add(new CharacterVertex(x + 1, y + 0, 0, 1, 0, index));
-            
-            vertices.Add(new CharacterVertex(x + 0, y + 1, 0, 0, 1, index));
-            vertices.Add(new CharacterVertex(x + 1, y + 1, 0, 1, 1, index));
-            
-            
+            var entities = Game.CurrentGameState == GameState.Running
+                ? Game.SimulationComponent.Simulation.Entities
+                : null;
 
+            if (entities != null)
+            {
+                foreach (var entity in entities)
+                {
+                    float x = entity.RoomPosition.X;
+                    float y = entity.RoomPosition.Y;
+            
+                    uint index = 0;
+            
+                    vertices.Add(new CharacterVertex(x + 0, y + 0, 0, 0, 0, index));
+                    vertices.Add(new CharacterVertex(x + 1, y + 0, 0, 1, 0, index));
+            
+                    vertices.Add(new CharacterVertex(x + 0, y + 1, 0, 0, 1, index));
+                    vertices.Add(new CharacterVertex(x + 1, y + 1, 0, 1, 1, index));
+                }
+            }
+            
             if (vertexBuffer == null)
                 vertexBuffer = new VertexBuffer(Game.GraphicsDevice, CharacterVertex.VertexDeclaration, vertices.Count);
             else if (vertexBuffer.VertexCount != vertices.Count)
@@ -75,7 +84,12 @@ namespace BigWorldGame.Components
                 indices.Add((ushort) (3 + i));
                 indices.Add((ushort) (2 + i));
             }
-            indexBuffer = new IndexBuffer(graphicsDevice, DrawElementsType.UnsignedShort, indices.Count);
+
+            if (indexBuffer == null)
+                indexBuffer = new IndexBuffer(graphicsDevice, DrawElementsType.UnsignedShort, indices.Count);
+            else
+                indexBuffer.Resize(indices.Count);
+
             indexBuffer.SetData(indices.ToArray());
         }
 

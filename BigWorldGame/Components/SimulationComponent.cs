@@ -10,12 +10,19 @@ namespace BigWorldGame.Components
     {
         public new MainGame Game;
         
-        public World CurrentWorld { get; private set; }
+        public WorldMap BuildWorldMap { get; private set; }
+
+        
+        
+        public readonly Simulation Simulation = new Simulation();
+        public WorldMap CurrentWorldMap => Simulation.CurrentWorldMap;
+        
         
         public Point CurrentRoomCoordinate { get; private set; }
         public Room CurrentRoom { get; private set; }
         
-        public Vector2 PlayerRoomPosition { get; private set; }
+
+        public Player Player { get; private set; }
         
         
         private readonly Trigger<bool> upTrigger = new Trigger<bool>();
@@ -26,21 +33,19 @@ namespace BigWorldGame.Components
         public SimulationComponent(MainGame game) : base(game)
         {
             Game = game;
-            CurrentWorld = new World();
+            BuildWorldMap = new WorldMap();
         }
 
         public void Reset(GameState state)
         {
-            switch (state)
+            if (state == GameState.Build || state == GameState.Debug)
             {
-                case GameState.Build:
-                    break;
-                case GameState.Debug:
-                    break;
-                case GameState.Running:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
+                Simulation.Stop();
+            }
+            else if (state == GameState.Running)
+            {
+                Simulation.Start(BuildWorldMap);
+                Player = Simulation.AddPlayer();
             }
         }
         
@@ -85,7 +90,7 @@ namespace BigWorldGame.Components
                 if (keyState.IsKeyDown(Keys.S))
                     direction += new Vector2(0,1);
 
-                PlayerRoomPosition = PlayerRoomPosition + direction * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                Player.CmdMoveDirection = direction;
             }
             
             
@@ -93,12 +98,22 @@ namespace BigWorldGame.Components
 
             Room currentRoom;
             
-            if (!CurrentWorld.TryGetRoom(CurrentRoomCoordinate,out currentRoom))
+            if (!BuildWorldMap.TryGetRoom(CurrentRoomCoordinate,out currentRoom))
             {
                 currentRoom = null;
             }
 
             CurrentRoom = currentRoom;
+
+            if (Simulation.IsRunning)
+            {
+                Simulation.Update(gameTime);
+            }
+        }
+
+        public void SetWorld(WorldMap loadWorld)
+        {
+            BuildWorldMap = loadWorld;
         }
     }
 }

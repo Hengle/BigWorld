@@ -58,7 +58,7 @@ namespace BigWorldGame.Components
                 var x = i % 3 - 1;
                 var y = i / 3 - 1;
 
-                var room = Game.SimulationComponent.CurrentWorld.LoadOrCreateRoom(new Point(x, y) + Game.SimulationComponent.CurrentRoomCoordinate);
+                var room = Game.SimulationComponent.BuildWorldMap.LoadOrCreateRoom(new Point(x, y) + Game.SimulationComponent.CurrentRoomCoordinate);
                 renderers[i].ReloadChunk(room);
             }
         }
