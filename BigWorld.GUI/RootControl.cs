@@ -6,15 +6,29 @@ using System.Threading.Tasks;
 using engenious;
 using engenious.Input;
 
-namespace BigWorld.GUI.Controls
+namespace BigWorld.GUI
 {
     public class RootControl : Control
     {
         private MouseState lastMouseState;
 
-        public override void Update()
+        public RootControl()
         {
-            base.Update();
+            
+        }
+
+        public override void LoadContent(Game game)
+        {
+            base.LoadContent(game);
+            ClientRectangle = game.GraphicsDevice.Viewport.Bounds;
+            ActualClientRectangle = game.GraphicsDevice.Viewport.Bounds;
+            RenderedClientRectangle = game.GraphicsDevice.Viewport.Bounds;
+            Invalidate();
+        }
+
+        protected override void OnUpdate(GameTime time)
+        {
+            base.OnUpdate(time);
 
             var mouseState = Mouse.GetState();
             var mousePoint = new engenious.Point(mouseState.X, mouseState.Y);

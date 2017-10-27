@@ -1,4 +1,5 @@
 ﻿using BigWorld;
+using BigWorld.GUI;
 using BigWorld.Map;
 using BigWorldGame.Components;
 using engenious;
@@ -46,10 +47,10 @@ namespace BigWorldGame
         {
             GraphicsDevice.Clear(Color.Black);
 
-            GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Height,Window.ClientSize.Height);
-            MapRenderer.Draw(gameTime);
+            //GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Height,Window.ClientSize.Height);
+            //MapRenderer.Draw(gameTime);
             
-            EntityRenderer.Draw(gameTime);
+            //EntityRenderer.Draw(gameTime);
             
             GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Width,Window.ClientSize.Height);
             GuiRenderer.Draw(gameTime);

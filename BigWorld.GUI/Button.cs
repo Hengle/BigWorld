@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using engenious;
 
-namespace BigWorld.GUI.Controls
+namespace BigWorld.GUI
 {
     public class Button : Control
     {
@@ -15,39 +15,19 @@ namespace BigWorld.GUI.Controls
 
         public Button(string text)
         {
-            l = new Label() { Text = text};
-            l.ClientRectangle = new Rectangle(10,10,100,100);
+            l = new Label() { Text = text, HorizontalAlignment = Layout.HorizontalAlignment.Stretch, VerticalAlignment = Layout.VerticalAlignment.Stretch};
             Children.Add(l);
-        }
 
-        protected override void OnMouseEnter(Point mousePosition)
-        {
-            base.OnMouseEnter(mousePosition);
-
-            BackgroundColor = Color.Blue;
-        }
-
-        protected override void OnMouseLeave(Point mousePosition)
-        {
-            base.OnMouseLeave(mousePosition);
-
-            BackgroundColor = Color.Red;
+            BackgroundColor = Color.LightGray * 0.5f;
+            HoveredBackgroundColor = Color.Red * 0.5f;
+            PressedBackgroundColor = Color.Red;
         }
 
         protected override void OnMouseDown(Point mousePosition)
         {
             base.OnMouseUp(mousePosition);
-            BackgroundColor = Color.Yellow;
-
             if (ClientRectangle.Contains(mousePosition))
                 ButtonClick?.Invoke(this, EventArgs.Empty);
-        }
-
-        protected override void OnMouseUp(Point mousePosition)
-        {
-            base.OnMouseUp(mousePosition);
-
-            BackgroundColor = Color.Plum;
         }
 
         public event EventHandler ButtonClick;

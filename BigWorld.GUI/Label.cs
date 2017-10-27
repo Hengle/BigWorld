@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using engenious;
 using engenious.Graphics;
 
-namespace BigWorld.GUI.Controls
+namespace BigWorld.GUI
 {
     public class Label : Control
     {
@@ -22,12 +22,16 @@ namespace BigWorld.GUI.Controls
                 Font = game.Content.Load<SpriteFont>("Fonts\\GameFont");
         }
 
-        public override void Draw(SpriteBatch batch, Rectangle destinationRectangle, float alpha)
+        protected override void OnDraw(SpriteBatch batch, Rectangle destinationRectangle, float alpha)
         {
-            base.Draw(batch, destinationRectangle, alpha);
+            base.OnDraw(batch, destinationRectangle, alpha);
 
             if (Font != null && !String.IsNullOrEmpty(Text))
-                batch.DrawString(Font, Text, ClientRectangle.Location.ToVector2(), Color.White);
+            {
+                var textSize = Font.MeasureString(Text);
+                batch.DrawString(Font, Text, new Vector2((destinationRectangle.Width - textSize.X - Padding.Horizontal) / 2,
+                    (destinationRectangle.Height - textSize.Y - Padding.Vertical) / 2), Color.White);
+            }
         }
     }
 }

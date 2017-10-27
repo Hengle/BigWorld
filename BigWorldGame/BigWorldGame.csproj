@@ -57,11 +57,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\EntityRenderer.cs" />
-    <Compile Include="Components\Gui\BuildGuiRenderer.cs" />
-    <Compile Include="Components\Gui\DebugGuiRenderer.cs" />
     <Compile Include="Components\MapRenderer.cs" />
     <Compile Include="Components\SimulationComponent.cs" />
-    <Compile Include="Controls\SelectTileSheetControl.cs" />
     <Compile Include="Graphics\CharacterVertex.cs" />
     <Compile Include="Graphics\MapVertex.cs" />
     <Compile Include="Graphics\RoomRenderer.cs" />
@@ -78,6 +75,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BigWorld.GUI\BigWorld.GUI.csproj">
+      <Project>{d6394335-7c02-49f8-a2c6-a8584b89e049}</Project>
+      <Name>BigWorld.GUI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BigWorld\BigWorld.csproj">
       <Project>{46AAACB9-0360-451D-B884-78C3A9CED460}</Project>
       <Name>BigWorld</Name>
@@ -99,6 +100,10 @@
     <Content Include="Content\Spritesheets\TileSheetDungeon.png" />
     <Content Include="Content\Spritesheets\TileSheetIndoor.png" />
     <Content Include="Content\Spritesheets\TileSheetOutdoor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components\Gui\" />
+    <Folder Include="Controls\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\engenious.0.1.10\build\engenious.targets" Condition="Exists('..\packages\engenious.0.1.10\build\engenious.targets')" />

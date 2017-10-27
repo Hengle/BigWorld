@@ -1,55 +1,49 @@
 ﻿using System;
 using BigWorld;
-using BigWorld.Map;
-using BigWorldGame.Components.Gui;
 using engenious;
 using engenious.Graphics;
 using engenious.Input;
 using ButtonState = engenious.Input.ButtonState;
 using Keyboard = engenious.Input.Keyboard;
 using Mouse = engenious.Input.Mouse;
-using BigWorldGame.Controls;
 
-namespace BigWorld.GUI.Components
+namespace BigWorld.GUI
 {
     public class GuiRenderer : DrawableGameComponent
     {
-        public new readonly MainGame Game;
-
-        public RootControl RootControl { get; private set; }
+        public new readonly Game Game;
         
         public SpriteBatch SpriteBatch { get; private set; }
 
-        public GuiRenderer(MainGame game) : base(game)
+        public RootControl RootControl { get; private set; }
+
+        public GuiRenderer(Game game) : base(game)
         {
             Game = game;
             RootControl = new RootControl();
-            RootControl.ClientRectangle = new Rectangle(0,0,game.Window.ClientSize.Width, game.Window.ClientSize.Height);
-            RootControl.BackgroundColor = Color.Green;
+
+            var button = new Button("Start");
+            button.Height = 100;
+            button.Width = 200;
+            button.ClientRectangle = new Rectangle(button.ClientRectangle.Location, new Point(button.ClientRectangle.Size.Height, 200));
+
+            RootControl.Children.Add(button);
         }
 
         protected override void LoadContent()
         {
-            RootControl.LoadContent(Game);
-
-            var child = new Button("Demo") { ClientRectangle = new Rectangle(10, 10, 100, 100), BackgroundColor = Color.Red };
-            child.LoadContent(Game);
-            RootControl.Children.Add(child);
-
-
             SpriteBatch = new SpriteBatch(Game.GraphicsDevice);
+            RootControl.LoadContent(Game);
         }
         
         public override void Update(GameTime gameTime)
         {
-            RootControl.Update();
+            RootControl.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            SpriteBatch.Begin();
-            RootControl.Draw(SpriteBatch, RootControl.ClientRectangle, 1);
-            SpriteBatch.End();
+            RootControl.Draw(SpriteBatch, Game.GraphicsDevice.Viewport.Bounds, 1);
         }
     }
 }
