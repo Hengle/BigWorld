@@ -1,332 +1,88 @@
-﻿using engenious;
+﻿using BigWorld.GUI.Layout;
+using engenious;
 using engenious.Graphics;
-using System.Collections.Generic;
 using System;
-using BigWorld.GUI.Layout;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BigWorld.GUI
 {
     public class Control
     {
+        public int? Width { get; set; }
+        public int? Height { get; set; }
 
-        #region Properties
-        /// <summary>
-        /// The relative client rectangle as it is calculated (including margins & layouting, not clipped)
-        /// </summary>
-        public Rectangle ActualClientRectangle { get; set; } = Rectangle.Empty;
-
-        /// <summary>
-        /// The relative client rectangle as it is rendered (including margins & layouting, clipped)
-        /// </summary>
-        public Rectangle RenderedClientRectangle { get; set; } = Rectangle.Empty;
-
-        public int? Height
-        {
-            get => height;
-            set {
-                if (height == value)
-                    return;
-
-                height = value;
-                Invalidate();
-            }
-        }
-
-        private int? height = null;
-
-        public int? Width
-        {
-            get => width;
-            set
-            {
-                if (width == value)
-                    return;
-
-                width = value;
-                Invalidate();
-            }
-        }
-
-        private int? width = null;
-
-        public Border Padding { get; set; } = new Border(0);
-
-        public Border Margin { get; set; } = new Border(0);
-
-        public ObservableCollection<Control> Children { get; private set; } = new ObservableCollection<Control>();
+        public Point Position { get; set; } = Point.Zero;
 
         public Color BackgroundColor { get; set; } = Color.Transparent;
 
-        public Color? HoveredBackgroundColor { get; set; } = null;
-
-        public Color? PressedBackgroundColor { get; set; } = null;
-
-        protected Color ActiveBackgroundColor
-        {
-            get => activeBackgroundColor;
-            set
-            {
-                if (activeBackgroundColor == value)
-                    return;
-
-                activeBackgroundColor = value;
-            }
-        }
-
-        private Color activeBackgroundColor = Color.Transparent;
-
-        public Texture2D Pixel { get; private set; }
-
-        public bool MouseHovered { get; private set; } = false;
-
-        public bool MouseDown { get; private set; } = false;
-
-        protected bool IsInvalid { get; private set; } = false;
-
         public HorizontalAlignment HorizontalAlignment { get; set; }
 
-        public VerticalAlignment VerticalAlignment { get; set; }
+        public VerticalAlignment VerticalAlignment { get; set; } 
+
+        protected readonly List<Control> ChildCollection = new List<Control>();
+
+        public virtual Size GetActualSize(int? availableWidth = null, int? availableHeight = null )
+        {
+            var width = Width;
+            var height = Height;
+
+            if (!width.HasValue && availableWidth == 0)
+                width = 0;
+            else if (!width.HasValue && HorizontalAlignment == HorizontalAlignment.Stretch)
+                width = availableWidth;
+
+            if (!height.HasValue && availableHeight == 0)
+                height = 0;
+            else if (!height.HasValue && VerticalAlignment == VerticalAlignment.Stretch)
+                height = availableHeight;
+
+            return new Size(width ?? 0, height ?? 0);
+        }
 
         public RasterizerState RasterizerState { get; set; } = new RasterizerState()
         {
             ScissorTestEnable = true,
         };
 
-        #endregion
-
-        protected void Invalidate()
+        public void Draw(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
         {
-            IsInvalid = true;
-            ControlInvalidated?.Invoke(this, null);
-        }
+            var clientSize = GetActualSize(renderMask.Width, renderMask.Height);
 
-        public Control()
-        {
-            Children.CollectionChanged += (s, e) => Invalidate();
-        }
+            transform *= Matrix.CreateTranslation(Position.X, Position.Y, 0);
 
-        public virtual void LoadContent(Game game)
-        {
-            Pixel = new Texture2D(game.GraphicsDevice, 1, 1);
-            Pixel.SetData(new[] { Color.White });
+            Rectangle clientRectangle = new Rectangle(0, 0, clientSize.Width, clientSize.Height);
+            clientRectangle = clientRectangle.Transform(transform);
 
-            foreach (var child in Children)
-                child.LoadContent(game);
-        }
-        
-        public void Update(GameTime gameTime)
-        {
-            if (IsInvalid)
-                PerformLayout();
+            Rectangle renderRec = renderMask.Intersection(clientRectangle);
 
-            OnUpdate(gameTime);
+            batch.GraphicsDevice.ScissorRectangle = renderRec;
 
-            foreach (var child in Children)
-                child.Update(gameTime);
-        }
-
-        public virtual void PerformLayout()
-        {
-            var contentArea = new Rectangle(ActualClientRectangle.X + Padding.Left, ActualClientRectangle.Y + Padding.Top,
-                ActualClientRectangle.Width - Padding.Horizontal, ActualClientRectangle.Height - Padding.Vertical);
-
-            foreach(var child in Children)
-            {
-                var childSize = child.CalculateRequiredClientSpace();
-
-                var positionX = child.Margin.Left;
-                var positionY = child.Margin.Top;
-                var height = childSize.Y;
-                var width = childSize.X;
-
-                switch (child.HorizontalAlignment)
-                {
-                    case HorizontalAlignment.Right:
-                        positionX = contentArea.Width - width - child.Margin.Right;
-                        break;
-                    case HorizontalAlignment.Left:
-                        positionX = 0 + child.Margin.Left;
-                        break;
-                    case HorizontalAlignment.Stretch:
-                        positionX = 0 + child.Margin.Left;
-                        width = contentArea.Width - child.Margin.Horizontal;
-                        break;
-                    case HorizontalAlignment.Center:
-                    default:
-                        positionX = contentArea.Width/2 - width/2 - child.Margin.Horizontal / 2;
-                        break;
-                }
-
-                switch(child.VerticalAlignment)
-                {
-                    case VerticalAlignment.Top:
-                        positionY = 0 + child.Margin.Top;
-                        break;
-                    case VerticalAlignment.Bottom:
-                        positionY = contentArea.Height - height - child.Margin.Bottom;
-                        break;
-                    case VerticalAlignment.Stretch:
-                        positionY = 0 + child.Margin.Top;
-                        height = contentArea.Height - child.Margin.Vertical;
-                        break;
-                    case VerticalAlignment.Center:
-                    default:
-                        positionY = contentArea.Height/2 - height/2 - child.Margin.Vertical / 2;
-                        break;
-                }
-
-                child.ActualClientRectangle = new Rectangle(positionX, positionY, width, height);
-
-                child.PerformLayout();
-            }
-
-            IsInvalid = false;
-        }
-
-        public virtual Point CalculateRequiredClientSpace()
-        {
-            return new Point(Width ?? 0, Height ?? 0);
-        }
-
-        public virtual void PreDraw(SpriteBatch batch, Rectangle parentArea, float alpha)
-        {
-
-        }
-
-        public virtual void Draw(SpriteBatch batch, Rectangle parentArea, float alpha)
-        {
-            RenderedClientRectangle = new Rectangle(parentArea.X + ActualClientRectangle.X,
-                parentArea.Y + ActualClientRectangle.Y, Math.Min(parentArea.Width, ActualClientRectangle.Width),
-                Math.Min(parentArea.Height, ActualClientRectangle.Height));
-
-            batch.GraphicsDevice.RasterizerState.ScissorTestEnable = true;
-
-            //batch.GraphicsDevice.Viewport = new Viewport(RenderedClientRectangle);
-
-
-            //batch.GraphicsDevice.ScissorRectangle = RenderedClientRectangle;
-
-            var oldscissorRectangle = batch.GraphicsDevice.ScissorRectangle;
-            PreDraw(batch, parentArea, alpha);
-            batch.Begin(samplerState: SamplerState.LinearWrap);
-            
-            OnDraw(batch, RenderedClientRectangle, alpha);
+            batch.Begin(rasterizerState:RasterizerState,transformMatrix: transform);
+            OnDraw(batch,clientSize, gameTime);
             batch.End();
-            batch.GraphicsDevice.RasterizerState.ScissorTestEnable = false;
 
+            OnDrawChildren(batch, transform, renderRec, gameTime);
+        }
 
-            var childRectangle = new Rectangle(RenderedClientRectangle.X + Padding.Left, RenderedClientRectangle.Y + Padding.Top,
-                RenderedClientRectangle.Width - Padding.Horizontal, RenderedClientRectangle.Height - Padding.Vertical);
+        protected virtual void OnDrawBackground(SpriteBatch batch, Size clientSize, GameTime gameTime)
+        {
+            batch.Draw(GuiRenderer.Pixel, new Rectangle(0, 0, clientSize.Width, clientSize.Height), BackgroundColor);
+        }
 
-            foreach (var child in Children)
+        protected virtual void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
+        {
+            foreach(var child in ChildCollection)
             {
-               child.Draw(batch, childRectangle, alpha);
-            }
-
-            batch.GraphicsDevice.ScissorRectangle = oldscissorRectangle;
-        }
-
-        protected virtual void OnDraw(SpriteBatch batch, Rectangle controlArea, float alpha)
-        {
-            if (MouseDown)
-                ActiveBackgroundColor = PressedBackgroundColor ?? BackgroundColor;
-            else if (MouseHovered)
-                ActiveBackgroundColor = HoveredBackgroundColor ?? BackgroundColor;
-            else
-                ActiveBackgroundColor = BackgroundColor;
-
-            batch.Draw(Pixel, controlArea, ActiveBackgroundColor);
-        }
-
-        #region Internal Mouse Methods
-        internal virtual void InternalMouseEnter(Point mousePosition)
-        {
-            MouseHovered = true;
-            OnMouseEnter(mousePosition);
-        }
-
-        internal virtual void InternalMouseLeave(Point mousePosition)
-        {
-            MouseHovered = false;
-            OnMouseLeave(mousePosition);
-
-            foreach (var child in Children)
-            {
-                if (child.MouseHovered)
-                    child.InternalMouseLeave(mousePosition);
+                child.Draw(batch, transform, renderMask, gameTime);
             }
         }
 
-        internal void InternalMouseMove(Point mousePosition)
+        protected virtual void OnDraw(SpriteBatch batch, Size clientSize, GameTime gameTime)
         {
-            var relativeMousePosition = new Point(mousePosition.X - ActualClientRectangle.X, mousePosition.Y - ActualClientRectangle.Y);
-
-            foreach (var child in Children)
-            {
-                if (child.ActualClientRectangle.Contains(relativeMousePosition.X, relativeMousePosition.Y) && !child.MouseHovered)
-                    child.InternalMouseEnter(relativeMousePosition);
-                else if (!child.ActualClientRectangle.Contains(relativeMousePosition.X, relativeMousePosition.Y) && child.MouseHovered)
-                    child.InternalMouseLeave(relativeMousePosition);
-
-                if (child.MouseHovered)
-                    child.InternalMouseMove(relativeMousePosition);
-
-            }
+            OnDrawBackground(batch, clientSize, gameTime);
         }
-
-        internal virtual void InternalMouseUp(Point mousePosition)
-        {
-            MouseDown = false;
-
-            foreach(var child in Children)
-            {
-                if (child.MouseDown)
-                    child.InternalMouseUp(mousePosition);
-            }
-
-            OnMouseUp(mousePosition);
-        }
-
-        internal virtual void InternalMouseDown(Point mousePosition)
-        {
-            MouseDown = true;
-
-            foreach (var child in Children)
-            {
-                if (child.MouseHovered)
-                    child.InternalMouseDown(mousePosition);
-            }
-
-            OnMouseDown(mousePosition);
-        }
-
-        internal virtual void InternalMouseWheel(int wheelPosition, int delta)
-        {
-            OnMouseWheel(wheelPosition, delta);
-
-            foreach(var child in Children)
-            {
-                if (child.MouseHovered)
-                    child.InternalMouseWheel(wheelPosition, delta);
-            }
-        }
-        #endregion
-
-        #region Protected Virtual Methods
-        protected virtual void OnMouseLeave(Point mousePosition){ }
-
-        protected virtual void OnMouseEnter(Point mousePosition){}
-
-        protected virtual void OnMouseUp(Point mousePosition){}
-
-        protected virtual void OnMouseDown(Point mousePosition) { }
-
-        protected virtual void OnUpdate(GameTime gameTime) { }
-
-        protected virtual void OnMouseWheel(int wheelPosition, int delta) { }
-        #endregion
-
-        public event EventHandler ControlInvalidated;
     }
 }

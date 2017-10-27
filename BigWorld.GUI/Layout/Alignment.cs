@@ -11,8 +11,7 @@ namespace BigWorld.GUI.Layout
         Center,
         Left,
         Right,
-        Stretch,
-        Absolute
+        Stretch
     }
 
     public enum VerticalAlignment
@@ -20,7 +19,6 @@ namespace BigWorld.GUI.Layout
         Center,
         Top,
         Bottom,
-        Stretch,
-        Absolute
+        Stretch
     }
 }

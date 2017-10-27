@@ -4,157 +4,64 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using engenious;
-using BigWorld.GUI.Layout;
+using engenious.Graphics;
 
 namespace BigWorld.GUI
 {
-    public class StackPanel : Control
+    public class StackPanel : ContainerControl
     {
-        public Orientation Orientation { get => orientation;
-            set
-            {
-                if (orientation == value)
-                    return;
+        public int ItemSpacing { get; set; } = 0;
 
-                orientation = value;
-                Invalidate();
-            }
-        }
-
-        private Orientation orientation;
-
-        public int ItemSpacing
+        protected override void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
         {
-            get => itemSpacing;
-            set
-            {
-                if (itemSpacing == value)
-                    return;
-
-                itemSpacing = value;
-                Invalidate();
-            }
-        }
-        private int itemSpacing = 0;
-
-        public override void PerformLayout()
-        {
-            var contentArea = new Rectangle(ActualClientRectangle.X + Padding.Left, ActualClientRectangle.Y + Padding.Top,
-               ActualClientRectangle.Width - Padding.Horizontal, ActualClientRectangle.Height - Padding.Vertical);
-
             var offset = 0;
-
-            if (Orientation == Orientation.Vertical)
+            foreach(var child in Children)
             {
-                foreach (var child in Children)
+                var size = child.GetActualSize(renderMask.Width);
+
+                var offsetX = 0;
+
+                switch(child.HorizontalAlignment)
                 {
-                    var childSize = child.CalculateRequiredClientSpace();
-
-                    var positionX = child.Margin.Left;
-                    var positionY = child.Margin.Top;
-                    var height = childSize.Y;
-                    var width = childSize.X;
-
-                    switch (child.HorizontalAlignment)
-                    {
-                        case HorizontalAlignment.Right:
-                            positionX = contentArea.Width - width - child.Margin.Right;
-                            break;
-                        case HorizontalAlignment.Left:
-                            positionX = 0 + child.Margin.Left;
-                            break;
-                        case HorizontalAlignment.Stretch:
-                            positionX = 0 + child.Margin.Left;
-                            width = contentArea.Width - child.Margin.Horizontal;
-                            break;
-                        case HorizontalAlignment.Center:
-                        default:
-                            positionX = contentArea.Width / 2 - width / 2 - child.Margin.Horizontal / 2;
-                            break;
-                    }
-
-                    child.ActualClientRectangle = new Rectangle(positionX, offset, width, height);
-
-                    offset += height + child.Margin.Top;
-                    offset += child.Margin.Bottom;
-                    offset += ItemSpacing;
-
+                    case Layout.HorizontalAlignment.Left:
+                        break;
+                    case Layout.HorizontalAlignment.Right:
+                        offsetX = renderMask.Width - size.Width;
+                        break;
+                    case Layout.HorizontalAlignment.Center:
+                    default:
+                        offsetX = renderMask.Width / 2 - size.Width / 2;
+                        break;
                 }
-            }
-            else
-            {
-                foreach (var child in Children)
-                {
-                    var childSize = child.CalculateRequiredClientSpace();
 
-                    var positionX = child.Margin.Left;
-                    var positionY = child.Margin.Top;
-                    var height = childSize.Y;
-                    var width = childSize.X;
+                var childTransform = transform * Matrix.CreateTranslation(offsetX, offset, 0);
 
-                    switch (child.VerticalAlignment)
-                    {
-                        case VerticalAlignment.Top:
-                            positionY = 0 + child.Margin.Top;
-                            break;
-                        case VerticalAlignment.Bottom:
-                            positionY = contentArea.Height - height - child.Margin.Bottom;
-                            break;
-                        case VerticalAlignment.Stretch:
-                            positionY = 0 + child.Margin.Top;
-                            height = contentArea.Height - child.Margin.Vertical;
-                            break;
-                        case VerticalAlignment.Center:
-                        default:
-                            positionY = contentArea.Height / 2 - height / 2 - child.Margin.Vertical / 2;
-                            break;
-                    }
+                var childRender = renderMask.Intersection(new Rectangle(new Point(0, 0), size).Transform(childTransform));
 
-                    child.ActualClientRectangle = new Rectangle(offset, positionY, width, height);
-                    offset += width + child.Margin.Left;
-                    offset += child.Margin.Right;
-                    offset += ItemSpacing;
-                }
+                child.Draw(batch, childTransform , childRender, gameTime);
+                offset += size.Height + ItemSpacing;
             }
         }
 
-        public override Point CalculateRequiredClientSpace()
+        public override Size GetActualSize(int? availableWidth = null, int? availableHeight = null)
         {
-            var height = Height;
-            var width = Width;
+            var estimatedSize = base.GetActualSize(availableWidth, availableHeight);
 
-            var calcWidth = 0;
-            var calcHeight = 0;
-
-            if (height != null && width != null)
-                return new Point(height ?? 0, width ?? 0);
-
-            if(Orientation == Orientation.Vertical)
+            if(estimatedSize.Height == 0)
             {
+                int sum = 0;
+
                 foreach(var child in Children)
                 {
-                    var childCalc = child.CalculateRequiredClientSpace();
-                    calcHeight += childCalc.Y + child.Margin.Vertical;
-                    if (childCalc.X + child.Margin.Horizontal > calcWidth)
-                        calcWidth = childCalc.X + child.Margin.Horizontal;
+                    sum += child.GetActualSize(availableWidth, null).Height;
                 }
 
-                calcHeight += (Children.Count - 1) * ItemSpacing;
-            }
-            else
-            {
-                foreach (var child in Children)
-                {
-                    var childCalc = child.CalculateRequiredClientSpace();
-                    calcWidth += childCalc.X + child.Margin.Horizontal;
-                    if (childCalc.Y + child.Margin.Vertical > calcHeight)
-                        calcHeight = childCalc.Y + child.Margin.Vertical;
-                }
+                sum += ItemSpacing * (Children.Count - 1);
 
-                calcWidth += (Children.Count - 1) * ItemSpacing;
+                estimatedSize.Height = sum;
             }
 
-            return new Point((width != null ? width ?? 0 : calcWidth), (height != null ? height ?? 0 : calcHeight));
+            return estimatedSize;
         }
     }
 }

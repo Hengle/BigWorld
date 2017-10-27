@@ -1,88 +1,68 @@
-﻿using System;
-using BigWorld;
-using engenious;
+﻿using engenious;
 using engenious.Graphics;
-using engenious.Input;
-using ButtonState = engenious.Input.ButtonState;
-using Keyboard = engenious.Input.Keyboard;
-using Mouse = engenious.Input.Mouse;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BigWorld.GUI
 {
     public class GuiRenderer : DrawableGameComponent
     {
-        public new readonly Game Game;
-        
-        public SpriteBatch SpriteBatch { get; private set; }
+        public static Texture2D Pixel { get; private set; }
 
         public RootControl RootControl { get; private set; }
 
+        private SpriteBatch spriteBatch;
+
         public GuiRenderer(Game game) : base(game)
         {
-            Game = game;
             RootControl = new RootControl();
+            RootControl.BackgroundColor = Color.CornflowerBlue;
 
-           // StackPanel stackPanel = new StackPanel();
-           // stackPanel.ItemSpacing = 10;
-           // stackPanel.VerticalAlignment = Layout.VerticalAlignment.Top;
-           // stackPanel.Orientation = Layout.Orientation.Horizontal;
-            
-           // var button1 = new Button("Start");
-           // stackPanel.Children.Add(button1);
-           // var button2 = new Button("Start");
-           // stackPanel.Children.Add(button2);
-           //// var button3 = new Button("Start");
-           //// stackPanel.Children.Add(button3);
+            var stackPanel = new StackPanel();
+            stackPanel.HorizontalAlignment = Layout.HorizontalAlignment.Stretch;
+            stackPanel.Position = new Point(20, 20);
+            stackPanel.BackgroundColor = Color.Bisque;
+            stackPanel.ItemSpacing = 10;
 
-            //var button4 = new Button("Demo");
+            var content = new ContentControl();
+            content.BackgroundColor = Color.DarkSeaGreen;
+            content.HorizontalAlignment = Layout.HorizontalAlignment.Stretch;
+            content.Height = 200;
+            //content.Position = new Point(100, 100);
+            stackPanel.Children.Add(content);
 
-            //var label = new Label() { Text = "Demo" };
-            //label.HorizontalAlignment = Layout.HorizontalAlignment.Right;
-            //label.BackgroundColor = Color.White * 0.5f;
 
-            StackPanel stack = new StackPanel();
-            stack.ItemSpacing = 10;
-            stack.BackgroundColor = Color.Green;
-            stack.Orientation = Layout.Orientation.Vertical;
+            var nestedContent = new ContentControl();
+            nestedContent.BackgroundColor = Color.IndianRed;
+            nestedContent.Height = 200;
+            nestedContent.Width = 400;
+            nestedContent.HorizontalAlignment = Layout.HorizontalAlignment.Right;
+            //nestedContent.Position = new Point(30, 30);
+            stackPanel.Children.Add(nestedContent);
 
-            for(int i = 0; i < 10; i++)
-            {
-                stack.Children.Add(new Button("Demo " + i));
-            }
-
-            ScrollPanel sp = new ScrollPanel();
-            sp.Content = stack;
-            sp.HorizontalAlignment = Layout.HorizontalAlignment.Left;
-            sp.Width = 400;
-            sp.Height = 200;
-            sp.BackgroundColor = Color.Red;
-            sp.Children.Add(stack);
-            RootControl.Children.Add(sp);
-
-            Button scrollButton = new Button("Scroll");
-            scrollButton.HorizontalAlignment = Layout.HorizontalAlignment.Right;
-            scrollButton.ButtonClick += (s, e) => sp.ScrollPositionY += 5;
-            RootControl.Children.Add(scrollButton);
-
-            //RootControl.Children.Add(stackPanel);
-        //    RootControl.Children.Add(button4);
-        //    RootControl.Children.Add(label);
+            RootControl.Content = stackPanel;
         }
 
         protected override void LoadContent()
         {
-            SpriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            RootControl.LoadContent(Game);
-        }
-        
-        public override void Update(GameTime gameTime)
-        {
-            RootControl.Update(gameTime);
+            base.LoadContent();
+
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Pixel = new Texture2D(GraphicsDevice, 1, 1);
+            Pixel.SetData(new Color[] { Color.White });
         }
 
         public override void Draw(GameTime gameTime)
         {
-            RootControl.Draw(SpriteBatch, Game.GraphicsDevice.Viewport.Bounds, 1);
+            base.Draw(gameTime);
+
+            RootControl.Height = GraphicsDevice.Viewport.Bounds.Height;
+            RootControl.Width = GraphicsDevice.Viewport.Bounds.Width;
+            RootControl.Draw(spriteBatch, Matrix.Identity, GraphicsDevice.Viewport.Bounds, gameTime);
         }
     }
 }
