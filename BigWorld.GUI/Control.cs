@@ -88,6 +88,11 @@ namespace BigWorld.GUI
 
         public VerticalAlignment VerticalAlignment { get; set; }
 
+        public RasterizerState RasterizerState { get; set; } = new RasterizerState()
+        {
+            ScissorTestEnable = true,
+        };
+
         #endregion
 
         protected void Invalidate()
@@ -184,26 +189,42 @@ namespace BigWorld.GUI
             return new Point(Width ?? 0, Height ?? 0);
         }
 
-        public void Draw(SpriteBatch batch, Rectangle parentArea, float alpha)
+        public virtual void PreDraw(SpriteBatch batch, Rectangle parentArea, float alpha)
+        {
+
+        }
+
+        public virtual void Draw(SpriteBatch batch, Rectangle parentArea, float alpha)
         {
             RenderedClientRectangle = new Rectangle(parentArea.X + ActualClientRectangle.X,
                 parentArea.Y + ActualClientRectangle.Y, Math.Min(parentArea.Width, ActualClientRectangle.Width),
                 Math.Min(parentArea.Height, ActualClientRectangle.Height));
 
             batch.GraphicsDevice.RasterizerState.ScissorTestEnable = true;
-            batch.GraphicsDevice.ScissorRectangle = RenderedClientRectangle;
 
-            batch.Begin();
+            //batch.GraphicsDevice.Viewport = new Viewport(RenderedClientRectangle);
+
+
+            //batch.GraphicsDevice.ScissorRectangle = RenderedClientRectangle;
+
+            var oldscissorRectangle = batch.GraphicsDevice.ScissorRectangle;
+            PreDraw(batch, parentArea, alpha);
+            batch.Begin(samplerState: SamplerState.LinearWrap);
+            
             OnDraw(batch, RenderedClientRectangle, alpha);
             batch.End();
+            batch.GraphicsDevice.RasterizerState.ScissorTestEnable = false;
+
 
             var childRectangle = new Rectangle(RenderedClientRectangle.X + Padding.Left, RenderedClientRectangle.Y + Padding.Top,
                 RenderedClientRectangle.Width - Padding.Horizontal, RenderedClientRectangle.Height - Padding.Vertical);
 
             foreach (var child in Children)
             {
-                child.Draw(batch, childRectangle, alpha);
+               child.Draw(batch, childRectangle, alpha);
             }
+
+            batch.GraphicsDevice.ScissorRectangle = oldscissorRectangle;
         }
 
         protected virtual void OnDraw(SpriteBatch batch, Rectangle controlArea, float alpha)
@@ -279,6 +300,17 @@ namespace BigWorld.GUI
 
             OnMouseDown(mousePosition);
         }
+
+        internal virtual void InternalMouseWheel(int wheelPosition, int delta)
+        {
+            OnMouseWheel(wheelPosition, delta);
+
+            foreach(var child in Children)
+            {
+                if (child.MouseHovered)
+                    child.InternalMouseWheel(wheelPosition, delta);
+            }
+        }
         #endregion
 
         #region Protected Virtual Methods
@@ -291,6 +323,8 @@ namespace BigWorld.GUI
         protected virtual void OnMouseDown(Point mousePosition) { }
 
         protected virtual void OnUpdate(GameTime gameTime) { }
+
+        protected virtual void OnMouseWheel(int wheelPosition, int delta) { }
         #endregion
 
         public event EventHandler ControlInvalidated;

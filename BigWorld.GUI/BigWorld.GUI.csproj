@@ -63,6 +63,7 @@
     <Compile Include="Layout\Orientation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RootControl.cs" />
+    <Compile Include="ScrollPanel.cs" />
     <Compile Include="StackPanel.cs" />
   </ItemGroup>
   <ItemGroup>

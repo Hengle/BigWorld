@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using engenious;
+using engenious.Graphics;
 using engenious.Input;
 
 namespace BigWorld.GUI
@@ -27,6 +28,11 @@ namespace BigWorld.GUI
             Invalidate();
         }
 
+        public override void PreDraw(SpriteBatch batch, Rectangle parentArea, float alpha)
+        {
+            batch.GraphicsDevice.ScissorRectangle = RenderedClientRectangle;
+        }
+
         protected override void OnUpdate(GameTime time)
         {
             base.OnUpdate(time);
@@ -41,6 +47,9 @@ namespace BigWorld.GUI
                     InternalMouseDown(mousePoint);
                 else if (mouseState.IsAnyButtonDown == false && lastMouseState.IsAnyButtonDown == true)
                     InternalMouseUp(mousePoint);
+
+                if (mouseState.ScrollWheelValue != lastMouseState.ScrollWheelValue)
+                    InternalMouseWheel(mouseState.ScrollWheelValue, mouseState.ScrollWheelValue-lastMouseState.ScrollWheelValue);
 
                 lastMouseState = mouseState;
             }
