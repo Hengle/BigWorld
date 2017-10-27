@@ -83,7 +83,11 @@ namespace BigWorldGame.Graphics
                 indices.Add((ushort) (3 + i));
                 indices.Add((ushort) (2 + i));
             }
-            indexBuffer = new IndexBuffer(graphicsDevice, DrawElementsType.UnsignedShort, indices.Count);
+            if (indexBuffer == null)
+                indexBuffer = new IndexBuffer(graphicsDevice, DrawElementsType.UnsignedShort, indices.Count);
+            else
+                indexBuffer.Resize(indices.Count);
+
             indexBuffer.SetData(indices.ToArray());
         }
 
