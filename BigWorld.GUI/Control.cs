@@ -84,13 +84,17 @@ namespace BigWorld.GUI
 
         protected bool IsInvalid { get; private set; } = false;
 
-        protected void Invalidate() => IsInvalid = true;
-
         public HorizontalAlignment HorizontalAlignment { get; set; }
 
         public VerticalAlignment VerticalAlignment { get; set; }
 
         #endregion
+
+        protected void Invalidate()
+        {
+            IsInvalid = true;
+            ControlInvalidated?.Invoke(this, null);
+        }
 
         public Control()
         {
@@ -140,12 +144,12 @@ namespace BigWorld.GUI
                         positionX = 0 + child.Margin.Left;
                         break;
                     case HorizontalAlignment.Stretch:
-                        positionY = 0 + child.Margin.Left;
+                        positionX = 0 + child.Margin.Left;
                         width = contentArea.Width - child.Margin.Horizontal;
                         break;
                     case HorizontalAlignment.Center:
                     default:
-                        positionX = (contentArea.Width - width - child.Margin.Horizontal) / 2;
+                        positionX = contentArea.Width/2 - width/2 - child.Margin.Horizontal / 2;
                         break;
                 }
 
@@ -163,7 +167,7 @@ namespace BigWorld.GUI
                         break;
                     case VerticalAlignment.Center:
                     default:
-                        positionY = (contentArea.Height - height - child.Margin.Vertical) / 2;
+                        positionY = contentArea.Height/2 - height/2 - child.Margin.Vertical / 2;
                         break;
                 }
 
@@ -300,5 +304,7 @@ namespace BigWorld.GUI
 
         protected virtual void OnUpdate(GameTime gameTime) { }
         #endregion
+
+        public event EventHandler ControlInvalidated;
     }
 }

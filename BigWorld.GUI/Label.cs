@@ -45,11 +45,11 @@ namespace BigWorld.GUI
                         destX = Padding.Left;
                         break;
                     case HorizontalAlignment.Right:
-                        destX = destinationRectangle.X + destinationRectangle.Width - (int)textSize.X - Padding.Right;
+                        destX = destinationRectangle.X + destinationRectangle.Width - (int)textSize.X;
                         break;
                     default:
                     case HorizontalAlignment.Center:
-                        destX = destinationRectangle.X + (destinationRectangle.Width - (int)textSize.X - Padding.Horizontal) / 2;
+                        destX = destinationRectangle.X + (destinationRectangle.Width - (int)textSize.X) / 2;
                         break;
                 }
 
@@ -59,11 +59,11 @@ namespace BigWorld.GUI
                         destY = Padding.Top;
                         break;
                     case VerticalAlignment.Bottom:
-                        destY = destinationRectangle.Y + destinationRectangle.Height - (int)textSize.Y - Padding.Bottom;
+                        destY = destinationRectangle.Y + destinationRectangle.Height - (int)textSize.Y;
                         break;
                     default:
                     case VerticalAlignment.Center:
-                        destY = destinationRectangle.Y + (destinationRectangle.Height - (int)textSize.Y - Padding.Vertical) / 2;
+                        destY = destinationRectangle.Y + (destinationRectangle.Height - (int)textSize.Y) / 2;
                         break;
                 }
 

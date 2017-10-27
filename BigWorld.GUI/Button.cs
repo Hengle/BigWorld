@@ -16,13 +16,15 @@ namespace BigWorld.GUI
 
         public Button(string text)
         {
-            BackgroundColor = Color.White * 0.5f;
+            BackgroundColor = Color.White;
             HoveredBackgroundColor = Color.White * 0.7f;
             PressedBackgroundColor = Color.White * 0.8f;
-            Padding = new Border(10);
+            Padding = new Border(20);
 
             Label = new Label()
             {
+                Padding = new Border(10),
+                BackgroundColor = Color.Transparent,
                 Text = text,
                 HorizontalAlignment = Layout.HorizontalAlignment.Stretch,
                 VerticalAlignment = Layout.VerticalAlignment.Stretch

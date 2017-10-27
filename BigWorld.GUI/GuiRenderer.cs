@@ -23,11 +23,8 @@ namespace BigWorld.GUI
             RootControl = new RootControl();
 
             var button = new Button("Start");
-            button.Padding = new Layout.Border(10);
             button.VerticalAlignment = Layout.VerticalAlignment.Top;
 
-            RootControl.BackgroundColor = Color.Red;
-            RootControl.Padding = new Layout.Border(10);
             RootControl.Children.Add(button);
         }
 
