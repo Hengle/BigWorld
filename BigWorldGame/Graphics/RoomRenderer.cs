@@ -36,7 +36,7 @@ namespace BigWorldGame.Graphics
 
             int l = 0;
             
-            foreach (var layer in room.TileLayer)
+            foreach (var layer in room.TileLayers)
             {   
                 for (int x = 0; x < Room.SizeX; x++)
                 {

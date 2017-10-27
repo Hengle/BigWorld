@@ -5,7 +5,7 @@ namespace BigWorld.Services
 {
     public class RoomCollisionService : BaseService
     {
-        public override void Update(Entity entity, World world, GameTime gameTime)
+        public override void Update(Entity entity, WorldMap worldMap, GameTime gameTime)
         {
             if (entity.RoomPosition.X < 0)
             {

@@ -20,6 +20,9 @@ namespace BigWorldGame
         private readonly Trigger<bool> buildTrigger = new Trigger<bool>();
         private readonly Trigger<bool> runTrigger = new Trigger<bool>();
         
+        private readonly Trigger<bool> saveTrigger = new Trigger<bool>();
+        private readonly Trigger<bool> loadTrigger = new Trigger<bool>();
+        
         public readonly MapRenderer MapRenderer;
         public readonly GuiRenderer GuiRenderer;
         public readonly SimulationComponent SimulationComponent;
@@ -78,6 +81,16 @@ namespace BigWorldGame
             {
                 CurrentGameState = GameState.Running;
                 SimulationComponent.Reset(GameState.Running);
+            }
+
+            if (saveTrigger.IsChanged(keyState.IsKeyDown(Keys.F11), k => k))
+            {
+                SimulationComponent.BuildWorldMap.SaveWorld();
+            }
+            
+            if (loadTrigger.IsChanged(keyState.IsKeyDown(Keys.F12), k => k))
+            {
+                SimulationComponent.SetWorld(WorldMap.LoadWorld());
             }
             
             base.Update(gameTime);

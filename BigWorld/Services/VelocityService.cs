@@ -5,7 +5,7 @@ namespace BigWorld.Services
 {
     public class VelocityService : BaseService
     {
-        public override void Update(Entity entity, World world, GameTime gameTime)
+        public override void Update(Entity entity, WorldMap worldMap, GameTime gameTime)
         {
             entity.Velocity = entity.CmdMoveDirection  * 4;
         }
