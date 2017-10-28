@@ -11,15 +11,17 @@ namespace BigWorldGame.Graphics
         private IndexBuffer indexBuffer;
         private readonly Spritesheet spriteSheet;
 
+        private Game game;
+        private Matrix world;
+
+        private bool invalide = false;
+        
         static SamplerState NearestSampler = new SamplerState()
         {
             TextureFilter = TextureFilter.Nearest,
             AddressU = TextureWrapMode.Repeat,
             AddressV = TextureWrapMode.Repeat
         };
-
-        private Game game;
-        private Matrix world;
 
         public RoomRenderer(Game game,Point point, Spritesheet spriteSheet)
         {
@@ -32,6 +34,14 @@ namespace BigWorldGame.Graphics
 
         public void ReloadChunk(Room room)
         {
+            if (room == null)
+            {
+                invalide = true;
+                return;
+            }
+
+            invalide = false;
+            
             List<MapVertex> vertices = new List<MapVertex>(Room.SizeX * Room.SizeY * 4);
 
             int l = 0;
@@ -93,6 +103,9 @@ namespace BigWorldGame.Graphics
 
         public void Render(GraphicsDevice graphicsDevice, Effect effect, Matrix view, Matrix projection)
         {
+            if (invalide)
+                return;
+            
             //_spriteSheets
             graphicsDevice.IndexBuffer = indexBuffer;
             graphicsDevice.VertexBuffer = vertexBuffer;

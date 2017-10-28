@@ -75,7 +75,17 @@ namespace BigWorldGame.Components
                 var x = i % 3 - 1;
                 var y = i / 3 - 1;
 
-                var room = map.LoadOrCreateRoom(new Point(x, y) + roomPoint);
+                var point = new Point(x, y) + roomPoint;
+                
+                Room room;
+                if (!map.TryGetRoom(point,out room) 
+                    && (Game.CurrentGameState == GameState.Build || Game.CurrentGameState == GameState.Debug) )
+                {
+                    room = map.LoadOrCreateRoom(point);
+                }
+                
+                
+                
                 renderers[i].ReloadChunk(room);
             }
         }
