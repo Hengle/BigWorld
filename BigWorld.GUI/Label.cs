@@ -23,7 +23,7 @@ namespace BigWorld.GUI
 
         public Label()
         {
-            //Padding = new Border(10);
+            Padding = new Border(10);
         }
 
         public Label(string text) : this()
@@ -77,7 +77,7 @@ namespace BigWorld.GUI
                     offsetX = clientSize.Width - (int)textSize.X - Padding.Right;
                     break;
                 default:
-                    offsetX = clientSize.Width / 2 - (int)textSize.X / 2 - Padding.Horizontal / 2;
+                    offsetX = clientSize.Width / 2 - (int)textSize.X / 2;
                     break;
             }
 
@@ -90,7 +90,7 @@ namespace BigWorld.GUI
                     offsetY = clientSize.Height - (int)textSize.Y - Padding.Bottom;
                     break;
                 default:
-                    offsetY = clientSize.Height / 2 - (int)textSize.Y / 2 - Padding.Vertical / 2;
+                    offsetY = clientSize.Height / 2 - (int)textSize.Y / 2;
                     break;
             }
 

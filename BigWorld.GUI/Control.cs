@@ -28,6 +28,8 @@ namespace BigWorld.GUI
 
         public Color? PressedBackgroundColor { get; set; } = null;
 
+        public Color? DisabledColor { get; set; } = null;
+
         public HorizontalAlignment HorizontalAlignment { get; set; }
 
         public VerticalAlignment VerticalAlignment { get; set; } 
@@ -39,6 +41,20 @@ namespace BigWorld.GUI
         public bool IsHovered { get; private set; }
 
         public bool IsMouseButtonDown { get; private set; }
+
+        public bool Enabled
+        {
+            get => enabled;
+            set
+            {
+                if (enabled == value)
+                    return;
+                enabled = value;
+                OnEnabledChanged();
+            }
+        }
+
+        private bool enabled = true;
 
         public virtual Size GetActualSize(int? availableWidth = null, int? availableHeight = null )
         {
@@ -96,13 +112,15 @@ namespace BigWorld.GUI
             batch.End();
 
             OnDrawChildren(batch, transform, renderRec, gameTime);
+
+            OnAfterDraw(batch, clientSize, gameTime);
         }
 
         protected virtual void OnDrawBackground(SpriteBatch batch, Size clientSize, GameTime gameTime)
         {
-            if(IsMouseButtonDown && PressedBackgroundColor.HasValue)
+            if(IsMouseButtonDown && PressedBackgroundColor.HasValue && Enabled)
                 batch.Draw(GuiRenderer.Pixel, new Rectangle(0, 0, clientSize.Width, clientSize.Height), (Color)PressedBackgroundColor);
-            else if(IsHovered && HoveredBackgroundColor.HasValue)
+            else if(IsHovered && HoveredBackgroundColor.HasValue && Enabled)
                 batch.Draw(GuiRenderer.Pixel, new Rectangle(0, 0, clientSize.Width, clientSize.Height), (Color)HoveredBackgroundColor);
             else
                 batch.Draw(GuiRenderer.Pixel, new Rectangle(0, 0, clientSize.Width, clientSize.Height), BackgroundColor);
@@ -120,6 +138,14 @@ namespace BigWorld.GUI
         {
             OnDrawBackground(batch, clientSize, gameTime);
         }
+
+        protected virtual void OnAfterDraw(SpriteBatch batch, Size clientSize, GameTime gameTime)
+        {
+            if (!Enabled && DisabledColor.HasValue)
+                batch.Draw(GuiRenderer.Pixel, new Rectangle(0, 0, clientSize.Width, clientSize.Height), (Color)DisabledColor);
+        }
+
+        protected virtual void OnEnabledChanged() { }
 
         public void Update(GameTime gameTime)
         {
