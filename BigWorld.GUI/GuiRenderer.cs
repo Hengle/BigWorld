@@ -43,6 +43,11 @@ namespace BigWorld.GUI
             //nestedContent.Position = new Point(30, 30);
             stackPanel.Children.Add(nestedContent);
 
+            var button = new Button("Demo");
+            button.Height = 100;
+            button.Width = 200;
+            stackPanel.Children.Add(button);
+
             RootControl.Content = stackPanel;
         }
 
@@ -50,10 +55,18 @@ namespace BigWorld.GUI
         {
             base.LoadContent();
 
+            RootControl.LoadContent(Game);
+
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Pixel = new Texture2D(GraphicsDevice, 1, 1);
             Pixel.SetData(new Color[] { Color.White });
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+            RootControl.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)

@@ -54,12 +54,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Args\MouseEventArgs.cs" />
+    <Compile Include="Button.cs" />
     <Compile Include="ContainerControl.cs" />
     <Compile Include="ContentControl.cs" />
     <Compile Include="Control.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GuiRenderer.cs" />
+    <Compile Include="Label.cs" />
     <Compile Include="Layout\Alignment.cs" />
+    <Compile Include="Layout\Border.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RootControl.cs" />
     <Compile Include="StackPanel.cs" />

@@ -21,6 +21,11 @@ namespace BigWorld.GUI
             }
         }
 
+        protected override void OnDraw(SpriteBatch batch, Size clientSize, GameTime gameTime)
+        {
+            base.OnDraw(batch, clientSize, gameTime);
+        }
+
         protected override void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
         {
             if (Content == null)
@@ -59,9 +64,29 @@ namespace BigWorld.GUI
             }
 
             var childTransform = transform * Matrix.CreateTranslation(offsetX, offsetY, 0);
-            var childRenderMask = renderMask.Intersection(new Rectangle(new Point(0,0), size)).Transform(childTransform);
+
+            //TODO: what is happening here?
+            var childRenderMask = renderMask.Intersection(new Rectangle(new Point(0, 0), size).Transform(childTransform));
 
             Content.Draw(batch, childTransform, childRenderMask, gameTime);
+        }
+
+        public override Size GetActualSize(int? availableWidth = null, int? availableHeight = null)
+        {
+            var size = base.GetActualSize(availableWidth, availableHeight);
+
+            if(Content != null && (size.Height == 0 || size.Width == 0))
+            {
+                var contentSize = Content.GetActualSize(availableWidth - Padding.Horizontal, availableHeight- Padding.Vertical);
+
+                if (size.Height == 0)
+                    size.Height = contentSize.Height + Padding.Vertical;
+
+                if (size.Width == 0)
+                    size.Width = contentSize.Width + Padding.Horizontal;
+            }
+
+            return size;
         }
     }
 }
