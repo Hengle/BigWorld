@@ -15,21 +15,18 @@ namespace BigWorldGame.Components
     {
         public new readonly MainGame Game;
 
-        private BuildGuiRenderer buildGuiRenderer;
-        private DebugGuiRenderer debugGuiRenderer;
+        public readonly BuildGuiRenderer BuildGuiRenderer;
         
         public GuiRenderer(MainGame game) : base(game)
         {
             Game = game;
+            
+            BuildGuiRenderer = new BuildGuiRenderer(Game);
         }
 
         protected override void LoadContent()
         {        
-            buildGuiRenderer = new BuildGuiRenderer(Game);
-            buildGuiRenderer.LoadContent();
-            
-            debugGuiRenderer = new DebugGuiRenderer(Game);
-            debugGuiRenderer.LoadContent();
+            BuildGuiRenderer.LoadContent();
         }
 
         
@@ -39,11 +36,9 @@ namespace BigWorldGame.Components
         {
             switch(Game.CurrentGameState)
                 {
-                    case GameState.Build:
-                        buildGuiRenderer.Update(gameTime);
-                        break;
                     case GameState.Debug:
-                        debugGuiRenderer.Update(gameTime);
+                    case GameState.Build:
+                        BuildGuiRenderer.Update(gameTime);
                         break;
                     case GameState.Running:
                         break;
@@ -56,11 +51,9 @@ namespace BigWorldGame.Components
         {
             switch (Game.CurrentGameState)
             {
-                case GameState.Build:
-                    buildGuiRenderer.Draw(gameTime);
-                    break;
                 case GameState.Debug:
-                    debugGuiRenderer.Draw(gameTime);
+                case GameState.Build:
+                    BuildGuiRenderer.Draw(gameTime);
                     break;
                 case GameState.Running:
                     break;
