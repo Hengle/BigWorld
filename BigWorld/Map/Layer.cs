@@ -37,10 +37,10 @@ namespace BigWorld.Map
 
         public int GetFlatIndex(int x, int y)
         {
-            if (x < 0 || x > Room.SizeX)
+            if (x < 0 || x > Room.SizeX - 1 )
                 throw new IndexOutOfRangeException("X out of Range");
             
-            if (y < 0 || y > Room.SizeY)
+            if (y < 0 || y > Room.SizeY - 1 )
                 throw new IndexOutOfRangeException("Y out of Range");
 
             return y * Room.SizeY + x;
@@ -90,6 +90,13 @@ namespace BigWorld.Map
                     Values[i] = deserialize(sr);
                 }
             }
+        }
+
+        public bool Test(Point position, Func<T, bool> func, bool invert = false)
+        {
+            var value = GetValue(position);
+
+            return invert && !value.HasValue || value.HasValue && func(value.Value) ;
         }
     }
 }
