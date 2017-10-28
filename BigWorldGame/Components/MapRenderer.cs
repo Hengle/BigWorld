@@ -52,13 +52,40 @@ namespace BigWorldGame.Components
         
         public override void Update(GameTime gameTime)
         {
+
+            Point roomPoint = new Point(0,0);
+            WorldMap map = null;
+            
+            if (Game.CurrentGameState == GameState.Build || Game.CurrentGameState == GameState.Debug)
+            {
+                roomPoint = Game.GuiRenderer.BuildGuiRenderer.CurrentRoomCoordinate;
+                map = Game.BuildWorldMap;
+            }
+            else if (Game.CurrentGameState == GameState.Running)
+            {
+                roomPoint = Game.SimulationComponent.Player.CurrentRoom;
+                map = Game.SimulationComponent.CurrentWorldMap;
+            }
+
+            if (map == null)
+                return;
             
             for (int i = 0; i < renderers.Length; i++)
             {
                 var x = i % 3 - 1;
                 var y = i / 3 - 1;
 
-                var room = Game.SimulationComponent.BuildWorldMap.LoadOrCreateRoom(new Point(x, y) + Game.SimulationComponent.CurrentRoomCoordinate);
+                var point = new Point(x, y) + roomPoint;
+                
+                Room room;
+                if (!map.TryGetRoom(point,out room) 
+                    && (Game.CurrentGameState == GameState.Build || Game.CurrentGameState == GameState.Debug) )
+                {
+                    room = map.LoadOrCreateRoom(point);
+                }
+                
+                
+                
                 renderers[i].ReloadChunk(room);
             }
         }
