@@ -70,5 +70,10 @@ namespace BigWorld.Map
 
             return world;
         }
+
+        public bool ContainsRoom(Point point)
+        {
+            return roomList.ContainsKey(point);
+        }
     }
 }

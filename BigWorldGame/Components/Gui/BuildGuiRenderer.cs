@@ -11,6 +11,8 @@ namespace BigWorldGame.Components.Gui
     {
         public new readonly MainGame Game;
         
+        public Point CurrentRoomCoordinate { get; set; }
+        
         private SelectTileSheetControl tileSheetControl;
         
         private Texture2D dungeonSheet;
@@ -29,8 +31,10 @@ namespace BigWorldGame.Components.Gui
 
         private readonly Trigger<bool> groundFill = new Trigger<bool>();
         
-        
-        
+        private readonly Trigger<bool> upTrigger = new Trigger<bool>();
+        private readonly Trigger<bool> downTrigger = new Trigger<bool>();
+        private readonly Trigger<bool> leftTrigger = new Trigger<bool>();
+        private readonly Trigger<bool> rightTrigger = new Trigger<bool>();
         
         public BuildGuiRenderer(MainGame game) : base(game)
         {
@@ -74,7 +78,7 @@ namespace BigWorldGame.Components.Gui
 
             if (mouseMapPoint.HasValue && mouseState.LeftButton == ButtonState.Pressed)
             {
-                var room = Game.SimulationComponent.BuildWorldMap.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+                var room = Game.BuildWorldMap.LoadOrCreateRoom(CurrentRoomCoordinate);
 
                 if (!isBlockMode)
                 {
@@ -89,7 +93,7 @@ namespace BigWorldGame.Components.Gui
             }
             else if (mouseMapPoint.HasValue && mouseState.RightButton == ButtonState.Pressed)
             {
-                var room = Game.SimulationComponent.BuildWorldMap.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+                var room = Game.BuildWorldMap.LoadOrCreateRoom(CurrentRoomCoordinate);
 
                 if (!isBlockMode)
                 {
@@ -120,12 +124,9 @@ namespace BigWorldGame.Components.Gui
             }
 
             isBlockMode = keyState.IsKeyDown(Keys.B);
-            
-            
-            
             if (groundFill.IsChanged((keyState.IsKeyDown(Keys.F)),i => i))
             {
-                var room = Game.SimulationComponent.BuildWorldMap.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+                var room = Game.BuildWorldMap.LoadOrCreateRoom(CurrentRoomCoordinate);
                 
                 for (int x = 0; x < Room.SizeX; x++)
                 {
@@ -137,10 +138,31 @@ namespace BigWorldGame.Components.Gui
                 }
             }
             
+            if (upTrigger.IsChanged(keyState.IsKeyDown(Keys.W),k => k))
+            {
+                CurrentRoomCoordinate = new Point(CurrentRoomCoordinate.X,CurrentRoomCoordinate.Y-1);
+            }
+            if (downTrigger.IsChanged(keyState.IsKeyDown(Keys.S),k => k))
+            {
+                CurrentRoomCoordinate = new Point(CurrentRoomCoordinate.X,CurrentRoomCoordinate.Y+1);
+            }
+            
+            if (leftTrigger.IsChanged(keyState.IsKeyDown(Keys.A),k => k))
+            {
+                CurrentRoomCoordinate = new Point(CurrentRoomCoordinate.X-1,CurrentRoomCoordinate.Y);
+            }
+            
+            if (rightTrigger.IsChanged(keyState.IsKeyDown(Keys.D),k => k))
+            {
+                CurrentRoomCoordinate = new Point(CurrentRoomCoordinate.X+1,CurrentRoomCoordinate.Y);
+            }
+            
 
             Game.CurrentLayer = currentLayer;
             tileSheetControl.Update();
         }
+
+        
 
         public override void Draw(GameTime gameTime)
         {
@@ -161,7 +183,7 @@ namespace BigWorldGame.Components.Gui
                 batch.Draw(pixelTexture,new Rectangle(mouseMapPoint.Value.X*RenderSettings.TileSize+height,mouseMapPoint.Value.Y*RenderSettings.TileSize+height,RenderSettings.TileSize,RenderSettings.TileSize),mouseColor );
             }
             
-            var room = Game.SimulationComponent.BuildWorldMap.LoadOrCreateRoom(Game.SimulationComponent.CurrentRoomCoordinate);
+            var room = Game.BuildWorldMap.LoadOrCreateRoom(CurrentRoomCoordinate);
 
             for (int x = 0; x < Room.SizeX; x++)
             {

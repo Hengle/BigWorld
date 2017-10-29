@@ -13,10 +13,10 @@ namespace BigWorldGame
         
         public int CurrentLayer = -1;
         
-        
-
         public GameState CurrentGameState = GameState.Build;
                 
+        public WorldMap BuildWorldMap = new WorldMap();                
+        
         private readonly Trigger<bool> debugTrigger = new Trigger<bool>();
         private readonly Trigger<bool> buildTrigger = new Trigger<bool>();
         private readonly Trigger<bool> runTrigger = new Trigger<bool>();
@@ -81,17 +81,18 @@ namespace BigWorldGame
             if (runTrigger.IsChanged(keyState.IsKeyDown(Keys.F6),k => k) && CurrentGameState != GameState.Running)
             {
                 CurrentGameState = GameState.Running;
+                SimulationComponent.SimulationWorld = BuildWorldMap;
                 SimulationComponent.Reset(GameState.Running);
             }
 
-            if (saveTrigger.IsChanged(keyState.IsKeyDown(Keys.F11), k => k))
+            if (saveTrigger.IsChanged(keyState.IsKeyDown(Keys.F11), k => k) && CurrentGameState == GameState.Build)
             {
-                SimulationComponent.BuildWorldMap.SaveWorld();
+                BuildWorldMap.SaveWorld();
             }
             
-            if (loadTrigger.IsChanged(keyState.IsKeyDown(Keys.F12), k => k))
+            if (loadTrigger.IsChanged(keyState.IsKeyDown(Keys.F12), k => k) && CurrentGameState == GameState.Build)
             {
-                SimulationComponent.SetWorld(WorldMap.LoadWorld());
+                BuildWorldMap = WorldMap.LoadWorld();
             }
             
             base.Update(gameTime);
