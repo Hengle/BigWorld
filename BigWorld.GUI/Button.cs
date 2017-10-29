@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BigWorld.GUI.Args;
 using engenious;
 using engenious.Input;
+using BigWorld.GUI.Brushes;
 
 namespace BigWorld.GUI
 {
@@ -13,10 +14,10 @@ namespace BigWorld.GUI
     {
         public Button()
         {
-            BackgroundColor = Color.White * 0.5f;
-            HoveredBackgroundColor = Color.White * 0.7f;
-            PressedBackgroundColor = Color.White * 0.9f;
-            DisabledColor = Color.Black * 0.7f;
+            Background = new BorderBrush(Color.White * 0.5f);
+            HoveredBackground = new BorderBrush(Color.White * 0.7f);
+            PressedBackground = new BorderBrush(Color.White * 0.9f);
+            DisabledBrush = new BorderBrush(Color.Black * 0.5f);
         }
 
         public Button(string text): this()

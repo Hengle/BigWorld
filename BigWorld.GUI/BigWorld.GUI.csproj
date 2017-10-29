@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Args\MouseEventArgs.cs" />
+    <Compile Include="Brushes\BorderBrush.cs" />
+    <Compile Include="Brushes\Brush.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="ContainerControl.cs" />
     <Compile Include="ContentControl.cs" />

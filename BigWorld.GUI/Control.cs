@@ -1,4 +1,5 @@
 ﻿using BigWorld.GUI.Args;
+using BigWorld.GUI.Brushes;
 using BigWorld.GUI.Layout;
 using engenious;
 using engenious.Graphics;
@@ -22,13 +23,13 @@ namespace BigWorld.GUI
 
         public Point Position { get; set; } = Point.Zero;
 
-        public Color BackgroundColor { get; set; } = Color.Transparent;
+        public Brush Background { get; set; } = new BorderBrush(Color.Transparent);
 
-        public Color? HoveredBackgroundColor { get; set; } = null;
+        public Brush HoveredBackground { get; set; } = null;
 
-        public Color? PressedBackgroundColor { get; set; } = null;
+        public Brush PressedBackground { get; set; } = null;
 
-        public Color? DisabledColor { get; set; } = null;
+        public Brush DisabledBrush { get; set; } = null;
 
         public HorizontalAlignment HorizontalAlignment { get; set; }
 
@@ -122,12 +123,12 @@ namespace BigWorld.GUI
 
         protected virtual void OnDrawBackground(SpriteBatch batch, Size clientSize, GameTime gameTime)
         {
-            if(IsMouseButtonDown && PressedBackgroundColor.HasValue && Enabled)
-                batch.Draw(GuiRenderer.Pixel, new Rectangle(0, 0, clientSize.Width, clientSize.Height), (Color)PressedBackgroundColor);
-            else if(IsHovered && HoveredBackgroundColor.HasValue && Enabled)
-                batch.Draw(GuiRenderer.Pixel, new Rectangle(0, 0, clientSize.Width, clientSize.Height), (Color)HoveredBackgroundColor);
+            if (IsMouseButtonDown && PressedBackground != null && Enabled)
+                PressedBackground.Draw(batch, clientSize);
+            else if (IsHovered && HoveredBackground != null && Enabled)
+                HoveredBackground.Draw(batch, clientSize);
             else
-                batch.Draw(GuiRenderer.Pixel, new Rectangle(0, 0, clientSize.Width, clientSize.Height), BackgroundColor);
+                Background.Draw(batch, clientSize);
         }
 
         protected virtual void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
@@ -145,8 +146,8 @@ namespace BigWorld.GUI
 
         protected virtual void OnAfterDraw(SpriteBatch batch, Size clientSize, GameTime gameTime)
         {
-            if (!Enabled && DisabledColor.HasValue)
-                batch.Draw(GuiRenderer.Pixel, new Rectangle(0, 0, clientSize.Width, clientSize.Height), (Color)DisabledColor);
+            if (!Enabled && DisabledBrush != null)
+                DisabledBrush.Draw(batch, clientSize);
         }
 
         protected virtual void OnEnabledChanged() { }

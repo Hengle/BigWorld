@@ -1,4 +1,5 @@
-﻿using engenious;
+﻿using BigWorld.GUI.Brushes;
+using engenious;
 using engenious.Graphics;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace BigWorld.GUI
         public GuiRenderer(Game game) : base(game)
         {
             RootControl = new RootControl();
-            RootControl.BackgroundColor = Color.CornflowerBlue;
+            RootControl.Background = new BorderBrush(Color.Red, 10, Color.CornflowerBlue);
 
             var container = new ContainerControl();
             container.HorizontalAlignment = Layout.HorizontalAlignment.Stretch;
@@ -30,11 +31,11 @@ namespace BigWorld.GUI
             scrollPanel.VerticalAlignment = Layout.VerticalAlignment.Center;
             scrollPanel.Width = 200;
             scrollPanel.Height = 300;
-            scrollPanel.BackgroundColor = Color.PaleVioletRed;
+            scrollPanel.Background = new BorderBrush(Color.PaleVioletRed);
             container.Children.Add(scrollPanel);
 
             var buttonStack = new StackPanel();
-            buttonStack.BackgroundColor = Color.Green;
+            buttonStack.Background = new BorderBrush(Color.Green);
             buttonStack.Width = 180;
             buttonStack.ItemSpacing = 10;
             scrollPanel.Content = buttonStack;
@@ -45,7 +46,7 @@ namespace BigWorld.GUI
                 {
                     Width = 100,
                     Height = 50,
-                    BackgroundColor = Color.Red
+                    Background = new BorderBrush(Color.Honeydew)
                 });
             }
 
