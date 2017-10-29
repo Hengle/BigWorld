@@ -2,7 +2,10 @@
 
 uniform sampler2DArray TileTextures;
 
+uniform vec4 LightColor;
 uniform vec2 LightPosition;
+uniform float LightRadius;
+uniform bool LightEnable;
 
 uniform float AmbientIntensity;
 uniform vec4 AmbientColor;
@@ -23,14 +26,20 @@ void main()
 	vec2 distVec =  LightPosition - psPosition.xy;
 	float dist = dot(distVec,distVec);
 	
-	dist = 1 - clamp(dist /2,0,1); 
-	
+	dist = 1 - clamp(dist /LightRadius,0,1); 
 	
 	vec4 IAmbient = texColor * AmbientColor * AmbientIntensity;
 	IAmbient = vec4(IAmbient.rgb,texColor.a);
 	
-	vec4 ILight = texColor * vec4(vec3(dist),1);
+	outColor = IAmbient;
 	
-	outColor = IAmbient + ILight ;
+	if(LightEnable)
+	{
+	    vec4 ILight = texColor * vec4(vec3(dist) * LightColor.rgb,1);
+    	
+    	outColor += ILight;
+	}
+	
+	
 	outColor = clamp(outColor,0,1);
 }

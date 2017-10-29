@@ -123,10 +123,26 @@ namespace BigWorldGame.Components
             else if (Game.CurrentGameState == GameState.Debug || Game.CurrentGameState == GameState.Running)
             {
                 effect.CurrentTechnique = effect.Techniques["RunCharacter"];
+
+                var map = Game.SimulationComponent.CurrentWorldMap;
                 
-                effect.Parameters["AmbientColor"].SetValue(Color.White);
-                effect.Parameters["AmbientIntensity"].SetValue(0.2f);
-                effect.Parameters["LightPosition"].SetValue(new Vector2(7,8));
+                
+                //TODO: Merge with MapRenderer
+                Room room;
+                if (map.TryGetRoom(Game.SimulationComponent.Player.CurrentRoom,out  room))
+                {
+                    effect.Parameters["AmbientIntensity"].SetValue(room.AmbientIntensity);
+                    effect.Parameters["AmbientColor"].SetValue(room.AmbientColor);
+
+                    for (int i = 0; i < 1; i++)
+                    {
+                        var light = room.RoomLights[i];
+                        effect.Parameters["LightColor"].SetValue(light.LightColor);
+                        effect.Parameters["LightPosition"].SetValue(light.Position);
+                        effect.Parameters["LightRadius"].SetValue(light.Radius);
+                        effect.Parameters["LightEnable"].SetValue(light.Enable);
+                    }
+                }
             }
 
             foreach (var pass in effect.CurrentTechnique.Passes.PassesList)

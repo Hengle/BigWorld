@@ -114,6 +114,8 @@ namespace BigWorldGame.Graphics
             effect.Parameters["TileTextures"].SetValue(spriteSheet.Textures);
             effect.Parameters["WorldViewProj"].SetValue(projection * view *  world);
             
+            effect.Parameters["LightPosition"].SetValue(new Vector2(7,8));
+            
 
             foreach (var pass in effect.CurrentTechnique.Passes.PassesList)
             {

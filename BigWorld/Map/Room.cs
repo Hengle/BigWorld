@@ -9,11 +9,14 @@ namespace BigWorld.Map
     {
         public const int SizeX = 16;
         public const int SizeY = 16;
+        public const int MaxRoomLights = 8;
         
         public readonly Point Point;
         
         public Layer<bool> BlockLayer { get; private set; } = new Layer<bool>();
         public List<Layer<uint>> TileLayers {get; private set;} = new List<Layer<uint>>();
+        
+        public readonly RoomLight[] RoomLights = new RoomLight[MaxRoomLights];
         
         public Color AmbientColor { get; set; } = Color.White;
         public float AmbientIntensity { get; set; } = 1;
@@ -23,6 +26,10 @@ namespace BigWorld.Map
             Point = point;
             //GroundValue
             TileLayers.Add(new Layer<uint>());
+
+            AmbientIntensity = 0.5f;
+            
+            RoomLights[0] = new RoomLight(Color.Red,new Vector2(8,8));
         }
 
         public Layer<uint> this[int index]

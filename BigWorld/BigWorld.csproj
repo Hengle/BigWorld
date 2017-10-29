@@ -55,6 +55,7 @@
     <Compile Include="GameState.cs" />
     <Compile Include="Map\Layer.cs" />
     <Compile Include="Map\Room.cs" />
+    <Compile Include="Map\RoomLight.cs" />
     <Compile Include="Map\WorldMap.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Services\BaseService.cs" />
