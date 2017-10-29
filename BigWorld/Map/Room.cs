@@ -26,10 +26,6 @@ namespace BigWorld.Map
             Point = point;
             //GroundValue
             TileLayers.Add(new Layer<uint>());
-
-            AmbientIntensity = 0.5f;
-            
-            RoomLights[0] = new RoomLight(Color.Red,new Vector2(8,8));
         }
 
         public Layer<uint> this[int index]

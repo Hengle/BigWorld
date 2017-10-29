@@ -118,14 +118,15 @@ namespace BigWorldGame.Components
                 {
                     effect.Parameters["AmbientIntensity"].SetValue(room.AmbientIntensity);
                     effect.Parameters["AmbientColor"].SetValue(room.AmbientColor);
-
-                    for (int i = 0; i < 1; i++)
+                    
+                    for (int i = 0; i < 8; i++)
                     {
                         var light = room.RoomLights[i];
-                        effect.Parameters["LightColor"].SetValue(light.LightColor);
-                        effect.Parameters["LightPosition"].SetValue(light.Position);
-                        effect.Parameters["LightRadius"].SetValue(light.Radius);
-                        effect.Parameters["LightEnable"].SetValue(light.Enable);
+                        
+                        effect.Parameters[$"Lights[{i}].color"].SetValue(light.Color);
+                        effect.Parameters[$"Lights[{i}].position"].SetValue(light.Position);
+                        effect.Parameters[$"Lights[{i}].radius"].SetValue(light.Radius);
+                        effect.Parameters[$"Lights[{i}].enable"].SetValue(light.Enable); 
                     }
                 }
                 
