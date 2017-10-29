@@ -226,6 +226,8 @@ namespace BigWorld.GUI
                     child.MouseLeave(mouseEventArgs);
                 }
             }
+
+            OnMouseMove(mouseEventArgs, mouseEventArgs.GetRelativePosition(ClientRectangle));
         }
 
         public bool MouseScroll(MouseEventArgs mouseEventArgs, int delta)
@@ -265,6 +267,9 @@ namespace BigWorld.GUI
 
             OnMouseLeave(eventArgs, eventArgs.GetRelativePosition(ClientRectangle));
         }
+
+        protected virtual void OnMouseMove(MouseEventArgs mouseEventArgs, Point relativePosition)
+        { }
 
         protected virtual void OnMouseEnter(MouseEventArgs mouseEventArgs, Point relativePosition)
         {  

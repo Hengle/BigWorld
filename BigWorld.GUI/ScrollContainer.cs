@@ -6,18 +6,44 @@ using System.Threading.Tasks;
 using BigWorld.GUI.Args;
 using engenious;
 using engenious.Graphics;
+using engenious.Input;
 
 namespace BigWorld.GUI
 {
     public class ScrollContainer : ContentControl
     {
-        public int ScrollPositionX { get; set; }
+        public int ScrollPositionX {
+            get => scrollPositionX;
+            set
+            {
+                if (scrollPositionX == value)
+                    return;
+
+                if(value < 0)
+                {
+                    scrollPositionX = 0;
+                    return;
+                }
+
+                if(value > scrollHeight - ClientRectangle.Height)
+                {
+                    scrollPositionX = scrollHeight - ClientRectangle.Height;
+                    return;
+                }
+
+                scrollPositionX = value;
+            }
+        }
+
+        private int scrollPositionX = 0;
 
         private bool needsScrollingX = false;
 
         private int scrollHeight = 0;
 
         const int MIN_SCROLLER_SIZE = 10;
+
+        public Rectangle ThumbAreaX { get; private set; }
 
         protected override void OnDraw(SpriteBatch batch, Size clientSize, GameTime gameTime)
         {
@@ -27,8 +53,15 @@ namespace BigWorld.GUI
                 return;
 
             float scrollRatio = (float)clientSize.Height / scrollHeight;
-            var scrollRectangle = new Rectangle(clientSize.Width - 10, (int)(ScrollPositionX * scrollRatio), 10, (int)Math.Round(scrollRatio * clientSize.Width));
-            batch.Draw(GuiRenderer.Pixel, scrollRectangle, Color.White);
+            int scrollerHeight = (int)(scrollRatio * clientSize.Height);
+
+            int scrollerPosition = (int)(((float)ScrollPositionX / (scrollHeight - clientSize.Height)) * (clientSize.Height-scrollerHeight));
+
+            var scrollRectangle = new Rectangle(clientSize.Width - 10, scrollerPosition, 10, scrollerHeight);
+
+            ThumbAreaX = scrollRectangle;
+
+            batch.Draw(GuiRenderer.Pixel, ThumbAreaX, Color.White);
 
         }
 
@@ -46,7 +79,7 @@ namespace BigWorld.GUI
 
                 var childTransform = transform * Matrix.CreateTranslation(0, -ScrollPositionX, 0);
 
-                var childRect = new Rectangle(0, 0, childSize.Width-10, childSize.Height).Transform(childTransform);
+                var childRect = new Rectangle(0, 0, childSize.Width, childSize.Height).Transform(childTransform);
 
                 Content.Draw(batch, childTransform, childRect, gameTime);
             }
@@ -66,6 +99,35 @@ namespace BigWorld.GUI
             ScrollPositionX += scrollDelta * 4;
 
             return true;
+        }
+
+        bool grabbing = false;
+        int thumbOffset = 0;
+
+        protected override bool OnMouseButtonDown(MouseEventArgs mouseEventArgs, Point relativePosition, MouseButton button)
+        {
+            if (button == MouseButton.Left && ThumbAreaX.Intersects(relativePosition))
+            {
+                grabbing = true;
+                thumbOffset = relativePosition.Y - ThumbAreaX.Y;
+            }
+            return true;
+        }
+
+        protected override bool OnMouseButtonUp(MouseEventArgs mouseEventArgs, Point relativePosition, MouseButton button)
+        {
+            if (button == MouseButton.Left)
+                grabbing = false;
+
+            return true;
+        }
+
+        protected override void OnMouseMove(MouseEventArgs mouseEventArgs, Point relativePosition)
+        {
+            if(grabbing)
+            {
+                //ScrollPositionX = (scrollHeight / ClientRectangle.Height) * relativePosition.X - thumbOffset;
+            }
         }
     }
 }
