@@ -39,16 +39,16 @@ namespace BigWorld.GUI
                 Font = game.Content.Load<SpriteFont>("Fonts/GameFont");
         }
 
-        public override Size GetActualSize(int? availableWidth = null, int? availableHeight = null)
+        public override ControlSize GetActualSize(ControlSize availableSize)
         {
-            var size = base.GetActualSize(availableWidth, availableHeight);
+            var size = base.GetActualSize(availableSize);
 
-            if(size.Height == 0 && Font != null && Text != null)
+            if(!size.Height.HasValue && Font != null && Text != null)
             {
                 size.Height = (int)Font.MeasureString(Text).Y + Padding.Vertical;
             }
 
-            if(size.Width == 0 && Font != null && Text != null)
+            if(!size.Width.HasValue && Font != null && Text != null)
             {
                 size.Width = (int)Font.MeasureString(Text).X + Padding.Horizontal;
             }

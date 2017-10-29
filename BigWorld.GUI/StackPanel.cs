@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using engenious;
 using engenious.Graphics;
+using BigWorld.GUI.Layout;
 
 namespace BigWorld.GUI
 {
@@ -12,74 +13,67 @@ namespace BigWorld.GUI
     {
         public int ItemSpacing { get; set; } = 0;
 
-        protected override void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
+        protected override void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, ControlSize availableSize, GameTime gameTime)
         {
             var offset = 0;
             foreach(var child in Children)
             {
-                var size = child.GetActualSize(renderMask.Width);
+                var size = child.GetActualSize(new ControlSize(availableSize.Width, null));
 
-                var offsetX = 0;
-
-                switch(child.HorizontalAlignment)
-                {
-                    case Layout.HorizontalAlignment.Left:
-                        break;
-                    case Layout.HorizontalAlignment.Right:
-                        offsetX = renderMask.Width - size.Width;
-                        break;
-                    case Layout.HorizontalAlignment.Center:
-                    default:
-                        offsetX = renderMask.Width / 2 - size.Width / 2;
-                        break;
-                }
+                var offsetX = LayoutHelper.CalculateXOffset(child.HorizontalAlignment, availableSize, size);
 
                 var childTransform = transform * Matrix.CreateTranslation(offsetX, offset, 0);
 
                 var childRender = renderMask.Intersection(new Rectangle(new Point(0, 0), size).Transform(childTransform));
 
-                child.Draw(batch, childTransform , childRender, gameTime);
-                offset += size.Height + ItemSpacing;
+                child.Draw(batch, childTransform , childRender, size,gameTime);
+                offset += (size.Height ?? 0) + ItemSpacing;
             }
         }
 
-        public override Size GetActualSize(int? availableWidth = null, int? availableHeight = null)
+        public override ControlSize GetActualSize(ControlSize controlSize)
         {
-            var estimatedSize = base.GetActualSize(availableWidth, availableHeight);
+            var estimatedSize = base.GetActualSize(controlSize);
 
-            if(estimatedSize.Height == 0 || estimatedSize.Width == 0)
+            if(!estimatedSize.Height.HasValue || !estimatedSize.Width.HasValue)
             {
-                List<Size> childSizes = new List<Size>();
+                List<ControlSize> childSizes = new List<ControlSize>();
 
                 foreach (var child in Children)
                 {
-                    childSizes.Add( child.GetActualSize(availableWidth, null));
+                    childSizes.Add( child.GetActualSize(new ControlSize(controlSize.Width, null)));
                 }
 
-                if (estimatedSize.Height == 0)
+                if (!estimatedSize.Height.HasValue)
                 {
                     int sum = 0;
 
                     foreach (var size in childSizes)
-                        sum += size.Height;
+                        sum += size.Height ?? 0;
 
                     sum += ItemSpacing * (Children.Count - 1);
 
                     estimatedSize.Height = sum + Padding.Vertical;
+
+                    if (sum + Padding.Vertical == 0)
+                        estimatedSize.Height = null;
                 }
 
-                if(estimatedSize.Width == 0)
+                if(!estimatedSize.Width.HasValue)
                 {
                     var maxWidth = 0;
 
                     foreach(var size in childSizes)
                     {
                         //Check if != availableWidth is to prevent child "stretch" if no width is set.
-                        if (size.Width > maxWidth && size.Width != availableWidth)
-                            maxWidth = size.Width;
+                        if (size.Width > maxWidth && size.Width != controlSize.Width)
+                            maxWidth = size.Width ?? 0;
                     }
 
                     estimatedSize.Width = maxWidth + Padding.Horizontal;
+
+                    if (maxWidth + Padding.Horizontal== 0)
+                        estimatedSize.Width = null;
                 }
             }
             return estimatedSize;

@@ -7,6 +7,7 @@ using BigWorld.GUI.Args;
 using engenious;
 using engenious.Graphics;
 using engenious.Input;
+using BigWorld.GUI.Layout;
 
 namespace BigWorld.GUI
 {
@@ -25,9 +26,9 @@ namespace BigWorld.GUI
                     return;
                 }
 
-                if(value > scrollHeight - ClientRectangle.Height)
+                if(value > scrollHeight - RenderedClientRectangle.Height)
                 {
-                    scrollPositionX = scrollHeight - ClientRectangle.Height;
+                    scrollPositionX = scrollHeight - RenderedClientRectangle.Height;
                     return;
                 }
 
@@ -65,33 +66,31 @@ namespace BigWorld.GUI
 
         }
 
-        protected override void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
+        protected override void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, ControlSize availableSize, GameTime gameTime)
         {
             if (Content == null)
                 return;
 
-            var childSize = Content.GetActualSize(null, null);
+            availableSize.Width = availableSize.Width - 10;
+
+            var childSize = Content.GetActualSize(new ControlSize(availableSize.Width, null));
 
             if(childSize.Height > renderMask.Height)
             {
                 needsScrollingX = true;
-                scrollHeight = childSize.Height;
-
-                var childTransform = transform * Matrix.CreateTranslation(0, -ScrollPositionX, 0);
-
-                var childRect = new Rectangle(0, 0, childSize.Width, childSize.Height).Transform(childTransform);
-
-                Content.Draw(batch, childTransform, childRect, gameTime);
+                scrollHeight = childSize.Height ?? 0;
             }
             else
             {
                 needsScrollingX = false;
             }
-        }
 
-        public override Size GetActualSize(int? availableWidth = null, int? availableHeight = null)
-        {
-            return base.GetActualSize(availableWidth, availableHeight);
+            var xOffset = LayoutHelper.CalculateXOffset(Content.HorizontalAlignment, availableSize, childSize);
+
+            var childTransform = transform * Matrix.CreateTranslation(xOffset, -ScrollPositionX, 0);
+            //var childRect = new Rectangle(0, 0, childSize.Width, childSize.Height).Transform(childTransform);
+
+            Content.Draw(batch, childTransform, renderMask, childSize, gameTime);
         }
 
         protected override bool OnMouseScroll(MouseEventArgs mouseEventArgs, int scrollDelta)

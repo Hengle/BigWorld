@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using engenious;
 using engenious.Graphics;
 using engenious.Helper;
+using BigWorld.GUI.Layout;
 
 namespace BigWorld.GUI
 {
@@ -26,65 +27,41 @@ namespace BigWorld.GUI
             base.OnDraw(batch, clientSize, gameTime);
         }
 
-        protected override void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
+        protected override void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, ControlSize availableSize, GameTime gameTime)
         {
             if (Content == null)
                 return;
 
             //Get the real size of the content
-            var size = Content.GetActualSize(renderMask.Width, renderMask.Height);
+            var size = Content.GetActualSize(availableSize);
 
             //Calculate the horizontal offset based on HorizontalAlignment
-            var offsetX = 0;
-            switch (Content.HorizontalAlignment)
-            {
-                case Layout.HorizontalAlignment.Left:
-                    break;
-                case Layout.HorizontalAlignment.Right:
-                    offsetX = renderMask.Width - size.Width;
-                    break;
-                case Layout.HorizontalAlignment.Center:
-                default:
-                    offsetX = renderMask.Width / 2 - size.Width / 2;
-                    break;
-            }
+            var offsetX = LayoutHelper.CalculateXOffset(Content.HorizontalAlignment, availableSize, size);
 
             //Calculate the vertical offset based on VerticalAlignment
-            var offsetY = 0;
-            switch(Content.VerticalAlignment)
-            {
-                case Layout.VerticalAlignment.Top:
-                    break;
-                case Layout.VerticalAlignment.Bottom:
-                    offsetY = renderMask.Height - size.Height;
-                    break;
-                case Layout.VerticalAlignment.Center:
-                default:
-                    offsetY = renderMask.Height / 2 - size.Height / 2;
-                    break;
-            }
+            var offsetY = LayoutHelper.CalculateYOffset(Content.VerticalAlignment, availableSize, size);
 
             //Create the child-transform based on our transform and the offset
             var childTransform = transform * Matrix.CreateTranslation(offsetX, offsetY, 0);
 
             //Calculate the renderMask for the child
-            var childRenderMask = renderMask.Intersection(new Rectangle(new Point(0, 0), renderMask.Size).Transform(childTransform));
+            var childRenderMask = renderMask.Intersection(new Rectangle(new Point(0, 0), size).Transform(childTransform));
 
-            Content.Draw(batch, childTransform, childRenderMask, gameTime);
+            Content.Draw(batch, childTransform, childRenderMask, size, gameTime);
         }
 
-        public override Size GetActualSize(int? availableWidth = null, int? availableHeight = null)
+        public override ControlSize GetActualSize(ControlSize availableSize)
         {
-            var size = base.GetActualSize(availableWidth, availableHeight);
+            var size = base.GetActualSize(availableSize);
 
-            if(Content != null && (size.Height == 0 || size.Width == 0))
+            if(Content != null && (!size.Width.HasValue || !size.Height.HasValue))
             {
-                var contentSize = Content.GetActualSize((size.Width > 0 ? size.Width : (int?)null), (size.Height > 0 ? size.Height : (int?)null));
+                var contentSize = Content.GetActualSize(size);
 
-                if (size.Height == 0)
+                if (!size.Height.HasValue)
                     size.Height = contentSize.Height;
 
-                if (size.Width == 0)
+                if (!size.Width.HasValue)
                     size.Width = contentSize.Width;
             }
 

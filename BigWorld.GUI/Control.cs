@@ -37,7 +37,9 @@ namespace BigWorld.GUI
 
         protected readonly List<Control> ChildCollection = new List<Control>();
 
-        public Rectangle ClientRectangle { get; private set; } = new Rectangle(0, 0, 0, 0);
+        public Rectangle ClientRectangle { get; private set; }
+
+        public Rectangle RenderedClientRectangle { get; private set; }
 
         public bool IsHovered { get; private set; }
 
@@ -57,22 +59,22 @@ namespace BigWorld.GUI
 
         private bool enabled = true;
 
-        public virtual Size GetActualSize(int? availableWidth = null, int? availableHeight = null )
+        public virtual ControlSize GetActualSize(ControlSize controlSize)
         {
             var width = Width;
             var height = Height;
 
-            if (!width.HasValue && availableWidth == 0)
-                width = 0;
+            if (!width.HasValue && !controlSize.Width.HasValue)
+                width = null;
             else if (!width.HasValue && HorizontalAlignment == HorizontalAlignment.Stretch)
-                width = availableWidth;
+                width = controlSize.Width;
 
-            if (!height.HasValue && availableHeight == 0)
-                height = 0;
+            if (!height.HasValue && !controlSize.Height.HasValue)
+                height = null;
             else if (!height.HasValue && VerticalAlignment == VerticalAlignment.Stretch)
-                height = availableHeight;
+                height = controlSize.Height;
 
-            return new Size(width ?? 0, height ?? 0);
+            return new ControlSize(width,height);
         }
 
         public RasterizerState RasterizerState { get; set; } = new RasterizerState()
@@ -93,39 +95,40 @@ namespace BigWorld.GUI
 
         }
 
-        public void Draw(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
+        public void Draw(SpriteBatch batch, Matrix transform, Rectangle renderMask, ControlSize availableSize, GameTime gameTime)
         {
 
             //Calculate how big we really are
-            var clientSize = GetActualSize(renderMask.Width, renderMask.Height);
+            var clientSize = GetActualSize(availableSize);
 
             //Add the absolute positioning to the transform
             transform *= Matrix.CreateTranslation(Position.X, Position.Y, 0);
 
             //Create the client-rectangle and transform it
-            Rectangle clientRectangle = new Rectangle(0, 0, clientSize.Width, clientSize.Height);
+            Rectangle clientRectangle = new Rectangle(0, 0, clientSize.Width ?? 0, clientSize.Height ?? 0);
             clientRectangle = clientRectangle.Transform(transform);
 
             //Calculate what the renderable area really is
             Rectangle renderRec = renderMask.Intersection(clientRectangle);
             
             ClientRectangle = clientRectangle;
+            RenderedClientRectangle = renderRec;
 
             //Set the ScissorRectangle to the real renderable area
             batch.GraphicsDevice.ScissorRectangle = renderRec;
 
             batch.Begin(rasterizerState:RasterizerState,transformMatrix: transform);
-            OnDraw(batch,renderMask.Size, gameTime);
+            OnDraw(batch,clientSize, gameTime);
             batch.End();
 
             //Set the renderable area for the child
             //TODO: Add padding here
-            var childRectangle = new Rectangle(renderRec.X + Padding.Left, renderRec.Y + Padding.Top, 
-                renderRec.Width - Padding.Horizontal, renderRec.Height - Padding.Vertical);
+            var childRectangle = new Rectangle(clientRectangle.X + Padding.Left, clientRectangle.Y + Padding.Top, 
+                clientRectangle.Width - Padding.Horizontal, clientRectangle.Height - Padding.Vertical);
 
             var childTransform = transform * Matrix.CreateTranslation(Padding.Left, Padding.Top, 0);
 
-            OnDrawChildren(batch, childTransform, childRectangle, gameTime);
+            OnDrawChildren(batch, childTransform, renderRec, new ControlSize(childRectangle.Size), gameTime);
 
             OnAfterDraw(batch, renderMask.Size, gameTime);
         }
@@ -140,11 +143,11 @@ namespace BigWorld.GUI
                 Background.Draw(batch, clientSize);
         }
 
-        protected virtual void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
+        protected virtual void OnDrawChildren(SpriteBatch batch, Matrix transform, Rectangle renderMask, ControlSize availableSize, GameTime gameTime)
         {
             foreach(var child in ChildCollection)
             {
-                child.Draw(batch, transform, renderMask, gameTime);
+                child.Draw(batch, transform, renderMask, availableSize, gameTime);
             }
         }
 
@@ -186,7 +189,7 @@ namespace BigWorld.GUI
                     child.MouseButtonUp(eventArgs, mouseButton);
             }
 
-            OnMouseButtonUp(eventArgs, eventArgs.GetRelativePosition(ClientRectangle), mouseButton);
+            OnMouseButtonUp(eventArgs, eventArgs.GetRelativePosition(RenderedClientRectangle), mouseButton);
         }
 
         public bool MouseButtonDown(MouseEventArgs mouseEventArgs, MouseButton mouseButton)
@@ -197,7 +200,7 @@ namespace BigWorld.GUI
 
             foreach(var child in ChildCollection)
             {
-                if (child.ClientRectangle.Intersects(mouseEventArgs.Position))
+                if (child.RenderedClientRectangle.Intersects(mouseEventArgs.Position))
                     handled = child.MouseButtonDown(mouseEventArgs, mouseButton);
 
                 if (handled)
@@ -205,7 +208,7 @@ namespace BigWorld.GUI
             }
 
             if (!handled)
-                handled = OnMouseButtonDown(mouseEventArgs, mouseEventArgs.GetRelativePosition(ClientRectangle), mouseButton);
+                handled = OnMouseButtonDown(mouseEventArgs, mouseEventArgs.GetRelativePosition(RenderedClientRectangle), mouseButton);
 
             return handled;
         }
@@ -214,7 +217,7 @@ namespace BigWorld.GUI
         {
             foreach(var child in ChildCollection)
             {
-                if (child.ClientRectangle.Intersects(mouseEventArgs.Position))
+                if (child.RenderedClientRectangle.Intersects(mouseEventArgs.Position))
                 {
                     child.MouseMove(mouseEventArgs);
 
@@ -227,7 +230,7 @@ namespace BigWorld.GUI
                 }
             }
 
-            OnMouseMove(mouseEventArgs, mouseEventArgs.GetRelativePosition(ClientRectangle));
+            OnMouseMove(mouseEventArgs, mouseEventArgs.GetRelativePosition(RenderedClientRectangle));
         }
 
         public bool MouseScroll(MouseEventArgs mouseEventArgs, int delta)
@@ -236,7 +239,7 @@ namespace BigWorld.GUI
 
             foreach (var child in ChildCollection)
             {
-                if (child.ClientRectangle.Intersects(mouseEventArgs.Position))
+                if (child.RenderedClientRectangle.Intersects(mouseEventArgs.Position))
                     handled = child.MouseScroll(mouseEventArgs, delta);
 
                 if (handled)
@@ -252,7 +255,7 @@ namespace BigWorld.GUI
         public void MouseEnter(MouseEventArgs eventArgs)
         {
             IsHovered = true;
-            OnMouseEnter(eventArgs, eventArgs.GetRelativePosition(ClientRectangle));
+            OnMouseEnter(eventArgs, eventArgs.GetRelativePosition(RenderedClientRectangle));
         }
 
         public void MouseLeave(MouseEventArgs eventArgs)
@@ -265,7 +268,7 @@ namespace BigWorld.GUI
                     child.MouseLeave(eventArgs);
             }
 
-            OnMouseLeave(eventArgs, eventArgs.GetRelativePosition(ClientRectangle));
+            OnMouseLeave(eventArgs, eventArgs.GetRelativePosition(RenderedClientRectangle));
         }
 
         protected virtual void OnMouseMove(MouseEventArgs mouseEventArgs, Point relativePosition)
@@ -293,6 +296,12 @@ namespace BigWorld.GUI
         {
             return false;
         }
+
+        #endregion
+
+        #region Keyboard-Events
+
+        public void OnKeyDown() { }
 
         #endregion
     }

@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Args\KeyboardEventArgs.cs" />
     <Compile Include="Args\MouseEventArgs.cs" />
     <Compile Include="Brushes\BorderBrush.cs" />
     <Compile Include="Brushes\Brush.cs" />
@@ -61,12 +62,14 @@
     <Compile Include="ContainerControl.cs" />
     <Compile Include="ContentControl.cs" />
     <Compile Include="Control.cs" />
+    <Compile Include="ControlSize.cs" />
     <Compile Include="Controls\ColorPicker.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GuiRenderer.cs" />
     <Compile Include="Label.cs" />
     <Compile Include="Layout\Alignment.cs" />
     <Compile Include="Layout\Border.cs" />
+    <Compile Include="Layout\LayoutHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RootControl.cs" />
     <Compile Include="ScrollContainer.cs" />

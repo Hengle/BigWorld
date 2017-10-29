@@ -38,6 +38,7 @@ namespace BigWorld.GUI
 
             var buttonStack = new StackPanel();
             buttonStack.Background = new BorderBrush(Color.Green);
+            buttonStack.HorizontalAlignment = Layout.HorizontalAlignment.Center;
             //buttonStack.Width = 180;
             buttonStack.Padding = new Layout.Border(10);
             buttonStack.ItemSpacing = 10;
@@ -93,7 +94,7 @@ namespace BigWorld.GUI
 
             RootControl.Height = GraphicsDevice.Viewport.Bounds.Height;
             RootControl.Width = GraphicsDevice.Viewport.Bounds.Width;
-            RootControl.Draw(spriteBatch, Matrix.Identity, GraphicsDevice.Viewport.Bounds, gameTime);
+            RootControl.Draw(spriteBatch, Matrix.Identity, GraphicsDevice.Viewport.Bounds, GraphicsDevice.Viewport.Bounds.Size, gameTime);
         }
     }
 }
