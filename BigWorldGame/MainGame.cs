@@ -2,6 +2,7 @@
 using BigWorld.GUI;
 using BigWorld.Map;
 using BigWorldGame.Components;
+using BigWorldGame.GUI;
 using engenious;
 using engenious.Graphics;
 using engenious.Input;
@@ -25,14 +26,25 @@ namespace BigWorldGame
         private readonly Trigger<bool> loadTrigger = new Trigger<bool>();
         
         public readonly MapRenderer MapRenderer;
+        public readonly BuildMapOverlayRenderer BuildMapOverlayRenderer;
         public readonly GuiRenderer GuiRenderer;
         public readonly SimulationComponent SimulationComponent;
         public readonly EntityRenderer EntityRenderer;
-        
+
+        public readonly CameraComponet CameraComponet;
+
+        private TileSelectControl tileSelectControl;
+
         public MainGame()
-        {   
+        {
+            CameraComponet = new CameraComponet(this);
+            Components.Add(CameraComponet);
+
             MapRenderer = new MapRenderer(this);
             Components.Add(MapRenderer);
+
+            BuildMapOverlayRenderer = new BuildMapOverlayRenderer(this);
+            Components.Add(BuildMapOverlayRenderer);
             
             GuiRenderer = new GuiRenderer(this);
             Components.Add(GuiRenderer);
@@ -42,24 +54,37 @@ namespace BigWorldGame
             
             EntityRenderer = new EntityRenderer(this);
             Components.Add(EntityRenderer);
+
+            var scrollContainer = new ScrollContainer();
+            scrollContainer.HorizontalAlignment = BigWorld.GUI.Layout.HorizontalAlignment.Right;
+            scrollContainer.VerticalAlignment = BigWorld.GUI.Layout.VerticalAlignment.Stretch;
+            GuiRenderer.RootControl.Content = scrollContainer;
+
+            tileSelectControl = new TileSelectControl();
+            tileSelectControl.ColumnCount = 7;
+            scrollContainer.Content = tileSelectControl;
         }
 
-        
+        public override void LoadContent()
+        {
+            base.LoadContent();
+
+            tileSelectControl.SpriteSheet = new Graphics.Spritesheet(GraphicsDevice, Content, "Spritesheets/TileSheetDungeon", 16, 16);
+        }
 
         public override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
 
-            //GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Height,Window.ClientSize.Height);
-            //MapRenderer.Draw(gameTime);
+            GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Height,Window.ClientSize.Height);
+            CameraComponet.Draw(gameTime);
+            MapRenderer.Draw(gameTime);
+            BuildMapOverlayRenderer.Draw(gameTime);
             
-            //EntityRenderer.Draw(gameTime);
+            EntityRenderer.Draw(gameTime);
             
             GraphicsDevice.Viewport = new Viewport(0,0,Window.ClientSize.Width,Window.ClientSize.Height);
-            GuiRenderer.Draw(gameTime);
-            
-            
-            
+            GuiRenderer.Draw(gameTime);          
         }
 
         public override void Update(GameTime gameTime)

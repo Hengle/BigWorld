@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\BuildMapOverlayRenderer.cs" />
+    <Compile Include="Components\CameraComponet.cs" />
     <Compile Include="Components\EntityRenderer.cs" />
     <Compile Include="Components\MapRenderer.cs" />
     <Compile Include="Components\SimulationComponent.cs" />
@@ -61,6 +63,7 @@
     <Compile Include="Graphics\MapVertex.cs" />
     <Compile Include="Graphics\RoomRenderer.cs" />
     <Compile Include="Graphics\SpriteSheet.cs" />
+    <Compile Include="GUI\TileSelectControl.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -99,6 +102,7 @@
     <Content Include="Content\Spritesheets\TileSheetIndoor.png" />
     <Content Include="Content\Spritesheets\TileSheetOutdoor.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\engenious.0.1.10\build\engenious.targets" Condition="Exists('..\packages\engenious.0.1.10\build\engenious.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

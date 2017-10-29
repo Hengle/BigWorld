@@ -57,6 +57,9 @@ namespace BigWorldGame.Graphics
                         if (tileIndex.HasValue)
                         {                            
                             var index = tileIndex.Value;
+
+                            index = 1;
+
                             vertices.Add(new MapVertex(x + 0, y + 0, l, index));
                             vertices.Add(new MapVertex(x + 1, y + 0, l, index));
 

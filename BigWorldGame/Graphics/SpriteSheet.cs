@@ -6,12 +6,24 @@ namespace BigWorldGame.Graphics
     public class Spritesheet
     {
         public Texture2DArray Textures { get; }
+
+        public Texture2D[] TextureArray { get; }
         public int Width { get; }
         public int Height { get; }
+
+        public int TileWidth { get; }
+
+        public int TileHeight { get; }
+
+        public int TileSpacing { get; }
 
         public Spritesheet(GraphicsDevice graphicsDevice, ContentManager content, string assetName, int tileWidth,
             int tileHeight, int tileSpacing = 1)
         {
+            TileWidth = tileWidth;
+            TileHeight = tileHeight;
+            TileSpacing = tileSpacing;
+
             var text = content.Load<Texture2D>(assetName);
 
             var data = new uint[text.Width * text.Height];
@@ -22,9 +34,14 @@ namespace BigWorldGame.Graphics
 
             int tileCount = Width * Height;
 
+            TextureArray = new Texture2D[tileCount+1];
+            TextureArray[0] = new Texture2D(graphicsDevice, TileWidth, TileHeight);
+
             Textures = new Texture2DArray(graphicsDevice, 1, tileWidth, tileHeight, tileCount + 1);
             var tileData = new uint[tileWidth * tileHeight];
             Textures.SetData(tileData, 0);
+            TextureArray[0].SetData(tileData);
+
             int yOffset = 0, xOffset = 0;
             for (int i = 0; i < tileCount; i++)
             {
@@ -38,7 +55,9 @@ namespace BigWorldGame.Graphics
                     }
                 }
 
+                TextureArray[i + 1] = new Texture2D(graphicsDevice, TileWidth, TileHeight);
                 Textures.SetData(tileData, i + 1);
+                TextureArray[i + 1].SetData(tileData);
 
                 xOffset += tileWidth + tileSpacing;
                 if (xOffset + tileWidth > text.Width)

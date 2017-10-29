@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BigWorld.GUI
 {
-    public class ControlSize
+    public struct ControlSize
     {
         public int? Height { get; set; }
 
@@ -39,7 +39,5 @@ namespace BigWorld.GUI
         {
             return new Size(size.Width ?? 0, size.Height ?? 0);
         }
-
-        public ControlSize() { }
     }
 }

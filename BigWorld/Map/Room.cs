@@ -23,6 +23,8 @@ namespace BigWorld.Map
         
         public Room(Point point)
         {
+ 
+
             Point = point;
             //GroundValue
             TileLayers.Add(new Layer<uint>());

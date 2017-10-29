@@ -21,53 +21,6 @@ namespace BigWorld.GUI
         public GuiRenderer(Game game) : base(game)
         {
             RootControl = new RootControl();
-            RootControl.Background = new BorderBrush(Color.Red, 10, Color.CornflowerBlue);
-            RootControl.Padding = new Layout.Border(20);
-
-            var container = new ContainerControl();
-            container.HorizontalAlignment = Layout.HorizontalAlignment.Stretch;
-            container.VerticalAlignment = Layout.VerticalAlignment.Stretch;
-
-            var scrollPanel = new ScrollContainer();
-            scrollPanel.HorizontalAlignment = Layout.HorizontalAlignment.Center;
-            scrollPanel.VerticalAlignment = Layout.VerticalAlignment.Center;
-            scrollPanel.Width = 200;
-            scrollPanel.Height = 300;
-            scrollPanel.Background = new BorderBrush(Color.PaleVioletRed);
-            container.Children.Add(scrollPanel);
-
-            var buttonStack = new StackPanel();
-            buttonStack.Background = new BorderBrush(Color.Green);
-            buttonStack.HorizontalAlignment = Layout.HorizontalAlignment.Center;
-            //buttonStack.Width = 180;
-            buttonStack.Padding = new Layout.Border(10);
-            buttonStack.ItemSpacing = 10;
-            scrollPanel.Content = buttonStack;
-
-            for (int i = 0; i < 10; i++)
-            {
-                buttonStack.Children.Add(new Button("Demo" + i)
-                {
-                    Width = 100,
-                    Height = 50,
-                });
-            }
-
-            var scrollButton = new Button("Scroll");
-            scrollButton.HorizontalAlignment = Layout.HorizontalAlignment.Right;
-            scrollButton.OnClick += (s, e) => scrollPanel.ScrollPositionX += 10;
-            container.Children.Add(scrollButton);
-
-            //var colorPicker = new ColorPicker();
-            //colorPicker.Height = 200;
-            //colorPicker.Width = 200;
-
-            //var demoControl = new ContentControl();
-            //demoControl.HorizontalAlignment = Layout.HorizontalAlignment.Stretch;
-            //demoControl.VerticalAlignment = Layout.VerticalAlignment.Stretch;
-            //demoControl.Background = new BorderBrush(Color.PaleVioletRed, 10, Color.Firebrick);
-
-            RootControl.Content = container;
         }
 
         protected override void LoadContent()

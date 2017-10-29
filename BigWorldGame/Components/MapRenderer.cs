@@ -60,7 +60,7 @@ namespace BigWorldGame.Components
             
             if (Game.CurrentGameState == GameState.Build || Game.CurrentGameState == GameState.Debug)
             {
-                roomPoint = Game.GuiRenderer.BuildGuiRenderer.CurrentRoomCoordinate;
+                //roomPoint = Game.GuiRenderer.BuildGuiRenderer.CurrentRoomCoordinate;
                 map = Game.BuildWorldMap;
             }
             else if (Game.CurrentGameState == GameState.Running)
@@ -93,17 +93,7 @@ namespace BigWorldGame.Components
         }
 
         public override void Draw(GameTime gameTime)
-        {
-            Matrix projection = Matrix.CreateOrthographic(
-                GraphicsDevice.Viewport.Width, 
-                GraphicsDevice.Viewport.Height,-1.1f, 10);
-
-            var posX = 16*Room.SizeX;
-            var posY = 16*Room.SizeY;
-            
-            Matrix view = Matrix.CreateLookAt(new Vector3(posX,posY,10),new Vector3(posX,posY,0), Vector3.UnitY) 
-                          * Matrix.CreateScaling(new Vector3(2));            
-            
+        {             
             if (Game.CurrentGameState == GameState.Build)
             {
                 effect.CurrentTechnique = effect.Techniques["Build"];
@@ -137,14 +127,14 @@ namespace BigWorldGame.Components
 
             if (Game.CurrentGameState == GameState.Running)
             {
-                renderers[4].Render(GraphicsDevice,effect,view,projection);
+                renderers[4].Render(GraphicsDevice,effect,Game.CameraComponet.View, Game.CameraComponet.Projection);
             }
             else
             {
                 for (int i = 0; i < renderers.Length; i++)
                 {
                     var renderer = renderers[i];
-                    renderer.Render(GraphicsDevice,effect,view,projection);
+                    renderer.Render(GraphicsDevice,effect, Game.CameraComponet.View, Game.CameraComponet.Projection);
                 }   
             }
         }
