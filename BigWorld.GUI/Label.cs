@@ -36,7 +36,7 @@ namespace BigWorld.GUI
             base.OnLoadContent(game);
 
             if (Font == null)
-                Font = game.Content.Load<SpriteFont>("Fonts\\GameFont");
+                Font = game.Content.Load<SpriteFont>("Fonts/GameFont");
         }
 
         public override Size GetActualSize(int? availableWidth = null, int? availableHeight = null)
