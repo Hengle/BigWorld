@@ -66,6 +66,7 @@
     <Compile Include="Layout\Border.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RootControl.cs" />
+    <Compile Include="ScrollContainer.cs" />
     <Compile Include="StackPanel.cs" />
   </ItemGroup>
   <ItemGroup>

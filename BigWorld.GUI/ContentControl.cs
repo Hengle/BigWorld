@@ -65,8 +65,7 @@ namespace BigWorld.GUI
 
             var childTransform = transform * Matrix.CreateTranslation(offsetX, offsetY, 0);
 
-            //TODO: what is happening here?
-            var childRenderMask = renderMask.Intersection(new Rectangle(new Point(0, 0), size).Transform(childTransform));
+            var childRenderMask = renderMask.Intersection(new Rectangle(new Point(0, 0), renderMask.Size).Transform(childTransform));
 
             Content.Draw(batch, childTransform, childRenderMask, gameTime);
         }
@@ -77,13 +76,13 @@ namespace BigWorld.GUI
 
             if(Content != null && (size.Height == 0 || size.Width == 0))
             {
-                var contentSize = Content.GetActualSize(availableWidth - Padding.Horizontal, availableHeight- Padding.Vertical);
+                var contentSize = Content.GetActualSize((size.Width > 0 ? size.Width : (int?)null), (size.Height > 0 ? size.Height : (int?)null));
 
                 if (size.Height == 0)
-                    size.Height = contentSize.Height + Padding.Vertical;
+                    size.Height = contentSize.Height;
 
                 if (size.Width == 0)
-                    size.Width = contentSize.Width + Padding.Horizontal;
+                    size.Width = contentSize.Width;
             }
 
             return size;

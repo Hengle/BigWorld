@@ -94,26 +94,30 @@ namespace BigWorld.GUI
 
         public void Draw(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
         {
-            var clientSize = GetActualSize(renderMask.Width, renderMask.Height);
+            //var clientSize = GetActualSize(renderMask.Width, renderMask.Height);
 
-            transform *= Matrix.CreateTranslation(Position.X, Position.Y, 0);
+            // transform *= Matrix.CreateTranslation(Position.X, Position.Y, 0);
 
-            Rectangle clientRectangle = new Rectangle(0, 0, clientSize.Width, clientSize.Height);
-            clientRectangle = clientRectangle.Transform(transform);
+            //Rectangle clientRectangle = new Rectangle(0, 0, renderMask.Width, renderMask.Height);
+            //clientRectangle = clientRectangle.Transform(transform);
 
-            Rectangle renderRec = renderMask.Intersection(clientRectangle);
+            //            Rectangle renderRec = renderMask.Intersection(clientRectangle);
+
+            var renderRec = renderMask;
 
             ClientRectangle = renderRec;
 
             batch.GraphicsDevice.ScissorRectangle = renderRec;
 
             batch.Begin(rasterizerState:RasterizerState,transformMatrix: transform);
-            OnDraw(batch,clientSize, gameTime);
+            OnDraw(batch,renderMask.Size, gameTime);
             batch.End();
 
-            OnDrawChildren(batch, transform, renderRec, gameTime);
+            var childRectangle = new Rectangle(renderRec.X, renderRec.Y, renderRec.Width, renderRec.Height);
 
-            OnAfterDraw(batch, clientSize, gameTime);
+            OnDrawChildren(batch, transform, childRectangle, gameTime);
+
+            OnAfterDraw(batch, renderMask.Size, gameTime);
         }
 
         protected virtual void OnDrawBackground(SpriteBatch batch, Size clientSize, GameTime gameTime)
@@ -221,7 +225,7 @@ namespace BigWorld.GUI
             foreach (var child in ChildCollection)
             {
                 if (child.ClientRectangle.Intersects(mouseEventArgs.Position))
-                    handled = child.OnMouseScroll(mouseEventArgs, delta);
+                    handled = child.MouseScroll(mouseEventArgs, delta);
 
                 if (handled)
                     break;

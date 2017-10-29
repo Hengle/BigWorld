@@ -21,34 +21,40 @@ namespace BigWorld.GUI
             RootControl = new RootControl();
             RootControl.BackgroundColor = Color.CornflowerBlue;
 
-            var stackPanel = new StackPanel();
-            stackPanel.HorizontalAlignment = Layout.HorizontalAlignment.Stretch;
-            stackPanel.Position = new Point(20, 20);
-            stackPanel.BackgroundColor = Color.Bisque;
-            stackPanel.ItemSpacing = 10;
+            var container = new ContainerControl();
+            container.HorizontalAlignment = Layout.HorizontalAlignment.Stretch;
+            container.VerticalAlignment = Layout.VerticalAlignment.Stretch;
 
-            var content = new ContentControl();
-            content.BackgroundColor = Color.DarkSeaGreen;
-            content.HorizontalAlignment = Layout.HorizontalAlignment.Stretch;
-            content.Height = 200;
-            //content.Position = new Point(100, 100);
-            stackPanel.Children.Add(content);
+            var scrollPanel = new ScrollContainer();
+            scrollPanel.HorizontalAlignment = Layout.HorizontalAlignment.Left;
+            scrollPanel.VerticalAlignment = Layout.VerticalAlignment.Center;
+            scrollPanel.Width = 200;
+            scrollPanel.Height = 300;
+            scrollPanel.BackgroundColor = Color.PaleVioletRed;
+            container.Children.Add(scrollPanel);
 
+            var buttonStack = new StackPanel();
+            buttonStack.BackgroundColor = Color.Green;
+            buttonStack.Width = 180;
+            buttonStack.ItemSpacing = 10;
+            scrollPanel.Content = buttonStack;
 
-            var nestedContent = new ContentControl();
-            nestedContent.BackgroundColor = Color.IndianRed;
-            nestedContent.Height = 200;
-            nestedContent.Width = 400;
-            nestedContent.HorizontalAlignment = Layout.HorizontalAlignment.Right;
-            //nestedContent.Position = new Point(30, 30);
-            stackPanel.Children.Add(nestedContent);
+            for(int i = 0; i < 10; i++)
+            {
+                buttonStack.Children.Add(new Button("Demo" + i)
+                {
+                    Width = 100,
+                    Height = 50,
+                    BackgroundColor = Color.Red
+                });
+            }
 
-            var button = new Button("Demo");
-            button.Height = 100;
-            button.Width = 200;
-            stackPanel.Children.Add(button);
+            var scrollButton = new Button("Scroll");
+            scrollButton.HorizontalAlignment = Layout.HorizontalAlignment.Right;
+            scrollButton.OnClick += (s, e) => scrollPanel.ScrollPositionX += 10;
+            container.Children.Add(scrollButton);
 
-            RootControl.Content = stackPanel;
+            RootControl.Content = container;
         }
 
         protected override void LoadContent()

@@ -53,12 +53,12 @@ namespace BigWorld.GUI
 
                 foreach(var child in Children)
                 {
-                    sum += child.GetActualSize(availableWidth - Padding.Horizontal, null).Height;
+                    sum += child.GetActualSize(availableWidth , null).Height;
                 }
 
                 sum += ItemSpacing * (Children.Count - 1);
 
-                estimatedSize.Height = sum + Padding.Vertical;
+                estimatedSize.Height = sum;
             }
 
             return estimatedSize;
