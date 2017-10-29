@@ -2,7 +2,17 @@
 
 uniform sampler2DArray TileTextures;
 
-uniform vec2 LightPosition;
+struct light
+{
+    vec4 color;
+    vec2 position;
+    float radius;
+    bool enable;
+};
+
+#define MaxLights 8
+
+uniform light[MaxLights] Lights;
 
 uniform float AmbientIntensity;
 uniform vec4 AmbientColor;
@@ -20,17 +30,28 @@ void main()
 {
 	vec4 texColor = texture(TileTextures,vec3(psTexcoord,psTileIndex));
 	
-	vec2 distVec =  LightPosition - psPosition.xy;
-	float dist = dot(distVec,distVec);
-	
-	dist = 1 - clamp(dist /2,0,1); 
-	
 	
 	vec4 IAmbient = texColor * AmbientColor * AmbientIntensity;
 	IAmbient = vec4(IAmbient.rgb,texColor.a);
 	
-	vec4 ILight = texColor * vec4(vec3(dist),1);
+	outColor = IAmbient;
 	
-	outColor = IAmbient + ILight ;
+	for(int i = 0; i < MaxLights; i++)
+	{
+	    light cLight = Lights[i];
+        if(cLight.enable )
+        {
+            vec2 distVec =  cLight.position - psPosition.xy;
+            float dist = dot(distVec,distVec);
+            	
+            dist = 1 - clamp(dist /cLight.radius,0,1); 
+            	
+            vec4 ILight = texColor * vec4(vec3(dist) * cLight.color.rgb,1);
+            
+            outColor += ILight;
+        }
+	}
+	
+	
 	outColor = clamp(outColor,0,1);
 }

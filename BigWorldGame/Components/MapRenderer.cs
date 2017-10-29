@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using BigWorld;
 using BigWorld.Map;
 using BigWorldGame.Graphics;
@@ -21,6 +22,9 @@ namespace BigWorldGame.Components
 
         private RoomRenderer[] renderers = new RoomRenderer[9];
         
+        private Point roomPoint;
+        private WorldMap map;
+
         public MapRenderer(MainGame game) : base(game)
         {
             this.Game = game;
@@ -29,7 +33,6 @@ namespace BigWorldGame.Components
 
         protected override void LoadContent()
         {
-            
             pixeltexture = new Texture2D(GraphicsDevice,1,1);
             pixeltexture.SetData(new Color[] {Color.White});
 
@@ -52,9 +55,8 @@ namespace BigWorldGame.Components
         
         public override void Update(GameTime gameTime)
         {
-
-            Point roomPoint = new Point(0,0);
-            WorldMap map = null;
+            roomPoint = new Point(0, 0);
+            map = null;
             
             if (Game.CurrentGameState == GameState.Build || Game.CurrentGameState == GameState.Debug)
             {
@@ -100,10 +102,8 @@ namespace BigWorldGame.Components
             var posY = 16*Room.SizeY;
             
             Matrix view = Matrix.CreateLookAt(new Vector3(posX,posY,10),new Vector3(posX,posY,0), Vector3.UnitY) 
-                          * Matrix.CreateScaling(new Vector3(2));
-
+                          * Matrix.CreateScaling(new Vector3(2));            
             
-
             if (Game.CurrentGameState == GameState.Build)
             {
                 effect.CurrentTechnique = effect.Techniques["Build"];
@@ -113,9 +113,26 @@ namespace BigWorldGame.Components
             {
                 effect.CurrentTechnique = effect.Techniques["Run"];
                 
-                effect.Parameters["AmbientColor"].SetValue(Color.White);
-                effect.Parameters["AmbientIntensity"].SetValue(0.2f);
-                effect.Parameters["LightPosition"].SetValue(new Vector2(7,8));
+                Room room;
+                if (map.TryGetRoom(roomPoint,out  room))
+                {
+                    effect.Parameters["AmbientIntensity"].SetValue(room.AmbientIntensity);
+                    effect.Parameters["AmbientColor"].SetValue(room.AmbientColor);
+                    
+                    for (int i = 0; i < Room.MaxRoomLights; i++)
+                    {
+                        var light = room.RoomLights[i];
+                        
+                        effect.Parameters[$"Lights[{i}].color"].SetValue(light.Color);
+                        effect.Parameters[$"Lights[{i}].position"].SetValue(light.Position);
+                        effect.Parameters[$"Lights[{i}].radius"].SetValue(light.Radius);
+                        effect.Parameters[$"Lights[{i}].enable"].SetValue(light.Enable); 
+                    }
+                }
+                
+                
+                
+
             }
 
             if (Game.CurrentGameState == GameState.Running)
