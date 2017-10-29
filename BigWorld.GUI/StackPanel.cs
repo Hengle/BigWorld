@@ -47,20 +47,41 @@ namespace BigWorld.GUI
         {
             var estimatedSize = base.GetActualSize(availableWidth, availableHeight);
 
-            if(estimatedSize.Height == 0)
+            if(estimatedSize.Height == 0 || estimatedSize.Width == 0)
             {
-                int sum = 0;
+                List<Size> childSizes = new List<Size>();
 
-                foreach(var child in Children)
+                foreach (var child in Children)
                 {
-                    sum += child.GetActualSize(availableWidth , null).Height;
+                    childSizes.Add( child.GetActualSize(availableWidth, null));
                 }
 
-                sum += ItemSpacing * (Children.Count - 1);
+                if (estimatedSize.Height == 0)
+                {
+                    int sum = 0;
 
-                estimatedSize.Height = sum;
+                    foreach (var size in childSizes)
+                        sum += size.Height;
+
+                    sum += ItemSpacing * (Children.Count - 1);
+
+                    estimatedSize.Height = sum + Padding.Vertical;
+                }
+
+                if(estimatedSize.Width == 0)
+                {
+                    var maxWidth = 0;
+
+                    foreach(var size in childSizes)
+                    {
+                        //Check if != availableWidth is to prevent child "stretch" if no width is set.
+                        if (size.Width > maxWidth && size.Width != availableWidth)
+                            maxWidth = size.Width;
+                    }
+
+                    estimatedSize.Width = maxWidth + Padding.Horizontal;
+                }
             }
-
             return estimatedSize;
         }
     }

@@ -37,7 +37,7 @@ namespace BigWorld.GUI.Brushes
                 batch.Draw(GuiRenderer.Pixel, new Rectangle(new Point(0, 0), size), BorderColor);
             }
 
-            batch.Draw(GuiRenderer.Pixel, new Rectangle(BorderThickness, BorderThickness, size.Width - BorderThickness * 2, size.Height - BorderThickness * 1), BackgroundColor);
+            batch.Draw(GuiRenderer.Pixel, new Rectangle(BorderThickness, BorderThickness, size.Width - BorderThickness * 2, size.Height - BorderThickness * 2), BackgroundColor);
         }
     }
 }

@@ -95,28 +95,37 @@ namespace BigWorld.GUI
 
         public void Draw(SpriteBatch batch, Matrix transform, Rectangle renderMask, GameTime gameTime)
         {
-            //var clientSize = GetActualSize(renderMask.Width, renderMask.Height);
 
-            // transform *= Matrix.CreateTranslation(Position.X, Position.Y, 0);
+            //Calculate how big we really are
+            var clientSize = GetActualSize(renderMask.Width, renderMask.Height);
 
-            //Rectangle clientRectangle = new Rectangle(0, 0, renderMask.Width, renderMask.Height);
-            //clientRectangle = clientRectangle.Transform(transform);
+            //Add the absolute positioning to the transform
+            transform *= Matrix.CreateTranslation(Position.X, Position.Y, 0);
 
-            //            Rectangle renderRec = renderMask.Intersection(clientRectangle);
+            //Create the client-rectangle and transform it
+            Rectangle clientRectangle = new Rectangle(0, 0, clientSize.Width, clientSize.Height);
+            clientRectangle = clientRectangle.Transform(transform);
 
-            var renderRec = renderMask;
+            //Calculate what the renderable area really is
+            Rectangle renderRec = renderMask.Intersection(clientRectangle);
+            
+            ClientRectangle = clientRectangle;
 
-            ClientRectangle = renderRec;
-
+            //Set the ScissorRectangle to the real renderable area
             batch.GraphicsDevice.ScissorRectangle = renderRec;
 
             batch.Begin(rasterizerState:RasterizerState,transformMatrix: transform);
             OnDraw(batch,renderMask.Size, gameTime);
             batch.End();
 
-            var childRectangle = new Rectangle(renderRec.X, renderRec.Y, renderRec.Width, renderRec.Height);
+            //Set the renderable area for the child
+            //TODO: Add padding here
+            var childRectangle = new Rectangle(renderRec.X + Padding.Left, renderRec.Y + Padding.Top, 
+                renderRec.Width - Padding.Horizontal, renderRec.Height - Padding.Vertical);
 
-            OnDrawChildren(batch, transform, childRectangle, gameTime);
+            var childTransform = transform * Matrix.CreateTranslation(Padding.Left, Padding.Top, 0);
+
+            OnDrawChildren(batch, childTransform, childRectangle, gameTime);
 
             OnAfterDraw(batch, renderMask.Size, gameTime);
         }

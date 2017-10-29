@@ -31,10 +31,11 @@ namespace BigWorld.GUI
             if (Content == null)
                 return;
 
+            //Get the real size of the content
             var size = Content.GetActualSize(renderMask.Width, renderMask.Height);
 
+            //Calculate the horizontal offset based on HorizontalAlignment
             var offsetX = 0;
-
             switch (Content.HorizontalAlignment)
             {
                 case Layout.HorizontalAlignment.Left:
@@ -48,8 +49,8 @@ namespace BigWorld.GUI
                     break;
             }
 
+            //Calculate the vertical offset based on VerticalAlignment
             var offsetY = 0;
-
             switch(Content.VerticalAlignment)
             {
                 case Layout.VerticalAlignment.Top:
@@ -63,8 +64,10 @@ namespace BigWorld.GUI
                     break;
             }
 
+            //Create the child-transform based on our transform and the offset
             var childTransform = transform * Matrix.CreateTranslation(offsetX, offsetY, 0);
 
+            //Calculate the renderMask for the child
             var childRenderMask = renderMask.Intersection(new Rectangle(new Point(0, 0), renderMask.Size).Transform(childTransform));
 
             Content.Draw(batch, childTransform, childRenderMask, gameTime);

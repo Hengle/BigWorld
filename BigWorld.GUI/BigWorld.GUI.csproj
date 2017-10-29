@@ -61,6 +61,7 @@
     <Compile Include="ContainerControl.cs" />
     <Compile Include="ContentControl.cs" />
     <Compile Include="Control.cs" />
+    <Compile Include="Controls\ColorPicker.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GuiRenderer.cs" />
     <Compile Include="Label.cs" />
