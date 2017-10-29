@@ -10,7 +10,9 @@ struct light
     bool enable;
 };
 
-uniform light[8] Lights;
+#define MaxLights 8
+
+uniform light[MaxLights] Lights;
 
 uniform float AmbientIntensity;
 uniform vec4 AmbientColor;
@@ -34,10 +36,10 @@ void main()
 	
 	outColor = IAmbient;
 	
-	for(int i = 0; i < 8; i++)
+	for(int i = 0; i < MaxLights; i++)
 	{
 	    light cLight = Lights[i];
-        if(cLight.enable)
+        if(cLight.enable )
         {
             vec2 distVec =  cLight.position - psPosition.xy;
             float dist = dot(distVec,distVec);

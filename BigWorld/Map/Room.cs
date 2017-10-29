@@ -11,12 +11,12 @@ namespace BigWorld.Map
         public const int SizeY = 16;
         public const int MaxRoomLights = 8;
         
-        public readonly Point Point;
+        public Point Point { get; }
         
         public Layer<bool> BlockLayer { get; private set; } = new Layer<bool>();
         public List<Layer<uint>> TileLayers {get; private set;} = new List<Layer<uint>>();
         
-        public readonly RoomLight[] RoomLights = new RoomLight[MaxRoomLights];
+        public RoomLight[] RoomLights { get; } = new RoomLight[MaxRoomLights];
         
         public Color AmbientColor { get; set; } = Color.White;
         public float AmbientIntensity { get; set; } = 1;
@@ -70,6 +70,12 @@ namespace BigWorld.Map
             {
                 tileLayer.Serialize(sw,(e,s) => s.Write(e));
             }
+            
+            sw.Write(RoomLights.Length);
+            foreach (var roomLight in RoomLights)  
+            {
+                roomLight.Serialize(sw);
+            }
         }
 
         internal static Room Deserialize(BinaryReader sr)
@@ -101,6 +107,12 @@ namespace BigWorld.Map
                 room.TileLayers.Add(layer);
             }
 
+            var lights = sr.ReadInt32();
+            for (int i = 0; i < lights; i++)
+            {
+                room.RoomLights[i].Deserialize(sr);
+            }
+            
             return room;
         }
     }

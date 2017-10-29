@@ -119,7 +119,7 @@ namespace BigWorldGame.Components
                     effect.Parameters["AmbientIntensity"].SetValue(room.AmbientIntensity);
                     effect.Parameters["AmbientColor"].SetValue(room.AmbientColor);
                     
-                    for (int i = 0; i < 8; i++)
+                    for (int i = 0; i < Room.MaxRoomLights; i++)
                     {
                         var light = room.RoomLights[i];
                         
