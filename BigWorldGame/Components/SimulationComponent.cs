@@ -58,7 +58,7 @@ namespace BigWorldGame.Components
             if (keyState.IsKeyDown(Keys.S))
                 direction += new Vector2(0,1);
 
-            Player.CmdMoveDirection = direction;
+            Player.Input.MoveDirection = direction;
             
             Simulation.Update(gameTime);
         }

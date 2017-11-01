@@ -1,4 +1,6 @@
-﻿using BigWorld.Map;
+﻿using BigWorld.Entities;
+using BigWorld.Entities.Components;
+using BigWorld.Map;
 using engenious;
 
 namespace BigWorld.Services
@@ -6,58 +8,63 @@ namespace BigWorld.Services
     public class RoomCollisionService : BaseService
     {
         public override void Update(Entity entity, WorldMap worldMap, GameTime gameTime)
-           { 
-            if (entity.RoomPosition.X < 0)
+        {
+               
+            PositionComponent positionComponent;
+            if (!entity.TryGetComponent<PositionComponent>(out positionComponent) )
+                return;
+               
+            if (positionComponent.RoomPosition.X < 0)
             {
-                entity.RoomPosition = new Vector2(0,entity.RoomPosition.Y);
+                positionComponent.RoomPosition = new Vector2(0,positionComponent.RoomPosition.Y);
 
-                var position = new Point(Room.SizeX -1 ,(int)entity.RoomPosition.Y);
-                var newRoomCoordinate = entity.CurrentRoom +new Point(-1,0);
+                var position = new Point(Room.SizeX -1 ,(int)positionComponent.RoomPosition.Y);
+                var newRoomCoordinate = positionComponent.CurrentRoom +new Point(-1,0);
                 if (worldMap.TryGetRoom(newRoomCoordinate,out Room room) 
                     && room.BlockLayer.Test(position,i => !i,true))
                 {
-                    entity.CurrentRoom = newRoomCoordinate;
-                    entity.RoomPosition = position.ToVector2();
+                    positionComponent.CurrentRoom = newRoomCoordinate;
+                    positionComponent.RoomPosition = position.ToVector2();
                 }
             }
-            else if (entity.RoomPosition.X > Room.SizeX -1)
+            else if (positionComponent.RoomPosition.X > Room.SizeX -1)
             {
-                entity.RoomPosition = new Vector2(Room.SizeX -1,entity.RoomPosition.Y);
+                positionComponent.RoomPosition = new Vector2(Room.SizeX -1,positionComponent.RoomPosition.Y);
                 
-                var position = new Point(0 ,(int)entity.RoomPosition.Y);
-                var newRoomCoordinate = entity.CurrentRoom +new Point(1,0);
+                var position = new Point(0 ,(int)positionComponent.RoomPosition.Y);
+                var newRoomCoordinate = positionComponent.CurrentRoom +new Point(1,0);
                 if (worldMap.TryGetRoom(newRoomCoordinate,out Room room) 
                     && room.BlockLayer.Test(position,i => !i,true))
                 {
-                    entity.CurrentRoom = newRoomCoordinate;
-                    entity.RoomPosition = position.ToVector2();
+                    positionComponent.CurrentRoom = newRoomCoordinate;
+                    positionComponent.RoomPosition = position.ToVector2();
                 }
             }
 
-            if (entity.RoomPosition.Y < 0)
+            if (positionComponent.RoomPosition.Y < 0)
             {
-                entity.RoomPosition = new Vector2(entity.RoomPosition.X,0);
+                positionComponent.RoomPosition = new Vector2(positionComponent.RoomPosition.X,0);
                 
-                var position = new Point((int)entity.RoomPosition.X,Room.SizeY -1 );
-                var newRoomCoordinate = entity.CurrentRoom +new Point(0,-1);
+                var position = new Point((int)positionComponent.RoomPosition.X,Room.SizeY -1 );
+                var newRoomCoordinate = positionComponent.CurrentRoom +new Point(0,-1);
                 if (worldMap.TryGetRoom(newRoomCoordinate,out Room room) 
                     && room.BlockLayer.Test(position,i => !i,true))
                 {
-                    entity.CurrentRoom = newRoomCoordinate;
-                    entity.RoomPosition = position.ToVector2();
+                    positionComponent.CurrentRoom = newRoomCoordinate;
+                    positionComponent.RoomPosition = position.ToVector2();
                 }
             }
-            else if (entity.RoomPosition.Y > Room.SizeY -1)
+            else if (positionComponent.RoomPosition.Y > Room.SizeY -1)
             {
-                entity.RoomPosition = new Vector2(entity.RoomPosition.X,Room.SizeY -1);
+                positionComponent.RoomPosition = new Vector2(positionComponent.RoomPosition.X,Room.SizeY -1);
                 
-                var position = new Point((int)entity.RoomPosition.X,0 );
-                var newRoomCoordinate = entity.CurrentRoom +new Point(0,1);
+                var position = new Point((int)positionComponent.RoomPosition.X,0 );
+                var newRoomCoordinate = positionComponent.CurrentRoom +new Point(0,1);
                 if (worldMap.TryGetRoom(newRoomCoordinate,out Room room) 
                     && room.BlockLayer.Test(position,i => !i,true))
                 {
-                    entity.CurrentRoom = newRoomCoordinate;
-                    entity.RoomPosition = position.ToVector2();
+                    positionComponent.CurrentRoom = newRoomCoordinate;
+                    positionComponent.RoomPosition = position.ToVector2();
                 }
             }
         }

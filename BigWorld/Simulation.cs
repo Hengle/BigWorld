@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BigWorld.Entities;
 using BigWorld.Map;
 using BigWorld.Services;
 using engenious;

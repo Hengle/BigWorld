@@ -51,13 +51,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entity.cs" />
+    <Compile Include="Entities\Component.cs" />
+    <Compile Include="Entities\ComponentCollection.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\Components\InputComponent.cs" />
+    <Compile Include="Entities\Components\MovementComponent.cs" />
+    <Compile Include="Entities\Components\PositionComponent.cs" />
+    <Compile Include="Entities\Player.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Map\Layer.cs" />
     <Compile Include="Map\Room.cs" />
     <Compile Include="Map\RoomLight.cs" />
     <Compile Include="Map\WorldMap.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\BlockCollisionService.cs" />
     <Compile Include="Services\MovementService.cs" />

@@ -1,4 +1,5 @@
-﻿using BigWorld.Map;
+﻿using BigWorld.Entities;
+using BigWorld.Map;
 using engenious;
 
 namespace BigWorld.Services

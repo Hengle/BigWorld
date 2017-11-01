@@ -1,4 +1,6 @@
 ﻿using System.Runtime.ExceptionServices;
+using BigWorld.Entities;
+using BigWorld.Entities.Components;
 using BigWorld.Map;
 using engenious;
 
@@ -8,11 +10,20 @@ namespace BigWorld.Services
     {
         public override void Update(Entity entity, WorldMap worldMap, GameTime gameTime)
         {
+            MovementComponent movementComponent;
+            PositionComponent positionComponent;
+
+            if (!entity.TryGetComponent<MovementComponent>(out movementComponent) 
+                || !entity.TryGetComponent<PositionComponent>(out positionComponent) )
+                return;
+             
+            
             Room room;
-            if (!worldMap.TryGetRoom(entity.CurrentRoom,out room))
+            if (!worldMap.TryGetRoom(positionComponent.CurrentRoom,out room))
                 return;
 
-            var goalPosition = entity.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds + entity.RoomPosition;
+            var goalPosition = movementComponent.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds 
+                               + positionComponent.RoomPosition;
             
             foreach (var value in room.BlockLayer.GetPositivValues())
             {
@@ -25,7 +36,7 @@ namespace BigWorld.Services
                         //var x = distance.X < 0 ? 1 + distance.X : 1 - distance.X;
                         //var y = distance.Y < 0 ? 1 + distance.Y : 1 - distance.Y;
 
-                        entity.Velocity = entity.Velocity * new Vector2(0, 0);
+                        movementComponent.Velocity = movementComponent.Velocity * new Vector2(0, 0);
                     }
                 }
             }

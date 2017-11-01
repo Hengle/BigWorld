@@ -65,7 +65,7 @@ namespace BigWorldGame.Components
             }
             else if (Game.CurrentGameState == GameState.Running)
             {
-                roomPoint = Game.SimulationComponent.Player.CurrentRoom;
+                roomPoint = Game.SimulationComponent.Player.Position.CurrentRoom;
                 map = Game.SimulationComponent.CurrentWorldMap;
             }
 

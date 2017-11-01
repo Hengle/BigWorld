@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BigWorld;
+using BigWorld.Entities.Components;
 using BigWorld.Map;
 using BigWorldGame.Graphics;
 using engenious;
@@ -49,8 +50,12 @@ namespace BigWorldGame.Components
             {
                 foreach (var entity in entities)
                 {
-                    float x = entity.RoomPosition.X;
-                    float y = entity.RoomPosition.Y;
+                    PositionComponent posComp;
+                    if (! entity.TryGetComponent<PositionComponent>(out posComp))
+                        continue;
+                    
+                    float x = posComp.RoomPosition.X;
+                    float y = posComp.RoomPosition.Y;
             
                     uint index = 0;
             
@@ -129,7 +134,7 @@ namespace BigWorldGame.Components
                 
                 //TODO: Merge with MapRenderer
                 Room room;
-                if (map.TryGetRoom(Game.SimulationComponent.Player.CurrentRoom,out  room))
+                if (map.TryGetRoom(Game.SimulationComponent.Player.Position.CurrentRoom,out  room))
                 {
                     effect.Parameters["AmbientIntensity"].SetValue(room.AmbientIntensity);
                     effect.Parameters["AmbientColor"].SetValue(room.AmbientColor);
