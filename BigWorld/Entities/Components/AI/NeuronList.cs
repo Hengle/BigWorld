@@ -13,5 +13,14 @@ namespace BigWorld.Entities.Components.AI
             neurons.Add(neuron);
             return neuron;
         }
+
+        public void CreateNeuronsFromGenome(Genome gen)
+        {
+            
+        }
+        
+        public void Update()
+        {
+        }
     }
 }

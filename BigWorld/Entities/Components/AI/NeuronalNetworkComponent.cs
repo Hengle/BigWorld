@@ -2,6 +2,8 @@
 {
     public class NeuronalNetworkComponent : Component
     {
+        public bool Enable { get; set; }
+        
         public readonly InputNeuron Tick;
 
         public readonly OutputNeuron MoveUp;
