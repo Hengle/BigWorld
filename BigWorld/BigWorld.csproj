@@ -53,7 +53,12 @@
   <ItemGroup>
     <Compile Include="Entities\Component.cs" />
     <Compile Include="Entities\ComponentCollection.cs" />
+    <Compile Include="Entities\Components\AI\InputNeuron.cs" />
+    <Compile Include="Entities\Components\AI\Neuron.cs" />
+    <Compile Include="Entities\Components\AI\NeuronList.cs" />
     <Compile Include="Entities\Components\AI\NeuronalNetworkComponent.cs" />
+    <Compile Include="Entities\Components\AI\NeuronLink.cs" />
+    <Compile Include="Entities\Components\AI\OutputNeuron.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Components\InputComponent.cs" />
     <Compile Include="Entities\Components\MovementComponent.cs" />

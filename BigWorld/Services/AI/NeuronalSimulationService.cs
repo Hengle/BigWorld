@@ -11,7 +11,12 @@ namespace BigWorld.Services.AI
         protected override void Update(NeuronalNetworkComponent comp1, InputComponent comp2,
               Entity entity, WorldMap worldMap, GameTime gameTime)
         {
+            //TickNeuron
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if(comp1.Tick.Value == 0)
+                comp1.Tick.SetValue(1);
             
+            comp1.Tick.SetValue(-1* comp1.Tick.Value);
         }
     }
 }
