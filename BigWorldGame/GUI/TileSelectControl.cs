@@ -1,73 +1,101 @@
 ﻿using BigWorld.GUI;
+using BigWorldGame.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using engenious;
-using BigWorldGame.Graphics;
 using engenious.Graphics;
+using BigWorld.GUI.Args;
+using engenious.Input;
 
 namespace BigWorldGame.GUI
 {
     public class TileSelectControl : Control
     {
-        public int ColumnCount { get; set; }
-
-        private int internalColumnCount = 0;
-
-        private int internalRowCount = 0;
-
-        public int SizeFactor { get; set; } = 4;
 
         public Spritesheet SpriteSheet { get; set; }
 
-        protected override void OnLoadContent(Game game)
+        public int SizeMultiplicator { get; set; } = 2;
+
+        public Vector2? SelectedTileIndex { get; private set; }
+
+        private Point lastMousePosition;
+
+        public TileSelectControl()
         {
-            base.OnLoadContent(game);
         }
 
         protected override void OnDraw(SpriteBatch batch, Size clientSize, GameTime gameTime)
         {
             base.OnDraw(batch, clientSize, gameTime);
 
-            int i = 1;
+            var drawSize = new Size(
+                Math.Min(clientSize.Width - Padding.Horizontal, SpriteSheet.Texture.Width * SizeMultiplicator),
+                Math.Min(clientSize.Height - Padding.Vertical, SpriteSheet.Texture.Height * SizeMultiplicator));
 
-            for(int y = 0; y < internalRowCount; y++)
+            batch.Draw(SpriteSheet.Texture, new Rectangle(Padding.Left, Padding.Top, drawSize.Width, drawSize.Height), Color.White);
+
+            var tileIndex = GetTileIndex(lastMousePosition);
+            if (tileIndex != null)
             {
-                for (int x = 0; x < internalColumnCount; x++)
-                {
-                    var destination = new Rectangle(x * SpriteSheet.TileWidth * SizeFactor, y * SpriteSheet.TileHeight * SizeFactor, SpriteSheet.TileWidth * SizeFactor, SpriteSheet.TileHeight * SizeFactor);
 
-                    batch.Draw(SpriteSheet.TextureArray[i], destination, Color.White);
-
-                    i++;
-                }
+                var selectorRectangle = new Rectangle((int)tileIndex.Value.X * (SpriteSheet.TileSpacing + SpriteSheet.TileWidth) * SizeMultiplicator + Padding.Left,
+                    (int)tileIndex.Value.Y * (SpriteSheet.TileSpacing + SpriteSheet.TileHeight) * SizeMultiplicator + Padding.Top,
+                    SpriteSheet.TileWidth * SizeMultiplicator, SpriteSheet.TileHeight * SizeMultiplicator);
+                batch.Draw(GuiRenderer.Pixel, selectorRectangle, Color.White * 0.5f);
             }
+
+            if(SelectedTileIndex != null)
+            {
+                var selectorRectangle = new Rectangle((int)SelectedTileIndex.Value.X * (SpriteSheet.TileSpacing + SpriteSheet.TileWidth) * SizeMultiplicator + Padding.Left,
+                   (int)SelectedTileIndex.Value.Y * (SpriteSheet.TileSpacing + SpriteSheet.TileHeight) * SizeMultiplicator + Padding.Top,
+                   SpriteSheet.TileWidth * SizeMultiplicator, SpriteSheet.TileHeight * SizeMultiplicator);
+                batch.Draw(GuiRenderer.Pixel, selectorRectangle, Color.Red * 0.5f);
+            }
+        }
+
+        private Vector2? GetTileIndex(Point mousePosition)
+        {
+            var hoveredTileX = (lastMousePosition.X - Padding.Left) / ((SpriteSheet.TileWidth + SpriteSheet.TileSpacing) * SizeMultiplicator);
+            var hoveredTileY = (lastMousePosition.Y - Padding.Top) / ((SpriteSheet.TileHeight + SpriteSheet.TileSpacing) * SizeMultiplicator);
+
+            if (hoveredTileX >= 0 && hoveredTileX < SpriteSheet.Width && hoveredTileY >= 0 && hoveredTileY < SpriteSheet.Height)
+            {
+                return new Vector2(hoveredTileX, hoveredTileY);
+            }
+
+            return null;
         }
 
         public override ControlSize GetActualSize(ControlSize controlSize)
         {
             var size = base.GetActualSize(controlSize);
 
-            if (size.Width != null)
-                internalColumnCount = (size.Width.Value-Padding.Horizontal) / (SpriteSheet.TileWidth * SizeFactor);
-            else
-            {
-                internalColumnCount = ColumnCount;
-                size.Width = internalColumnCount * SpriteSheet.TileWidth * SizeFactor + Padding.Horizontal;
-            }
+            if (!size.Height.HasValue && SpriteSheet != null)
+                size.Height = SpriteSheet.Texture.Height * SizeMultiplicator;
 
-            if(size.Height == null)
-            {
-                internalRowCount = (SpriteSheet.Textures.Height * SpriteSheet.Textures.Height / internalColumnCount) +
-                    (SpriteSheet.Textures.Height * SpriteSheet.Textures.Width % internalColumnCount != 0 ? 1 : 0);
-
-                size.Height = internalRowCount * SpriteSheet.TileHeight * SizeFactor
-                    + Padding.Vertical;
-            }
+            if (!size.Width.HasValue && SpriteSheet != null)
+                size.Width = SpriteSheet.Texture.Width * SizeMultiplicator;
 
             return size;
+        }
+
+        protected override bool OnMouseButtonUp(MouseEventArgs mouseEventArgs, Point relativePosition, MouseButton button)
+        {
+            base.OnMouseButtonUp(mouseEventArgs, relativePosition, button);
+
+            SelectedTileIndex = GetTileIndex(relativePosition);
+
+            return true;
+        }
+
+        protected override void OnMouseMove(MouseEventArgs mouseEventArgs, Point relativePosition)
+        {
+            base.OnMouseMove(mouseEventArgs, relativePosition);
+
+            lastMousePosition = relativePosition;
         }
     }
 }

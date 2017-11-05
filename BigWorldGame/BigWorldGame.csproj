@@ -64,6 +64,7 @@
     <Compile Include="Graphics\RoomRenderer.cs" />
     <Compile Include="Graphics\SpriteSheet.cs" />
     <Compile Include="GUI\TileSelectControl.cs" />
+    <Compile Include="GUI\TileSelectControl_old.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

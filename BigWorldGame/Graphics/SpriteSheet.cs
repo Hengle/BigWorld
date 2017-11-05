@@ -8,6 +8,8 @@ namespace BigWorldGame.Graphics
         public Texture2DArray Textures { get; }
 
         public Texture2D[] TextureArray { get; }
+
+        public Texture2D Texture { get; }
         public int Width { get; }
         public int Height { get; }
 
@@ -25,6 +27,8 @@ namespace BigWorldGame.Graphics
             TileSpacing = tileSpacing;
 
             var text = content.Load<Texture2D>(assetName);
+
+            Texture = text;
 
             var data = new uint[text.Width * text.Height];
             text.GetData(data);

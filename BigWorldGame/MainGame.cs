@@ -56,12 +56,11 @@ namespace BigWorldGame
             Components.Add(EntityRenderer);
 
             var scrollContainer = new ScrollContainer();
-            scrollContainer.HorizontalAlignment = BigWorld.GUI.Layout.HorizontalAlignment.Right;
-            scrollContainer.VerticalAlignment = BigWorld.GUI.Layout.VerticalAlignment.Stretch;
+            //scrollContainer.HorizontalAlignment = BigWorld.GUI.Layout.HorizontalAlignment.Stretch;
+            //scrollContainer.VerticalAlignment = BigWorld.GUI.Layout.VerticalAlignment.Stretch;
             GuiRenderer.RootControl.Content = scrollContainer;
 
             tileSelectControl = new TileSelectControl();
-            tileSelectControl.ColumnCount = 7;
             scrollContainer.Content = tileSelectControl;
         }
 
