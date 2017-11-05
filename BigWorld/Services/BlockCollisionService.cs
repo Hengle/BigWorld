@@ -6,24 +6,17 @@ using engenious;
 
 namespace BigWorld.Services
 {
-    public class BlockCollisionService : BaseService
+    public class BlockCollisionService : BaseServiceR2<MovementComponent,PositionComponent>
     {
-        public override void Update(Entity entity, WorldMap worldMap, GameTime gameTime)
+        protected override void Update(MovementComponent comp1, PositionComponent comp2, 
+            WorldMap worldMap, GameTime gameTime)
         {
-            MovementComponent movementComponent;
-            PositionComponent positionComponent;
-
-            if (!entity.TryGetComponent<MovementComponent>(out movementComponent) 
-                || !entity.TryGetComponent<PositionComponent>(out positionComponent) )
-                return;
-             
-            
             Room room;
-            if (!worldMap.TryGetRoom(positionComponent.CurrentRoom,out room))
+            if (!worldMap.TryGetRoom(comp2.CurrentRoom,out room))
                 return;
 
-            var goalPosition = movementComponent.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds 
-                               + positionComponent.RoomPosition;
+            var goalPosition = comp1.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds 
+                               + comp2.RoomPosition;
             
             foreach (var value in room.BlockLayer.GetPositivValues())
             {
@@ -36,7 +29,7 @@ namespace BigWorld.Services
                         //var x = distance.X < 0 ? 1 + distance.X : 1 - distance.X;
                         //var y = distance.Y < 0 ? 1 + distance.Y : 1 - distance.Y;
 
-                        movementComponent.Velocity = movementComponent.Velocity * new Vector2(0, 0);
+                        comp1.Velocity = comp1.Velocity * new Vector2(0, 0);
                     }
                 }
             }

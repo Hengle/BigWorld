@@ -5,18 +5,16 @@ using engenious;
 
 namespace BigWorld.Services
 {
-    public class VelocityService : BaseService
+    public class VelocityService : BaseServiceR2<MovementComponent,InputComponent>
     {
         public override void Update(Entity entity, WorldMap worldMap, GameTime gameTime)
         {
-            MovementComponent movementComponent;
-            InputComponent inputComponent;
+        }
 
-            if (!entity.TryGetComponent<MovementComponent>(out movementComponent) ||
-                !entity.TryGetComponent<InputComponent>(out inputComponent))
-                return;
-            
-            movementComponent.Velocity = inputComponent.MoveDirection  * 4;
+        protected override void Update(MovementComponent comp1, InputComponent comp2,
+            WorldMap worldMap, GameTime gameTime)
+        {
+            comp1.Velocity = comp2.MoveDirection  * 4;
         }
     }
 }

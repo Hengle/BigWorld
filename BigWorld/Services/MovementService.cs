@@ -5,18 +5,12 @@ using engenious;
 
 namespace BigWorld.Services
 {
-    public class MovementService : BaseService
+    public class MovementService : BaseServiceR2<MovementComponent,PositionComponent>
     {
-        public override void Update(Entity entity, WorldMap worldMap, GameTime gameTime)
-        {   
-            MovementComponent movementComponent;
-            PositionComponent positionComponent;
-
-            if (!entity.TryGetComponent<MovementComponent>(out movementComponent) 
-                || !entity.TryGetComponent<PositionComponent>(out positionComponent) )
-                return;
-            
-            positionComponent.RoomPosition += movementComponent.Velocity * (float) gameTime.ElapsedGameTime.TotalSeconds;
+        protected override void Update(MovementComponent comp1, PositionComponent comp2,
+            WorldMap worldMap, GameTime gameTime)
+        {
+            comp2.RoomPosition += comp1.Velocity * (float) gameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 }
