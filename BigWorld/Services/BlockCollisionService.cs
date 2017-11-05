@@ -9,7 +9,7 @@ namespace BigWorld.Services
     public class BlockCollisionService : BaseServiceR2<MovementComponent,PositionComponent>
     {
         protected override void Update(MovementComponent comp1, PositionComponent comp2, 
-            WorldMap worldMap, GameTime gameTime)
+            Entity entity,WorldMap worldMap, GameTime gameTime)
         {
             Room room;
             if (!worldMap.TryGetRoom(comp2.CurrentRoom,out room))

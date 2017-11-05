@@ -12,7 +12,7 @@ namespace BigWorld.Services
         }
 
         protected override void Update(MovementComponent comp1, InputComponent comp2,
-            WorldMap worldMap, GameTime gameTime)
+            Entity entity,WorldMap worldMap, GameTime gameTime)
         {
             comp1.Velocity = comp2.MoveDirection  * 4;
         }

@@ -16,10 +16,10 @@ namespace BigWorld.Services
             if (entity.TryGetComponent(out comp1) &&
                 entity.TryGetComponent(out comp2))
             {
-                Update(comp1,comp2,worldMap,gameTime);
+                Update(comp1,comp2, entity,worldMap,gameTime);
             }
         }
 
-        protected abstract void Update(TC1 comp1, TC2 comp2, WorldMap worldMap, GameTime gameTime);
+        protected abstract void Update(TC1 comp1, TC2 comp2,Entity entity, WorldMap worldMap, GameTime gameTime);
     }
 }
