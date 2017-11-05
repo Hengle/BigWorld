@@ -1,5 +1,6 @@
 ﻿using BigWorld.Entities;
 using BigWorld.Entities.Components;
+using BigWorld.Entities.Components.AI;
 
 namespace BigWorld
 {
@@ -8,8 +9,11 @@ namespace BigWorld
         public readonly PositionComponent Position;
         public readonly InputComponent Input;
 
+        public readonly NeuronalNetworkComponent NeuronalNetwork;
+        
         public Player()
         {
+            NeuronalNetwork = CreateComponent<NeuronalNetworkComponent>();
             Input = CreateComponent<InputComponent>();
             
             CreateComponent<MovementComponent>();
