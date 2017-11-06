@@ -1,7 +1,14 @@
-﻿namespace BigWorld.Entities.Components.AI
+﻿using System;
+
+namespace BigWorld.Entities.Components.AI
 {
-    public class Gen
-    {
-        
+    public abstract class Gen
+    {        
+        public virtual void CreateRandom(Random r,Genome genome)
+        {
+            
+        }
+
+        public abstract void Apply(NeuronList neuronList);
     }
 }

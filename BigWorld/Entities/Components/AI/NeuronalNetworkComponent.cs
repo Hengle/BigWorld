@@ -1,4 +1,6 @@
-﻿namespace BigWorld.Entities.Components.AI
+﻿using BigWorld.Entities.Components.AI.Gens;
+
+namespace BigWorld.Entities.Components.AI
 {
     public class NeuronalNetworkComponent : Component
     {
@@ -15,14 +17,30 @@
 
         public NeuronalNetworkComponent()
         {
+            Enable = true;
+            
             //Input
-            Tick = NeuronList.CreateNeuron<InputNeuron>();
+            Tick = new InputNeuron();
             
             //Output
-            MoveUp = NeuronList.CreateNeuron<OutputNeuron>();
-            MoveDown = NeuronList.CreateNeuron<OutputNeuron>();
-            MoveLeft = NeuronList.CreateNeuron<OutputNeuron>();
-            MoveRight = NeuronList.CreateNeuron<OutputNeuron>();
+            MoveUp = new OutputNeuron();
+            MoveDown = new OutputNeuron();
+            MoveLeft = new OutputNeuron();
+            MoveRight = new OutputNeuron();
+            
+            //Genom
+            Genome genome = new Genome();
+            genome.Add(new InputGen(Tick));
+            
+            genome.Add(new OutputGen(MoveUp));
+            genome.Add(new OutputGen(MoveDown));
+            genome.Add(new OutputGen(MoveLeft));
+            genome.Add(new OutputGen(MoveRight));
+            
+            genome.CreateRandomGens(10);
+            
+            NeuronList.CreateNeuronsFromGenome(genome);
+
         }
     }
 }

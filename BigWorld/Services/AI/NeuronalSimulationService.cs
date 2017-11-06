@@ -24,8 +24,8 @@ namespace BigWorld.Services.AI
             //Update
             comp1.NeuronList.Update();
             
-            comp2.MoveDirection = new Vector2(comp1.MoveRight.Value - comp1.MoveLeft.Value
-                                              ,comp1.MoveUp.Value - comp1.MoveDown.Value );
+            comp2.MoveDirection = new Vector2((float)(comp1.MoveRight.Value - comp1.MoveLeft.Value)
+                                              ,(float)(comp1.MoveUp.Value - comp1.MoveDown.Value ));
         }
     }
 }

@@ -2,6 +2,7 @@
 using BigWorld.Entities;
 using BigWorld.Map;
 using BigWorld.Services;
+using BigWorld.Services.AI;
 using engenious;
 
 namespace BigWorld
@@ -17,6 +18,7 @@ namespace BigWorld
 
         private readonly List<BaseService> services = new List<BaseService>()
         {
+            new NeuronalSimulationService(),
             new VelocityService(),
             new BlockCollisionService(),
             new MovementService(),

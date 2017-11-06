@@ -1,7 +1,9 @@
-﻿namespace BigWorld.Entities.Components.AI.Gens
+﻿using System;
+
+namespace BigWorld.Entities.Components.AI.Gens
 {
-    [GenDefinition(1)]
-    public class NeuronGen : Gen
+    
+    public abstract class NeuronGen : Gen
     {
         
     }
