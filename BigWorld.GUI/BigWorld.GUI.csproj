@@ -64,6 +64,7 @@
     <Compile Include="Control.cs" />
     <Compile Include="ControlSize.cs" />
     <Compile Include="Controls\ColorPicker.cs" />
+    <Compile Include="Controls\ProgressBar.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="GuiRenderer.cs" />
     <Compile Include="Label.cs" />
