@@ -13,8 +13,11 @@ namespace BigWorld.Entities.Components.AI
         public readonly OutputNeuron MoveLeft;
         public readonly OutputNeuron MoveRight;
         
-        public readonly NeuronList NeuronList = new NeuronList();
+        
 
+        public NeuronList NeuronList { get; private set; } = new NeuronList();
+        private Genome genome;
+        
         public NeuronalNetworkComponent()
         {
             Enable = true;
@@ -29,7 +32,7 @@ namespace BigWorld.Entities.Components.AI
             MoveRight = new OutputNeuron();
             
             //Genom
-            Genome genome = new Genome();
+            genome = new Genome(12685);
             genome.Add(new InputGen(Tick));
             
             genome.Add(new OutputGen(MoveUp));
@@ -37,10 +40,16 @@ namespace BigWorld.Entities.Components.AI
             genome.Add(new OutputGen(MoveLeft));
             genome.Add(new OutputGen(MoveRight));
             
-            genome.CreateRandomGens(10);
+            //genome.CreateRandomGens(10);
             
             NeuronList.CreateNeuronsFromGenome(genome);
+        }
 
+        public void Mutate()
+        {
+            genome.Mutate();
+            NeuronList = new NeuronList();
+            NeuronList.CreateNeuronsFromGenome(genome);
         }
     }
 }

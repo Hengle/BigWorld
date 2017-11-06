@@ -27,6 +27,8 @@ namespace BigWorld.Entities.Components.AI
         
         public readonly List<LinkGen> LinkGens = new List<LinkGen>();
         public readonly List<NeuronGen> NeuronGens = new List<NeuronGen>();
+
+        private readonly Random genomRandom;
         
         static Genome()
         {
@@ -46,8 +48,11 @@ namespace BigWorld.Entities.Components.AI
 
             }
         }
-        
-        
+
+        public Genome(int seed)
+        {
+            genomRandom = new Random(seed);
+        }
         
         public static Genome CreateGenom(NeuronList basicList,int count)
         {
@@ -58,13 +63,28 @@ namespace BigWorld.Entities.Components.AI
 
         public static Genome CreateGenom(NeuronList basicList,int count,int seed)
         {
-            Genome genome = new Genome();
+            Genome genome = new Genome(seed);
 
             genome.CreateRandomGens(count, seed);
 
             return genome;
         }
 
+        public void Mutate()
+        {
+            foreach (var gen in LinkGens)
+            {
+                gen.Mutate(genomRandom);
+            }
+            
+            var value = genomRandom.Next(10);
+            if (value == 0)
+            {
+                var seed = genomRandom.Next();
+                CreateRandomGens(1,seed);
+            }
+        }
+        
         public void CreateRandomGens(int count)
         {
             Random r = new Random();
@@ -103,5 +123,7 @@ namespace BigWorld.Entities.Components.AI
                     break;
             }
         }
+
+
     }
 }

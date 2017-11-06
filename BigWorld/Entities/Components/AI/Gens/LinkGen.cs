@@ -43,5 +43,10 @@ namespace BigWorld.Entities.Components.AI.Gens
             
             outputNeuron.Links.Add(link);
         }
+
+        public void Mutate(Random genomRandom)
+        {
+            
+        }
     }
 }
