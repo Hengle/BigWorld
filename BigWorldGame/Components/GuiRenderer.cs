@@ -16,17 +16,20 @@ namespace BigWorldGame.Components
         public new readonly MainGame Game;
 
         public readonly BuildGuiRenderer BuildGuiRenderer;
+        public readonly RunGuiRenderer RunGuiRenderer;
         
         public GuiRenderer(MainGame game) : base(game)
         {
             Game = game;
             
             BuildGuiRenderer = new BuildGuiRenderer(Game);
+            RunGuiRenderer = new RunGuiRenderer(game);
         }
 
         protected override void LoadContent()
         {        
             BuildGuiRenderer.LoadContent();
+            RunGuiRenderer.LoadContent();
         }
 
         
@@ -41,6 +44,7 @@ namespace BigWorldGame.Components
                         BuildGuiRenderer.Update(gameTime);
                         break;
                     case GameState.Running:
+                        RunGuiRenderer.Update(gameTime);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -56,6 +60,7 @@ namespace BigWorldGame.Components
                     BuildGuiRenderer.Draw(gameTime);
                     break;
                 case GameState.Running:
+                    RunGuiRenderer.Draw(gameTime);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

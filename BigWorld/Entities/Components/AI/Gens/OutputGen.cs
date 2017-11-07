@@ -13,5 +13,10 @@
         {
             neuronList.Add(outputNeuron);
         }
+        
+        public override Gen Copy()
+        {
+            return new OutputGen(outputNeuron);
+        }
     }
 }

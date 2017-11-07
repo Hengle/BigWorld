@@ -18,5 +18,6 @@ namespace BigWorld.Entities.Components.AI
         {
             return Value;
         }
+
     }
 }

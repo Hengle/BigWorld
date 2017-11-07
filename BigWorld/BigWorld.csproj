@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="Entities\Component.cs" />
     <Compile Include="Entities\ComponentCollection.cs" />
+    <Compile Include="Entities\Components\AI\FitnessComponent.cs" />
     <Compile Include="Entities\Components\AI\Gen.cs" />
     <Compile Include="Entities\Components\AI\GenDefinitionAttribute.cs" />
     <Compile Include="Entities\Components\AI\Genome.cs" />

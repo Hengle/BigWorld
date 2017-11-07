@@ -54,6 +54,7 @@
     <Compile Include="Components\EntityRenderer.cs" />
     <Compile Include="Components\GuiRenderer.cs" />
     <Compile Include="Components\Gui\BuildGuiRenderer.cs" />
+    <Compile Include="Components\Gui\RunGuiRenderer.cs" />
     <Compile Include="Components\MapRenderer.cs" />
     <Compile Include="Components\SimulationComponent.cs" />
     <Compile Include="Controls\BaseControl.cs" />

@@ -16,14 +16,22 @@ namespace BigWorld
         private readonly List<Entity> entities = new List<Entity>();
         public IEnumerable<Entity> Entities => entities;
 
-        private readonly List<BaseService> services = new List<BaseService>()
+        public NeuronalSimulationService NeuronalSimulationService { get; }
+
+        private readonly List<BaseService> services;
+
+        public Simulation()
         {
-            new NeuronalSimulationService(),
-            new VelocityService(),
-            new BlockCollisionService(),
-            new MovementService(),
-            new RoomCollisionService(),
-        };
+            NeuronalSimulationService = new NeuronalSimulationService();
+            services = new List<BaseService>()
+            {
+                NeuronalSimulationService,
+                new VelocityService(),
+                new BlockCollisionService(),
+                new MovementService(),
+                new RoomCollisionService(),
+            };
+        }
         
         public void Start(WorldMap worldMap)
         {   

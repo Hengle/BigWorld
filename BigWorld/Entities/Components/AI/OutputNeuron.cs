@@ -13,9 +13,10 @@
             if (linkValue < 0)
                 return 0;
 
-            Value = linkValue;
+            Value = linkValue > 1 ? 1 : linkValue;
             
             return linkValue;
         }
+
     }
 }

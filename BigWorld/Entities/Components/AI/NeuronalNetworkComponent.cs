@@ -7,6 +7,9 @@ namespace BigWorld.Entities.Components.AI
         public bool Enable { get; set; }
         
         public readonly InputNeuron Tick;
+        
+        public readonly InputNeuron DeltaPositionX;
+        public readonly InputNeuron DeltaPositionY;
 
         public readonly OutputNeuron MoveUp;
         public readonly OutputNeuron MoveDown;
@@ -16,7 +19,7 @@ namespace BigWorld.Entities.Components.AI
         
 
         public NeuronList NeuronList { get; private set; } = new NeuronList();
-        private Genome genome;
+        public Genome Genome { get; private set; }
         
         public NeuronalNetworkComponent()
         {
@@ -24,30 +27,26 @@ namespace BigWorld.Entities.Components.AI
             
             //Input
             Tick = new InputNeuron();
+            DeltaPositionX = new InputNeuron();
+            DeltaPositionY = new InputNeuron();
             
             //Output
             MoveUp = new OutputNeuron();
             MoveDown = new OutputNeuron();
             MoveLeft = new OutputNeuron();
             MoveRight = new OutputNeuron();
-            
-            //Genom
-            genome = new Genome(12685);
-            genome.Add(new InputGen(Tick));
-            
-            genome.Add(new OutputGen(MoveUp));
-            genome.Add(new OutputGen(MoveDown));
-            genome.Add(new OutputGen(MoveLeft));
-            genome.Add(new OutputGen(MoveRight));
-            
-            //genome.CreateRandomGens(10);
-            
-            NeuronList.CreateNeuronsFromGenome(genome);
         }
 
-        public void Mutate()
+        public void Reset(Genome genome)
         {
-            genome.Mutate();
+            Genome = genome;
+
+            Tick.Reset();
+            MoveUp.Reset();
+            MoveDown.Reset();
+            MoveLeft.Reset();
+            MoveRight.Reset();
+            
             NeuronList = new NeuronList();
             NeuronList.CreateNeuronsFromGenome(genome);
         }

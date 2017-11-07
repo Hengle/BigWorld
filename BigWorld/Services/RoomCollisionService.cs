@@ -1,5 +1,6 @@
 ﻿using BigWorld.Entities;
 using BigWorld.Entities.Components;
+using BigWorld.Entities.Components.AI;
 using BigWorld.Map;
 using engenious;
 
@@ -9,6 +10,8 @@ namespace BigWorld.Services
     {
         protected override void Update(PositionComponent comp, Entity entity, WorldMap worldMap, GameTime gameTime)
         {
+            var oldPosition = comp.RoomPosition;
+            
             if (comp.RoomPosition.X < 0)
             {
                 comp.RoomPosition = new Vector2(0,comp.RoomPosition.Y);
@@ -62,6 +65,30 @@ namespace BigWorld.Services
                     comp.RoomPosition = position.ToVector2();
                 }
             }
+
+            var distance = comp.RoomPosition - oldPosition;
+
+            if (distance.LengthSquared > 0)
+            {
+                distance.Normalize();
+            
+                if (entity.TryGetComponent<FitnessComponent>(out var fitness))
+                {
+                    fitness.Value += distance.Length*2;
+                }
+                
+                if (entity.TryGetComponent<NeuronalNetworkComponent>(out var neuronal))
+                {
+                    neuronal.DeltaPositionX.SetValue(distance.X);
+                    neuronal.DeltaPositionY.SetValue(distance.Y);
+                }
+
+
+            }
+            
+           
+
+
         }
     }
 }

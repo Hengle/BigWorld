@@ -15,6 +15,11 @@ namespace BigWorld.Entities.Components.AI.Gens
             
         }
 
+        public override Gen Copy()
+        {
+            return new LinkGen(In,Out,Weight,Enable);
+        }
+
         public LinkGen(int @in, int @out, double weight, bool enable)
         {
             In = @in;
@@ -28,7 +33,12 @@ namespace BigWorld.Entities.Components.AI.Gens
             In = r.Next(0, genome.NeuronGens.Count);
             Out = r.Next(0, genome.NeuronGens.Count);
             Weight = r.NextDouble() * 2 - 1;
-            Enable = r.Next(0, 2) == 1;
+            Enable = r.Next(0, 3) > 0;
+
+            if (In == 0 && Out > 1)
+            {
+                
+            }
         }
 
         public override void Apply(NeuronList neuronList)
@@ -46,7 +56,15 @@ namespace BigWorld.Entities.Components.AI.Gens
 
         public void Mutate(Random genomRandom)
         {
-            
+            var mutationRate = genomRandom.Next(10);
+
+            if (mutationRate == 0)
+            {
+                Weight = genomRandom.NextDouble() * 2 - 1;
+                Enable = genomRandom.Next(0, 3) > 0;
+            }
         }
+
+
     }
 }

@@ -11,6 +11,15 @@ namespace BigWorld.Entities.Components.AI
 
         private int currentRun;
         private double? currentValue;
+
+        public void Reset()
+        {
+            Links.Clear();
+            oldValue = 0;
+            oldRun = 0;
+            currentRun = 0;
+            currentValue = null;
+        }
         
         public double GetValue(int run)
         {

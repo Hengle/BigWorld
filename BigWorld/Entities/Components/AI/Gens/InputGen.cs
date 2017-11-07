@@ -11,6 +11,11 @@ namespace BigWorld.Entities.Components.AI.Gens
             this.inputNeuron = inputNeuron;
         }
 
+        public override Gen Copy()
+        {
+            return new InputGen(inputNeuron);
+        }
+
         public override void Apply(NeuronList neuronList)
         {
             neuronList.Add(inputNeuron);

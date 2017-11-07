@@ -18,6 +18,8 @@ namespace BigWorld
             
             CreateComponent<MovementComponent>();
             Position = CreateComponent<PositionComponent>();
+
+            CreateComponent<FitnessComponent>();
         }
 
 

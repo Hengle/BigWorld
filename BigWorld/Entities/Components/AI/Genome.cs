@@ -19,6 +19,8 @@ namespace BigWorld.Entities.Components.AI
                 EndProp = endProp;
             }
         }
+
+        public int Generation { get; private set; }
         
         private static readonly Dictionary<Type,InternGenDefinition> gens 
             = new Dictionary<Type, InternGenDefinition>();
@@ -28,6 +30,7 @@ namespace BigWorld.Entities.Components.AI
         public readonly List<LinkGen> LinkGens = new List<LinkGen>();
         public readonly List<NeuronGen> NeuronGens = new List<NeuronGen>();
 
+        private int seed;
         private readonly Random genomRandom;
         
         static Genome()
@@ -51,7 +54,31 @@ namespace BigWorld.Entities.Components.AI
 
         public Genome(int seed)
         {
+            this.seed = seed;
             genomRandom = new Random(seed);
+            Generation = 1;
+        }
+
+        public Genome CopyGenome()
+        {
+            var newSeed = genomRandom.Next();
+            
+            Genome newGenome = new Genome(newSeed)
+            {
+                Generation = Generation + 1,
+            };
+
+            foreach (var gen in LinkGens)
+            {
+                newGenome.Add(gen.Copy());
+            }
+
+            foreach (var gen in NeuronGens)
+            {
+                newGenome.Add(gen.Copy());
+            }
+            
+            return newGenome;
         }
         
         public static Genome CreateGenom(NeuronList basicList,int count)
@@ -77,7 +104,7 @@ namespace BigWorld.Entities.Components.AI
                 gen.Mutate(genomRandom);
             }
             
-            var value = genomRandom.Next(10);
+            var value = genomRandom.Next(5);
             if (value == 0)
             {
                 var seed = genomRandom.Next();
@@ -125,5 +152,27 @@ namespace BigWorld.Entities.Components.AI
         }
 
 
+        public Genome Combine(Genome secoundGenome)
+        {
+            var newSeed = genomRandom.Next();
+            
+            Genome newGenome = new Genome(newSeed)
+            {
+            };
+
+
+
+            foreach (var gen in NeuronGens)
+            {
+                newGenome.Add(gen.Copy());
+            }
+            
+            foreach (var gen in LinkGens)
+            {
+                newGenome.Add(gen.Copy());
+            }
+            
+            return newGenome;
+        }
     }
 }

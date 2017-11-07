@@ -9,6 +9,8 @@ namespace BigWorld.Entities.Components.AI
             
         }
 
+        public abstract Gen Copy();
+        
         public abstract void Apply(NeuronList neuronList);
     }
 }
