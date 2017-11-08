@@ -65,30 +65,6 @@ namespace BigWorld.Services
                     comp.RoomPosition = position.ToVector2();
                 }
             }
-
-            var distance = comp.RoomPosition - oldPosition;
-
-            if (distance.LengthSquared > 0)
-            {
-                distance.Normalize();
-            
-                if (entity.TryGetComponent<FitnessComponent>(out var fitness))
-                {
-                    fitness.Value += distance.Length*2;
-                }
-                
-                if (entity.TryGetComponent<NeuronalNetworkComponent>(out var neuronal))
-                {
-                    neuronal.DeltaPositionX.SetValue(distance.X);
-                    neuronal.DeltaPositionY.SetValue(distance.Y);
-                }
-
-
-            }
-            
-           
-
-
         }
     }
 }

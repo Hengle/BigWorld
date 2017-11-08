@@ -7,6 +7,7 @@ namespace BigWorld.Entities.Components.AI
         public bool Enable { get; set; }
         
         public readonly InputNeuron Tick;
+        public readonly InputNeuron Const;
         
         public readonly InputNeuron DeltaPositionX;
         public readonly InputNeuron DeltaPositionY;
@@ -27,6 +28,7 @@ namespace BigWorld.Entities.Components.AI
             
             //Input
             Tick = new InputNeuron();
+            Const = new InputNeuron();
             DeltaPositionX = new InputNeuron();
             DeltaPositionY = new InputNeuron();
             

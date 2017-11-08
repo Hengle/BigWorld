@@ -99,11 +99,6 @@ namespace BigWorld.Entities.Components.AI
 
         public void Mutate()
         {
-            foreach (var gen in LinkGens)
-            {
-                gen.Mutate(genomRandom);
-            }
-            
             var value = genomRandom.Next(5);
             if (value == 0)
             {
@@ -158,18 +153,25 @@ namespace BigWorld.Entities.Components.AI
             
             Genome newGenome = new Genome(newSeed)
             {
+                Generation = (Generation > secoundGenome.Generation ? Generation : secoundGenome.Generation) +1,
             };
 
+            var neuronGens = NeuronGens.Count > secoundGenome.NeuronGens.Count ? NeuronGens : secoundGenome.NeuronGens;
+            
 
-
-            foreach (var gen in NeuronGens)
+            foreach (var gen in neuronGens)
             {
                 newGenome.Add(gen.Copy());
             }
+
+            var linkgens = LinkGens.Union(secoundGenome.LinkGens);
             
-            foreach (var gen in LinkGens)
+            foreach (var gen in linkgens)
             {
-                newGenome.Add(gen.Copy());
+                var copyGen = (LinkGen)gen.Copy();
+                copyGen.Mutate(genomRandom);
+                
+                newGenome.Add(copyGen);
             }
             
             return newGenome;

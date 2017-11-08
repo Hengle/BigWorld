@@ -16,8 +16,8 @@ namespace BigWorld.Services.AI
     {
         public int Run { get; private set; }
         public int Count { get; private set; }
-
         public Genome CurrentGenome { get; private set; }
+        public double MaxFitness { get; private set; }
         
         List<Tuple<Genome,double>> positiveGenomes = new List<Tuple<Genome, double>>();
 
@@ -66,6 +66,10 @@ namespace BigWorld.Services.AI
                     {
                         var goodGenomes = positiveGenomes.OrderByDescending(i => i.Item2).Take(16);
 
+                        var fitness = goodGenomes.First().Item2;
+                        if (fitness > MaxFitness)
+                            MaxFitness = fitness;
+                        
                         foreach (var genome in goodGenomes)
                         {
                             genomes.Add(genome.Item1.CopyGenome());
@@ -100,6 +104,7 @@ namespace BigWorld.Services.AI
                     {
                         var newGenom = new Genome(r.Next());
                         newGenom.Add(new InputGen(comp1.Tick));
+                        newGenom.Add(new InputGen(comp1.Const));
                         newGenom.Add(new InputGen(comp1.DeltaPositionX));
                         newGenom.Add(new InputGen(comp1.DeltaPositionY));
                     
@@ -119,7 +124,7 @@ namespace BigWorld.Services.AI
                 currentGenom.Mutate();
                 
                 comp1.Reset(currentGenom);
-                currentTimeLimit = ((currentGenom.Generation / 10)+1) * 0.1;
+                currentTimeLimit = (Math.Pow(10,currentGenom.Generation / 10)) * 0.1;
 
                 if (entity.TryGetComponent<PositionComponent>(out var position))
                 {
@@ -135,6 +140,8 @@ namespace BigWorld.Services.AI
             // ReSharper disable once CompareOfFloatsByEqualityOperator
             if(comp1.Tick.Value == 0)
                 comp1.Tick.SetValue(1);
+            
+            comp1.Const.SetValue(1);
             
             comp1.Tick.SetValue(-1* comp1.Tick.Value);
             
