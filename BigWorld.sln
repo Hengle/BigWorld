@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigWorld", "BigWorld/BigWor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BigWorldGame", "BigWorldGame\BigWorldGame.csproj", "{5C6D35F4-C55E-47F3-A3B1-E80E647BD067}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AISimulation", "AISimulation\AISimulation.csproj", "{0C3C047C-7813-4E61-A792-F23AB5ED5F53}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5C6D35F4-C55E-47F3-A3B1-E80E647BD067}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C6D35F4-C55E-47F3-A3B1-E80E647BD067}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C6D35F4-C55E-47F3-A3B1-E80E647BD067}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C3C047C-7813-4E61-A792-F23AB5ED5F53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C3C047C-7813-4E61-A792-F23AB5ED5F53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C3C047C-7813-4E61-A792-F23AB5ED5F53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C3C047C-7813-4E61-A792-F23AB5ED5F53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

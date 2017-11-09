@@ -31,6 +31,7 @@ namespace BigWorld.Services.AI
         
         private Random r = new Random();
         
+        public readonly List<Species> Specieses = new List<Species>();
         
         protected override void Update(NeuronalNetworkComponent comp1, InputComponent comp2,
               Entity entity, WorldMap worldMap, GameTime gameTime)
@@ -75,6 +76,7 @@ namespace BigWorld.Services.AI
                             var newGenome = genome.Item1.CreateNewGenation();
                             newGenome.Mutate();
                             
+                            OrderToSpecies(newGenome);
                             
                             genomes.Add(newGenome);
                         }
@@ -99,6 +101,7 @@ namespace BigWorld.Services.AI
                                 {
                                     var childGenome = firstGenome.Combine(secoundGenome);
                                     childGenome.Mutate();
+                                    OrderToSpecies(childGenome);
                                     genomes.Add(childGenome);
                                 }
                                 else
@@ -117,20 +120,21 @@ namespace BigWorld.Services.AI
 
                     for (int i = genomes.Count; i < 128; i++)
                     {
-                        var newGenom = new Genome(r.Next());
-                        newGenom.Add(new InputGen(comp1.Tick));
-                        newGenom.Add(new InputGen(comp1.Const));
-                        newGenom.Add(new InputGen(comp1.DeltaPositionX));
-                        newGenom.Add(new InputGen(comp1.DeltaPositionY));
+                        var newGenome = new Genome(r.Next());
+                        newGenome.Add(new InputGen(comp1.Tick));
+                        newGenome.Add(new InputGen(comp1.Const));
+                        newGenome.Add(new InputGen(comp1.DeltaPositionX));
+                        newGenome.Add(new InputGen(comp1.DeltaPositionY));
                     
-                        newGenom.Add(new OutputGen(comp1.MoveUp));
-                        newGenom.Add(new OutputGen(comp1.MoveDown));
-                        newGenom.Add(new OutputGen(comp1.MoveLeft));
-                        newGenom.Add(new OutputGen(comp1.MoveRight));
+                        newGenome.Add(new OutputGen(comp1.MoveUp));
+                        newGenome.Add(new OutputGen(comp1.MoveDown));
+                        newGenome.Add(new OutputGen(comp1.MoveLeft));
+                        newGenome.Add(new OutputGen(comp1.MoveRight));
                         
-                        newGenom.Mutate();
+                        newGenome.Mutate();
                         
-                        genomes.Add(newGenom);
+                        genomes.Add(newGenome);
+                        OrderToSpecies(newGenome);
                         
                         Count++;
                     }
@@ -141,7 +145,7 @@ namespace BigWorld.Services.AI
                 CurrentGenome = currentGenom;
                 
                 comp1.Reset(currentGenom);
-                currentTimeLimit = (Math.Pow(10,currentGenom.Generation / 10)) * 0.1;
+                currentTimeLimit = 10; //(Math.Pow(10,currentGenom.Generation / 10)) * 0.1;
 
                 if (entity.TryGetComponent<PositionComponent>(out var position))
                 {
@@ -166,12 +170,24 @@ namespace BigWorld.Services.AI
             comp1.NeuronList.Update();
             
             comp2.MoveDirection = new Vector2((float)(comp1.MoveRight.Value - comp1.MoveLeft.Value)
-                                              ,(float)(comp1.MoveUp.Value - comp1.MoveDown.Value ));
-            
-            if (float.IsNaN(comp2.MoveDirection.X) || float.IsNaN(comp2.MoveDirection.Y) )
+                                              ,(float)(comp1.MoveUp.Value - comp1.MoveDown.Value ));       
+        }
+
+        public void OrderToSpecies(Genome genome)
+        {
+            foreach (var species in Specieses)
             {
-                
+                if (species.Check(genome))
+                {
+                    genome.Species = species;
+                    return;
+                }
             }
+            
+            var newSpecies = new Species(genome);
+            genome.Species = newSpecies;
+                
+            Specieses.Add(newSpecies);
         }
     }
 }

@@ -11,8 +11,9 @@ namespace BigWorld.Entities.Components.AI
 
 
         public int Generation { get; private set; }
+        public Species Species { get; set; }
 
-        
+
         public readonly List<LinkGen> LinkGens = new List<LinkGen>();
         public readonly List<NeuronGen> NeuronGens = new List<NeuronGen>();
 
@@ -53,7 +54,7 @@ namespace BigWorld.Entities.Components.AI
 
         public void Mutate()
         {
-            var mutateApply = (random.Next(5)) == 0;
+            var mutateApply = (random.Next(10)) == 0;
 
             foreach (var gen in LinkGens)
             {

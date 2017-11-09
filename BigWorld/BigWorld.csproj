@@ -69,6 +69,7 @@
     <Compile Include="Entities\Components\AI\NeuronalNetworkComponent.cs" />
     <Compile Include="Entities\Components\AI\NeuronLink.cs" />
     <Compile Include="Entities\Components\AI\OutputNeuron.cs" />
+    <Compile Include="Entities\Components\AI\Species.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Components\InputComponent.cs" />
     <Compile Include="Entities\Components\MovementComponent.cs" />

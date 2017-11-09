@@ -81,14 +81,14 @@ namespace BigWorld.Entities.Components.AI.Gens
             {
                 Weight += (float)((random.NextDouble() * 2 - 1) * 0.1);
                 
-                /*
+                
                 var applyEnableMutation = random.Next(10) == 0;
 
                 if (applyEnableMutation)
                 {
                     Enable = !Enable;
                 }
-                */
+                
             }
         }
 
