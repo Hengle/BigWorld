@@ -72,7 +72,11 @@ namespace BigWorld.Services.AI
                         
                         foreach (var genome in goodGenomes)
                         {
-                            genomes.Add(genome.Item1.CopyGenome());
+                            var newGenome = genome.Item1.CreateNewGenation();
+                            newGenome.Mutate();
+                            
+                            
+                            genomes.Add(newGenome);
                         }
 
                         var combinegenomes = goodGenomes.Take(8).ToArray();
@@ -89,8 +93,20 @@ namespace BigWorld.Services.AI
                                 var firstGenome = combinegenomes[k].Item1;
                                 var secoundGenome = combinegenomes[l].Item1;
 
-                                var childGenome = firstGenome.Combine(secoundGenome);
-                                genomes.Add(childGenome);
+                                var diff = firstGenome.Distance(secoundGenome);
+
+                                if (diff < 3)
+                                {
+                                    var childGenome = firstGenome.Combine(secoundGenome);
+                                    childGenome.Mutate();
+                                    genomes.Add(childGenome);
+                                }
+                                else
+                                {
+                                    
+                                }
+                                
+
                             }
                         }
                         
@@ -111,7 +127,11 @@ namespace BigWorld.Services.AI
                         newGenom.Add(new OutputGen(comp1.MoveDown));
                         newGenom.Add(new OutputGen(comp1.MoveLeft));
                         newGenom.Add(new OutputGen(comp1.MoveRight));
+                        
+                        newGenom.Mutate();
+                        
                         genomes.Add(newGenom);
+                        
                         Count++;
                     }
                     
@@ -119,8 +139,6 @@ namespace BigWorld.Services.AI
                 
                 var currentGenom = genomes[CurrentGenomeNumber];
                 CurrentGenome = currentGenom;
-                
-                currentGenom.Mutate();
                 
                 comp1.Reset(currentGenom);
                 currentTimeLimit = (Math.Pow(10,currentGenom.Generation / 10)) * 0.1;

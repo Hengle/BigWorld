@@ -27,7 +27,7 @@ namespace BigWorld.Entities.Components.AI
             Generation = 1;
         }
 
-        public Genome CopyGenome()
+        public Genome CreateNewGenation()
         {
             var newSeed = random.Next();
             
@@ -53,8 +53,13 @@ namespace BigWorld.Entities.Components.AI
 
         public void Mutate()
         {
-            var mutateApply = (random.Next(1)) == 0;
+            var mutateApply = (random.Next(5)) == 0;
 
+            foreach (var gen in LinkGens)
+            {
+                gen.Mutate(random);
+            }
+            
             if (mutateApply)
             {
 
@@ -166,17 +171,83 @@ namespace BigWorld.Entities.Components.AI
                 newGenome.Add(gen.Copy());
             }
 
-            var linkgens = LinkGens.Union(secoundGenome.LinkGens);
-            
-            foreach (var gen in linkgens)
+            var exceptionOne = LinkGens.Except(secoundGenome.LinkGens);
+            var exceptionTwo = secoundGenome.LinkGens.Except(LinkGens);
+            var intersection = LinkGens.Intersect(secoundGenome.LinkGens);
+
+            var cleanIntersection =
+                from intersectionGen in intersection
+                from parentOneGen in LinkGens
+                from parentTwoGen in secoundGenome.LinkGens
+                where intersectionGen.Equals(parentOneGen) && intersectionGen.Equals(parentTwoGen)
+                select (LinkGen)parentOneGen.Copy(parentOneGen.Enable && parentTwoGen.Enable);
+
+            foreach (var gen in cleanIntersection)
             {
-                var copyGen = (LinkGen)gen.Copy();
-                copyGen.Mutate(random);
+                gen.Mutate(random);
+                newGenome.Add(gen);
+            }
+
+            foreach (var gen in exceptionOne)
+            {
+                var diffgens =
+                    newGenome.LinkGens.Where(i => i.InNeuron == gen.InNeuron && i.OutNeuron == gen.OutNeuron);
+                foreach (var diffgen in diffgens)
+                {
+                    diffgen.Enable = false;
+                }
                 
-                newGenome.Add(copyGen);
+                gen.Mutate(random);
+                newGenome.Add(gen);
             }
             
+            foreach (var gen in exceptionTwo)
+            {
+                var diffgens =
+                    newGenome.LinkGens.Where(i => i.InNeuron == gen.InNeuron && i.OutNeuron == gen.OutNeuron);
+                foreach (var diffgen in diffgens)
+                {
+                    diffgen.Enable = false;
+                }
+                
+                gen.Mutate(random);
+                newGenome.Add(gen);
+            }
+            
+            
             return newGenome;
+        }
+
+        public float Distance(Genome other)
+        {
+            var n = LinkGens.Count > other.LinkGens.Count ? LinkGens.Count : other.LinkGens.Count;
+
+            if (n == 0)
+                return 0;
+            
+            var exceptionOne = LinkGens.Except(other.LinkGens).Count() /(float)n;
+            var exceptionTwo = other.LinkGens.Except(LinkGens).Count() /(float)n;
+            float width = 0f;
+            
+            var widthDiff = from genOne in LinkGens
+                from gentwo in other.LinkGens
+                where genOne.Equals(gentwo)
+                select genOne.Weight - gentwo.Weight;
+
+            var widthDiffArray = widthDiff as float[] ?? widthDiff.ToArray();
+            if (widthDiffArray.Count() != 0)
+            {
+                width = widthDiffArray.Average();
+            }
+
+            var result = exceptionOne + exceptionTwo + width;
+
+            if (result > 0)
+            {
+                
+            }
+
+            return result;
         }
     }
 }

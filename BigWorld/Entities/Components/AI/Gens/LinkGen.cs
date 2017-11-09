@@ -50,6 +50,17 @@ namespace BigWorld.Entities.Components.AI.Gens
                 Enable = Enable,
             };
         }
+        
+        public Gen Copy(bool enable)
+        {
+            return new LinkGen(InovationNumber)
+            {
+                InNeuron = InNeuron,
+                OutNeuron = OutNeuron,
+                Weight = Weight,
+                Enable = enable,
+            };
+        }
 
         public override void Apply(NeuronList neuronList)
         {
@@ -65,6 +76,35 @@ namespace BigWorld.Entities.Components.AI.Gens
 
         public void Mutate(Random random)
         {
+            var applyMutate = random.Next(10) == 0;
+            if (applyMutate)
+            {
+                Weight += (float)((random.NextDouble() * 2 - 1) * 0.1);
+                
+                /*
+                var applyEnableMutation = random.Next(10) == 0;
+
+                if (applyEnableMutation)
+                {
+                    Enable = !Enable;
+                }
+                */
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            return InovationNumber;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is LinkGen linkGen)
+            {
+                return linkGen.InovationNumber == InovationNumber;
+            }
+            
+            return false;
         }
     }
 }
