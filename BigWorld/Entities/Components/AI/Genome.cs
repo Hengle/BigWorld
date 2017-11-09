@@ -8,60 +8,28 @@ namespace BigWorld.Entities.Components.AI
 {
     public class Genome
     {
-        private class InternGenDefinition
-        {
-            public readonly int StartProp;
-            public readonly int EndProp;
 
-            public InternGenDefinition(int startProp, int endProp)
-            {
-                StartProp = startProp;
-                EndProp = endProp;
-            }
-        }
 
         public int Generation { get; private set; }
-        
-        private static readonly Dictionary<Type,InternGenDefinition> gens 
-            = new Dictionary<Type, InternGenDefinition>();
 
-        private static readonly int MaxProp = 0;
         
         public readonly List<LinkGen> LinkGens = new List<LinkGen>();
         public readonly List<NeuronGen> NeuronGens = new List<NeuronGen>();
 
         private int seed;
-        private readonly Random genomRandom;
+        private readonly Random random;
         
-        static Genome()
-        {
-            var ass = Assembly.GetExecutingAssembly();
-            var genTypes = from type in ass.GetTypes()
-                let attribute = type.GetCustomAttribute<GenDefinitionAttribute>()
-                where attribute != null
-                where typeof(Gen).IsAssignableFrom(type)
-                select new {Type = type,Attribute = attribute };
-
-            foreach (var type in genTypes)
-            {
-                var newMax = MaxProp+(int)type.Attribute.Probabillity;
-                gens.Add(type.Type,new InternGenDefinition(MaxProp,newMax));
-
-                MaxProp = newMax;
-
-            }
-        }
 
         public Genome(int seed)
         {
             this.seed = seed;
-            genomRandom = new Random(seed);
+            random = new Random(seed);
             Generation = 1;
         }
 
         public Genome CopyGenome()
         {
-            var newSeed = genomRandom.Next();
+            var newSeed = random.Next();
             
             Genome newGenome = new Genome(newSeed)
             {
@@ -81,57 +49,90 @@ namespace BigWorld.Entities.Components.AI
             return newGenome;
         }
         
-        public static Genome CreateGenom(NeuronList basicList,int count)
-        {
-            Random r = new Random();
-            var seed = r.Next();
-            return CreateGenom(basicList,count,seed);
-        }
-
-        public static Genome CreateGenom(NeuronList basicList,int count,int seed)
-        {
-            Genome genome = new Genome(seed);
-
-            genome.CreateRandomGens(count, seed);
-
-            return genome;
-        }
+        
 
         public void Mutate()
         {
-            var value = genomRandom.Next(5);
-            if (value == 0)
-            {
-                var seed = genomRandom.Next();
-                CreateRandomGens(1,seed);
-            }
-        }
-        
-        public void CreateRandomGens(int count)
-        {
-            Random r = new Random();
-            var seed = r.Next();
-            CreateRandomGens(count,seed);
-        }
-        
-        public void CreateRandomGens(int count, int seed)
-        {
-            Random r = new Random(seed);
+            var mutateApply = (random.Next(1)) == 0;
 
-            for (int i = 0; i < count; i++)
+            if (mutateApply)
             {
-                var genTypeNumber = r.Next(MaxProp);
-                var genType = gens.First(g =>
-                    genTypeNumber >= g.Value.StartProp && genTypeNumber < g.Value.EndProp);
 
-                var gen = Activator.CreateInstance(genType.Key) as Gen;
-                if (gen != null)
+                var linkMutate = (random.Next(2)) == 0;
+                
+                if (linkMutate)
                 {
-                    gen.CreateRandom(r,this);
-                    Add(gen);
+                    CreateRandomLinkGen();
+                }
+                else
+                {
+                    CreateRandomNeuronGen();
                 }
             }
         }
+        
+        public void CreateRandomLinkGen()
+        {
+            var links = GetLink();
+
+            var exist = LinkGens.Any(i => i.InNeuron == links.Item1 && i.OutNeuron == links.Item2);
+
+            if (exist)
+                return;
+
+            var linkgen = LinkGen.CreateRandom(random,links);
+            
+            Add(linkgen);
+        }
+
+        public void CreateRandomNeuronGen()
+        {
+            var links = GetLink();
+
+            var link = LinkGens.FirstOrDefault(i => i.InNeuron == links.Item1 && i.OutNeuron == links.Item2);
+
+            if (link != null)
+            {
+                link.Enable = false;
+                
+                var gen = new HiddenNeuronGen();
+                Add(gen);
+                var position = NeuronGens.Count -1;
+                
+                var linkgen1 = LinkGen.CreateRandom(random,new Tuple<int, int>(links.Item1,position));
+                var linkgen2 = LinkGen.CreateRandom(random,new Tuple<int, int>(position,links.Item2));
+                
+                Add(linkgen1);
+                Add(linkgen2);
+            }
+        }
+
+        private Tuple<int, int> GetLink()
+        {
+            int f = 0;
+            int s = 0;
+
+            bool ok = false;
+            int i = 0;
+            
+            do
+            {
+                f = random.Next(NeuronGens.Count);
+                s = random.Next(NeuronGens.Count);
+
+                if (f == s)
+                    continue;
+
+                ok = true;
+
+            } while (i++ < 20 && !ok);
+
+            if (f == s)
+                throw new Exception();
+            
+            return new Tuple<int, int>(f,s);
+        }
+        
 
         public void Add(Gen gen)
         {
@@ -149,7 +150,8 @@ namespace BigWorld.Entities.Components.AI
 
         public Genome Combine(Genome secoundGenome)
         {
-            var newSeed = genomRandom.Next();
+            
+            var newSeed = random.Next();
             
             Genome newGenome = new Genome(newSeed)
             {
@@ -169,7 +171,7 @@ namespace BigWorld.Entities.Components.AI
             foreach (var gen in linkgens)
             {
                 var copyGen = (LinkGen)gen.Copy();
-                copyGen.Mutate(genomRandom);
+                copyGen.Mutate(random);
                 
                 newGenome.Add(copyGen);
             }

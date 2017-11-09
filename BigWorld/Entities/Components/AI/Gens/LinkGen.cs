@@ -3,95 +3,68 @@ using System.Threading;
 
 namespace BigWorld.Entities.Components.AI.Gens
 {
-    [GenDefinition(2)]
     public class LinkGen : Gen
     {
-        public int In { get; private set; }
-        public int Out { get; private set; }
-        public double Weight { get; private set; }
-        public bool Enable { get; private set; }
+        private static int GlobalInovationNumber = 0;
+        public readonly int InovationNumber;
 
-
-        private static int linkGenCounter = 0;
-        public readonly int LinkgenId;
+        public int InNeuron { get; set; }
+        public int OutNeuron { get; set; }
+        
+        public float Weight { get; set; }
+        public bool Enable { get; set; }
         
         public LinkGen()
         {
-            LinkgenId = Interlocked.Increment(ref linkGenCounter);
+            InovationNumber = Interlocked.Increment(ref GlobalInovationNumber);
         }
 
-        public LinkGen(int @in, int @out, double weight, bool enable)
+        public LinkGen(int inNeuron, int outNeuron, float weight, bool enable)
             :this()
         {
-            In = @in;
-            Out = @out;
+            InNeuron = inNeuron;
+            OutNeuron = outNeuron;
             Weight = weight;
             Enable = enable;
         }
-        
-        public LinkGen(int @in, int @out, double weight, bool enable, int linkgenId)
-        {
-            In = @in;
-            Out = @out;
-            Weight = weight;
-            Enable = enable;
 
-            LinkgenId = linkgenId;
+
+        private LinkGen(int inovationNumber)
+        {
+            InovationNumber = inovationNumber;
         }
-        
+
+        public static LinkGen CreateRandom(Random random,Tuple<int,int> pair)
+        {
+            var weight = random.NextDouble() * 2 - 1;
+            return new LinkGen(pair.Item1,pair.Item2,(float)weight,true);
+        }
+
         public override Gen Copy()
         {
-            return new LinkGen(In,Out,Weight,Enable,LinkgenId);
-        }
-
-        public override void CreateRandom(Random r, Genome genome)
-        {
-            In = r.Next(0, genome.NeuronGens.Count);
-            Out = r.Next(0, genome.NeuronGens.Count);
-            Weight = r.NextDouble() * 2 - 1;
-            Enable = r.Next(0, 3) > 0;
+            return new LinkGen(InovationNumber)
+            {
+                InNeuron = InNeuron,
+                OutNeuron = OutNeuron,
+                Weight = Weight,
+                Enable = Enable,
+            };
         }
 
         public override void Apply(NeuronList neuronList)
         {
             if (!Enable)
                 return;
-            
-            var inputNeuron = neuronList[In];
-            var outputNeuron = neuronList[Out];
-            
-            NeuronLink link = new NeuronLink(inputNeuron,Weight);
-            
-            outputNeuron.Links.Add(link);
+                
+                
+            var inputNeuron = neuronList[InNeuron];
+            var outputneuron = neuronList[OutNeuron];
+                
+            outputneuron.Links.Add(new NeuronLink(inputNeuron,Weight));
         }
 
-        public override int GetHashCode()
+        public void Mutate(Random random)
         {
-            return LinkgenId;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is LinkGen linkGen)
-            {
-                return linkGen.LinkgenId == LinkgenId;
-            }
-            return false;
-        }
-
-        public void Mutate(Random r)
-        {
-            var applyMutate = r.Next(10) == 0;
-
-            if (applyMutate)
-            {
-                Weight = Weight + (r.NextDouble() * 2 - 1) * 0.1  ;
-
-                if (r.Next(0, 5) == 0)
-                {
-                    Enable = !Enable ;
-                }
-            }
         }
     }
 }

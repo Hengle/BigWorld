@@ -20,6 +20,7 @@ namespace BigWorld
             Position = CreateComponent<PositionComponent>();
 
             CreateComponent<FitnessComponent>();
+            CreateComponent<AIInformationComponent>();
         }
 
 

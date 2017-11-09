@@ -64,7 +64,7 @@ namespace BigWorld.Services.AI
                     
                     if (positiveGenomes.Count >0)
                     {
-                        var goodGenomes = positiveGenomes.OrderByDescending(i => i.Item2).Take(16);
+                        var goodGenomes = positiveGenomes.OrderByDescending(i => i.Item2).Take(64);
 
                         var fitness = goodGenomes.First().Item2;
                         if (fitness > MaxFitness)
@@ -72,7 +72,6 @@ namespace BigWorld.Services.AI
                         
                         foreach (var genome in goodGenomes)
                         {
-                            genomes.Add(genome.Item1.CopyGenome());
                             genomes.Add(genome.Item1.CopyGenome());
                         }
 
@@ -150,6 +149,11 @@ namespace BigWorld.Services.AI
             
             comp2.MoveDirection = new Vector2((float)(comp1.MoveRight.Value - comp1.MoveLeft.Value)
                                               ,(float)(comp1.MoveUp.Value - comp1.MoveDown.Value ));
+            
+            if (float.IsNaN(comp2.MoveDirection.X) || float.IsNaN(comp2.MoveDirection.Y) )
+            {
+                
+            }
         }
     }
 }

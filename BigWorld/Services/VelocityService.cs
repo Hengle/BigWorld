@@ -13,6 +13,11 @@ namespace BigWorld.Services
         {
             comp1.Velocity = comp2.MoveDirection  * 4;
 
+            if (float.IsNaN(comp1.Velocity.X) || float.IsNaN(comp1.Velocity.Y) )
+            {
+                
+            }
+            
             if (entity.TryGetComponent<FitnessComponent>(out var fitComp))
             {
                 fitComp.Value += comp1.Velocity.Length;

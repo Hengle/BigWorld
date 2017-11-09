@@ -1,7 +1,9 @@
-﻿namespace BigWorld.Entities.Components.AI
+﻿using engenious;
+
+namespace BigWorld.Entities.Components.AI
 {
-    public class AIInformationComponent
+    public class AIInformationComponent :Component
     {
-        
+        public Vector2 OldPosition { get; set; }
     }
 }

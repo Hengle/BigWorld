@@ -26,10 +26,12 @@ namespace BigWorld
             services = new List<BaseService>()
             {
                 NeuronalSimulationService,
+                new StartAIService(),
                 new VelocityService(),
                 new BlockCollisionService(),
                 new MovementService(),
                 new RoomCollisionService(),
+                new EndAIService()
             };
         }
         

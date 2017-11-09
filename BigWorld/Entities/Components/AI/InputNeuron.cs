@@ -8,6 +8,9 @@ namespace BigWorld.Entities.Components.AI
         
         public void SetValue(double value)
         {
+            if (double.IsNaN(value) || double.IsInfinity(value))
+                throw new ArgumentOutOfRangeException(nameof(value));
+            
             if (value < -1 || value > 1)
                 throw new ArgumentOutOfRangeException(nameof(value));
 

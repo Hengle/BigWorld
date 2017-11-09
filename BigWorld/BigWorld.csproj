@@ -53,9 +53,9 @@
   <ItemGroup>
     <Compile Include="Entities\Component.cs" />
     <Compile Include="Entities\ComponentCollection.cs" />
+    <Compile Include="Entities\Components\AI\AIInformationComponent.cs" />
     <Compile Include="Entities\Components\AI\FitnessComponent.cs" />
     <Compile Include="Entities\Components\AI\Gen.cs" />
-    <Compile Include="Entities\Components\AI\GenDefinitionAttribute.cs" />
     <Compile Include="Entities\Components\AI\Genome.cs" />
     <Compile Include="Entities\Components\AI\Gens\HiddenNeuronGen.cs" />
     <Compile Include="Entities\Components\AI\Gens\InputGen.cs" />
@@ -79,7 +79,9 @@
     <Compile Include="Map\Room.cs" />
     <Compile Include="Map\RoomLight.cs" />
     <Compile Include="Map\WorldMap.cs" />
+    <Compile Include="Services\AI\EndAIService.cs" />
     <Compile Include="Services\AI\NeuronalSimulationService.cs" />
+    <Compile Include="Services\AI\StartAIService.cs" />
     <Compile Include="Services\BaseService.cs" />
     <Compile Include="Services\BaseServiceR1.cs" />
     <Compile Include="Services\BaseServiceR2.cs" />
