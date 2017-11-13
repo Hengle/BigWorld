@@ -52,5 +52,18 @@ namespace BigWorld.Entities.Components.AI
             NeuronList = new NeuronList();
             NeuronList.CreateNeuronsFromGenome(genome);
         }
+
+        public void MapInputOutput(Genome genome)
+        {
+            ((InputGen) genome.NeuronGens[0]).InputNeuron = Tick;
+            ((InputGen) genome.NeuronGens[1]).InputNeuron = Const;
+            ((InputGen) genome.NeuronGens[2]).InputNeuron = DeltaPositionX;
+            ((InputGen) genome.NeuronGens[3]).InputNeuron = DeltaPositionY;
+            
+            ((OutputGen) genome.NeuronGens[4]).OutputNeuron = MoveUp;
+            ((OutputGen) genome.NeuronGens[5]).OutputNeuron = MoveDown;
+            ((OutputGen) genome.NeuronGens[6]).OutputNeuron = MoveLeft;
+            ((OutputGen) genome.NeuronGens[7]).OutputNeuron = MoveRight;
+        }
     }
 }

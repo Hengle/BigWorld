@@ -11,11 +11,6 @@ namespace BigWorld.Services
             Entity entity, WorldMap worldMap, GameTime gameTime)
         {
             comp2.RoomPosition += comp1.Velocity * (float) gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (float.IsNaN(comp2.RoomPosition.X) || float.IsNaN(comp2.RoomPosition.Y) )
-            {
-                
-            }
         }
     }
 }

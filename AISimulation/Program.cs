@@ -10,36 +10,12 @@ namespace AISimulation
     {
         public static void Main(string[] args)
         {
-            WorldMap map = WorldMap.LoadWorld();
+            /*
+            BigWorld.AISimulation simulation = new BigWorld.AISimulation();
             
-            Simulation simulation = new Simulation();
-            simulation.Start(map);
+            simulation.Run(100);
 
-            var player = simulation.AddPlayer();
-            
-            TimeSpan globalTimeSpan = TimeSpan.Zero;
-            TimeSpan eleTimeSpan =  TimeSpan.FromMilliseconds(20);
-
-            int i = 0;
-            
-            while (i < 10000000)
-            {
-                globalTimeSpan += eleTimeSpan;
-                GameTime gameTime = new GameTime(globalTimeSpan,eleTimeSpan);
-                
-                simulation.Update(gameTime);
-
-
-                if (++i % 1000 == 0)
-                {
-                    Console.WriteLine(globalTimeSpan);
-                    Console.WriteLine(simulation.NeuronalSimulationService.MaxFitness);
-                }
-                
-                
-            }
-            
-            
+            */
         }
     }
 }

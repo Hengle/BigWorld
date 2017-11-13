@@ -2,21 +2,21 @@
 {
     public class OutputGen : NeuronGen
     {
-        private readonly OutputNeuron outputNeuron;
+        public OutputNeuron OutputNeuron { get; set; }
 
         public OutputGen(OutputNeuron outputNeuron)
         {
-            this.outputNeuron = outputNeuron;
+            this.OutputNeuron = outputNeuron;
         }
 
         public override void Apply(NeuronList neuronList)
         {
-            neuronList.Add(outputNeuron);
+            neuronList.Add(OutputNeuron);
         }
         
         public override Gen Copy()
         {
-            return new OutputGen(outputNeuron);
+            return new OutputGen(OutputNeuron);
         }
     }
 }

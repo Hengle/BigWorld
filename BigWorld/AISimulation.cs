@@ -7,7 +7,7 @@ using BigWorld.Entities.Components.AI.Gens;
 using BigWorld.Map;
 using engenious;
 
-namespace BigWorld.Services
+namespace BigWorld
 {
     public class AISimulation
     {
@@ -21,10 +21,11 @@ namespace BigWorld.Services
         public readonly List<Species> Specieses = new List<Species>();
 
         public double MaxFitness { get; private set; }
+        public Genome BestGenome { get;  private set; }
         
-        public void Run(int count)
+        
+        public Genome Run(int count,WorldMap map)
         {
-            var map = WorldMap.LoadWorld();
             simulation.Start(map);
 
             currentPlayer = simulation.AddPlayer();
@@ -33,6 +34,9 @@ namespace BigWorld.Services
             {
                 Update();
             }
+
+            
+            return BestGenome;
         }
 
         private List<Genome> newGenomes = new List<Genome>();
@@ -98,53 +102,61 @@ namespace BigWorld.Services
                 }
             }
 
-            var goodGenomes = positiveGenomes.OrderByDescending(i => i.Item2).Take(64);
-
-            var fitness = goodGenomes.First().Item2;
-            if (fitness > MaxFitness)
-                MaxFitness = fitness;
-
-            foreach (var genome in goodGenomes)
+            if (positiveGenomes.Count > 0)
             {
-                var newGenome = genome.Item1.CreateNewGenation();
-                newGenome.Mutate();
+                var goodGenomes = positiveGenomes.OrderByDescending(i => i.Item2).Take(64);
 
-                OrderToSpecies(newGenome);
-
-                newGenomes.Add(newGenome);
-            }
-
-            var combinegenomes = goodGenomes.Take(8).ToArray();
-
-            if (combinegenomes.Length == 8)
-            {
-                for (int i = 0; i < 16; i++)
+                var fitness = goodGenomes.First();
+                if (fitness.Item2 > MaxFitness)
                 {
-                    var k = r.Next(combinegenomes.Length);
-                    var l = r.Next(combinegenomes.Length);
-                    if (k == l)
-                        continue;
+                    BestGenome = fitness.Item1;
+                    MaxFitness = fitness.Item2;
+                }
 
-                    var firstGenome = combinegenomes[k].Item1;
-                    var secoundGenome = combinegenomes[l].Item1;
+                foreach (var genome in goodGenomes)
+                {
+                    var newGenome = genome.Item1.CreateNewGenation();
+                    newGenome.Mutate();
 
-                    var diff = firstGenome.Distance(secoundGenome);
+                    OrderToSpecies(newGenome);
 
-                    if (diff < 3)
+                    newGenomes.Add(newGenome);
+                }
+
+                var combinegenomes = goodGenomes.Take(8).ToArray();
+
+                if (combinegenomes.Length == 8)
+                {
+                    for (int i = 0; i < 16; i++)
                     {
-                        var childGenome = firstGenome.Combine(secoundGenome);
-                        childGenome.Mutate();
-                        OrderToSpecies(childGenome);
-                        newGenomes.Add(childGenome);
-                    }
-                    else
-                    {
+                        var k = r.Next(combinegenomes.Length);
+                        var l = r.Next(combinegenomes.Length);
+                        if (k == l)
+                            continue;
+
+                        var firstGenome = combinegenomes[k].Item1;
+                        var secoundGenome = combinegenomes[l].Item1;
+
+                        var diff = firstGenome.Distance(secoundGenome);
+
+                        if (diff < 3)
+                        {
+                            var childGenome = firstGenome.Combine(secoundGenome);
+                            childGenome.Mutate();
+                            OrderToSpecies(childGenome);
+                            newGenomes.Add(childGenome);
+                        }
+                        else
+                        {
+
+                        }
+
 
                     }
-
-
                 }
             }
+            
+            
 
         }
 

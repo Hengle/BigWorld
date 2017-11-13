@@ -25,6 +25,7 @@ namespace BigWorldGame.Components.Gui
         {
             batch.Begin();
 
+            /*
             var run = Game.SimulationComponent.Simulation.NeuronalSimulationService.Run;
             var count = Game.SimulationComponent.Simulation.NeuronalSimulationService.Count;
             var genomeNumber = Game.SimulationComponent.Simulation.NeuronalSimulationService.CurrentGenomeNumber;
@@ -39,7 +40,7 @@ namespace BigWorldGame.Components.Gui
                 batch.DrawString(font,$"{genome.Generation}",new Vector2(0,60),Color.White );
             }
             batch.DrawString(font,maxFitness.ToString(),new Vector2(0,80),Color.White );
-
+            */
             
             batch.End();
         }

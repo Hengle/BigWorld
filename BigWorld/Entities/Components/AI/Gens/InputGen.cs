@@ -4,21 +4,21 @@ namespace BigWorld.Entities.Components.AI.Gens
 {
     public class InputGen : NeuronGen
     {
-        private readonly InputNeuron inputNeuron;
+        public InputNeuron InputNeuron { get; set; }
 
         public InputGen(InputNeuron inputNeuron)
         {
-            this.inputNeuron = inputNeuron;
+            this.InputNeuron = inputNeuron;
         }
 
         public override Gen Copy()
         {
-            return new InputGen(inputNeuron);
+            return new InputGen(InputNeuron);
         }
 
         public override void Apply(NeuronList neuronList)
         {
-            neuronList.Add(inputNeuron);
+            neuronList.Add(InputNeuron);
         }
     }
 }

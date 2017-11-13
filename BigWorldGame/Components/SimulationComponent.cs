@@ -32,7 +32,7 @@ namespace BigWorldGame.Components
             else if (state == GameState.Running)
             {
                 Simulation.Start(SimulationWorld);
-                Player = Simulation.AddPlayer();
+                Player = Simulation.AddAIPlayer();
             }
         }
         
