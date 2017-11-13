@@ -225,11 +225,11 @@ namespace BigWorld.Entities.Components.AI
 
             if (n == 0)
                 return 0;
-            
-            var exceptionOne = LinkGens.Except(other.LinkGens).Count() /(float)n;
-            var exceptionTwo = other.LinkGens.Except(LinkGens).Count() /(float)n;
+
+            var exceptionOne = LinkGens.Except(other.LinkGens).Count() / (float) n;
+            var exceptionTwo = other.LinkGens.Except(LinkGens).Count() / (float) n;
             float width = 0f;
-            
+
             var widthDiff = from genOne in LinkGens
                 from gentwo in other.LinkGens
                 where genOne.Equals(gentwo)
@@ -245,7 +245,7 @@ namespace BigWorld.Entities.Components.AI
 
             if (result > 0)
             {
-                
+
             }
 
             return result;

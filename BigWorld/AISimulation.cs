@@ -20,12 +20,16 @@ namespace BigWorld
         
         public readonly List<Species> Specieses = new List<Species>();
 
+        public int RunCounter { get; private set; }
+        
         public double MaxFitness { get; private set; }
         public Genome BestGenome { get;  private set; }
         
         
         public Genome Run(int count,WorldMap map)
         {
+            RunCounter = 0;
+            
             simulation.Start(map);
 
             currentPlayer = simulation.AddPlayer();
@@ -33,6 +37,7 @@ namespace BigWorld
             for (int i = 0; i < count; i++)
             {
                 Update();
+                RunCounter++;
             }
 
             
@@ -85,7 +90,7 @@ namespace BigWorld
                 TimeSpan globalTime = new TimeSpan();
                 TimeSpan elapsedSpan = TimeSpan.FromMilliseconds(20);
 
-                for (int i = 0; i < 100; i++)
+                for (int i = 0; i < 1000; i++)
                 {
                     globalTime += elapsedSpan;
                     simulation.Update(new GameTime(globalTime, elapsedSpan));

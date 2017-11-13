@@ -21,10 +21,7 @@
         {
             if (currentRun == run)
             {
-                if (currentValue.HasValue)
-                    return currentValue.Value;
-
-                return oldValue;
+                return currentValue ?? oldValue;
             }
 
             oldRun = currentRun;

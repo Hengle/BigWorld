@@ -25,6 +25,14 @@ namespace BigWorld.Services.AI
                         networkComponent.DeltaPositionY.SetValue(distance.Y);
                     }
                 }
+                else
+                {
+                    if (entity.TryGetComponent<NeuronalNetworkComponent>(out var networkComponent))
+                    {
+                        networkComponent.DeltaPositionX.SetValue(0);
+                        networkComponent.DeltaPositionY.SetValue(0);
+                    }
+                }
                 
 
             }

@@ -25,22 +25,20 @@ namespace BigWorldGame.Components.Gui
         {
             batch.Begin();
 
-            /*
-            var run = Game.SimulationComponent.Simulation.NeuronalSimulationService.Run;
-            var count = Game.SimulationComponent.Simulation.NeuronalSimulationService.Count;
-            var genomeNumber = Game.SimulationComponent.Simulation.NeuronalSimulationService.CurrentGenomeNumber;
-            var genome = Game.SimulationComponent.Simulation.NeuronalSimulationService.CurrentGenome;
-            var maxFitness = Game.SimulationComponent.Simulation.NeuronalSimulationService.MaxFitness;
+            var maxFitness = Game.SimulationComponent.AiSimulation.MaxFitness;
+            var run = Game.SimulationComponent.AiSimulation.RunCounter;
             
             batch.DrawString(font,run.ToString(),new Vector2(0,0),Color.White );
+            /*
             batch.DrawString(font,count.ToString(),new Vector2(0,20),Color.White );
             batch.DrawString(font,genomeNumber.ToString(),new Vector2(0,40),Color.White );
             if (genome != null)
             {
                 batch.DrawString(font,$"{genome.Generation}",new Vector2(0,60),Color.White );
             }
-            batch.DrawString(font,maxFitness.ToString(),new Vector2(0,80),Color.White );
             */
+            batch.DrawString(font,maxFitness.ToString(),new Vector2(0,80),Color.White );
+            
             
             batch.End();
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BigWorld.Entities.Components.AI
 {
@@ -12,6 +13,8 @@ namespace BigWorld.Entities.Components.AI
         private int currentRun;
         private double? currentValue;
 
+
+        
         public void Reset()
         {
             Links.Clear();
@@ -25,16 +28,14 @@ namespace BigWorld.Entities.Components.AI
         {
             if (currentRun == run)
             {
-                if (currentValue.HasValue)
-                    return currentValue.Value;
+                return currentValue ?? oldValue;
 
-                return oldValue;
             }
 
             oldRun = currentRun;
             currentRun = run;
             oldValue = currentValue ?? 0;
-            
+
             currentValue = null;
             currentValue = InternGetValue(run);
 

@@ -58,12 +58,6 @@ namespace BigWorld
         {
             Player player = new Player();
             
-            AISimulation aiSimulation = new AISimulation();
-            var genome = aiSimulation.Run(20,CurrentWorldMap);
-            
-            player.NeuronalNetwork.MapInputOutput(genome);
-            player.NeuronalNetwork.Reset(genome);
-            
             entities.Add(player);
 
             return player;

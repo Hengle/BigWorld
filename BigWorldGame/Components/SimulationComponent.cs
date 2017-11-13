@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BigWorld;
 using BigWorld.Map;
 using engenious;
@@ -17,6 +18,7 @@ namespace BigWorldGame.Components
 
         public WorldMap SimulationWorld { get; set; }
        
+        public readonly AISimulation AiSimulation = new AISimulation();
         
         public SimulationComponent(MainGame game) : base(game)
         {
@@ -33,8 +35,21 @@ namespace BigWorldGame.Components
             {
                 Simulation.Start(SimulationWorld);
                 Player = Simulation.AddAIPlayer();
+
+                Task.Run((Action)CreateKI);
             }
         }
+
+        private void CreateKI()
+        {
+            
+            var genome = AiSimulation.Run(10000,CurrentWorldMap);
+            
+            Player.NeuronalNetwork.MapInputOutput(genome);
+            Player.NeuronalNetwork.Reset(genome);
+        }
+
+        private double oldMaxFitness = 0;
         
         public override void Update(GameTime gameTime)
         {
@@ -59,6 +74,16 @@ namespace BigWorldGame.Components
                 direction += new Vector2(0,1);
 
             Player.Input.MoveDirection = direction;
+
+            if (oldMaxFitness != AiSimulation.MaxFitness)
+            {
+                oldMaxFitness = AiSimulation.MaxFitness;
+
+                var genome = AiSimulation.BestGenome;
+                
+                Player.NeuronalNetwork.MapInputOutput(genome);
+                Player.NeuronalNetwork.Reset(genome);
+            }
             
             Simulation.Update(gameTime);
         }
